@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace WpfApplication1
 {
@@ -25,6 +26,9 @@ namespace WpfApplication1
         public MainWindow()
         {
             InitializeComponent();
+
+            newLayer(1);
+            LayerList.layersList[0].Background = new SolidColorBrush(Colors.White);
 
             text.Text = "" + mainCanvas.Children.Count;
             GlobalState.refreshGlobal();
@@ -54,9 +58,50 @@ namespace WpfApplication1
             }
         }
 
+        private void SaveCanvas(Canvas canvas, int dpi, string filename)
+        {
+            var width = canvas.ActualWidth;
+            var height = canvas.ActualHeight;
+
+            var size = new Size(width, height);
+            canvas.Measure(size);
+
+            var rtb = new RenderTargetBitmap(
+                (int)width,
+                (int)height,
+                dpi, //dpi x 
+                dpi, //dpi y 
+                PixelFormats.Pbgra32 // pixelformat 
+                );
+            rtb.Render(canvas);
+
+            SaveAsPng(rtb, filename);
+        }
+
+        private static void SaveAsPng(RenderTargetBitmap bmp, string filename)
+        {
+            var enc = new PngBitmapEncoder();
+            enc.Frames.Add(BitmapFrame.Create(bmp));
+
+            using (FileStream stm = File.Create(filename))
+            {
+                enc.Save(stm);
+            }
+        }
+
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
+            var saveDlg = new SaveFileDialog
+            {
+                FileName = "Masterpiece",
+                DefaultExt = ".png",
+                Filter = "PNG (.png)|*.png"
+            };
 
+            if (saveDlg.ShowDialog() == true)
+            {
+                SaveCanvas(mainCanvas, 96, saveDlg.FileName);
+            }
         }
 
         public void newLayer(double opacity)
