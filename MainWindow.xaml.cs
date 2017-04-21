@@ -26,12 +26,23 @@ namespace WpfApplication1
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            GlobalState.setLayerSize(mainCanvas.ActualWidth, mainCanvas.ActualHeight);
+            text_2.Text = "" + mainCanvas.ActualHeight + " " + mainCanvas.ActualWidth;
 
             newLayer(1);
             LayerList.layersList[0].Background = new SolidColorBrush(Colors.White);
 
             text.Text = "" + mainCanvas.Children.Count;
             GlobalState.refreshGlobal();
+        }
+
+        private void start()
+        {
+
         }
 
         private void btnOpen_Click(object sender, RoutedEventArgs e)
@@ -114,11 +125,12 @@ namespace WpfApplication1
             mainCanvas.Children.Add(layer);
 
             layer.Name = layerName;
-            layer.Width = 500;
-            layer.Height = 264;
+            layer.Width = GlobalState.layerWidth;
+            layer.Height = GlobalState.layerHeight;
             layer.Opacity = opacity;
             Grid.SetColumn(layer, 1);
             Grid.SetRow(layer, 1);
+            Grid.SetColumnSpan(layer, 2);
 
             text.Text = "" + mainCanvas.Children.Count;
         }
