@@ -66,6 +66,7 @@
     <Compile Include="GlobalState.cs" />
     <Compile Include="Layer.cs" />
     <Compile Include="LayerList.cs" />
+    <Compile Include="LayerWidget.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

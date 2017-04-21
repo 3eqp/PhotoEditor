@@ -16,7 +16,7 @@ using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.IO;
 
-namespace WpfApplication1
+namespace PhotoEditor
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -36,15 +36,9 @@ namespace WpfApplication1
             newLayer(1);
             LayerList.layersList[0].Background = new SolidColorBrush(Colors.White);
 
-            text.Text = "" + mainCanvas.Children.Count;
-            GlobalState.refreshGlobal();
+            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
         }
-
-        private void start()
-        {
-
-        }
-
+        
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog op = new OpenFileDialog();
@@ -57,7 +51,7 @@ namespace WpfApplication1
             {
                 newLayer(0.5);
 
-                int index = GlobalState.currentLayerIndex;
+                int index = LayerList.currentLayerIndex;
                 Layer layer = (Layer)LayerList.layersList[index];
 
                 BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
@@ -117,22 +111,15 @@ namespace WpfApplication1
 
         public void newLayer(double opacity)
         {
-            string layerName = "NewLayer" + GlobalState.LayersCount;
-            Layer layer = new Layer(layerName, GlobalState.currentLayerIndex);
+            double Width = GlobalState.layerWidth;
+            double Height = GlobalState.layerHeight;
+            string layerName = "NewLayer" + LayerList.layersList.Count;
+            Layer layer = new Layer(layerName, LayerList.currentLayerIndex, Width, Height, opacity, 1, 2, 1, layerCanvas);
             LayerList.layersList.Add(layer);
-            GlobalState.refreshGlobal();
-            GlobalState.currentLayerIndex = GlobalState.LayersCount - 1;
+            LayerList.currentLayerIndex = LayerList.layersList.Count - 1;
             mainCanvas.Children.Add(layer);
-
-            layer.Name = layerName;
-            layer.Width = GlobalState.layerWidth;
-            layer.Height = GlobalState.layerHeight;
-            layer.Opacity = opacity;
-            Grid.SetColumn(layer, 1);
-            Grid.SetRow(layer, 1);
-            Grid.SetColumnSpan(layer, 2);
-
-            text.Text = "" + mainCanvas.Children.Count;
+            
+            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
         }
 
         private void btnNewLayer_Click(object sender, RoutedEventArgs e)
@@ -142,17 +129,17 @@ namespace WpfApplication1
 
         private void btnDeleteLayer_Click(object sender, RoutedEventArgs e)
         {
-            int index = GlobalState.currentLayerIndex;
-            if (GlobalState.LayersCount > 0)
+            int index = LayerList.currentLayerIndex;
+            if (LayerList.layersList.Count > 0)
             {
                 Layer layer = (Layer)LayerList.layersList[index];
+                LayerWidget widget = layer.widget;
                 mainCanvas.Children.Remove(layer);
                 LayerList.layersList.Remove(layer);
-                GlobalState.refreshGlobal();
-                GlobalState.currentLayerIndex = GlobalState.LayersCount - 1;
+                LayerList.currentLayerIndex = LayerList.layersList.Count - 1;
+                layerCanvas.Children.Remove(widget);
             }
-
-            text.Text = "" + mainCanvas.Children.Count;
+            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
         }
     }
 }

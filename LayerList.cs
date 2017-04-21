@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace WpfApplication1
+namespace PhotoEditor
 {
     class LayerList
     {
         static public List<Canvas> layersList = new List<Canvas>();
+        public static int currentLayerIndex { get; set; }
+        public static int LayersIndexes { get; set; }
     }
 }

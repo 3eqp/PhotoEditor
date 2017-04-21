@@ -1,9 +1,9 @@
-﻿<Window x:Class="WpfApplication1.MainWindow"
+﻿<Window x:Class="PhotoEditor.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfApplication1"
+        xmlns:local="clr-namespace:PhotoEditor"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="600"
@@ -24,7 +24,9 @@
             <ColumnDefinition Width="21*" />
         </Grid.ColumnDefinitions>
         <Canvas x:Name="mainCanvas" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
-        <Canvas x:Name="layerCanvas" Grid.Column="3" Grid.Row="1" Height="493" VerticalAlignment="Top" Background="LightSkyBlue"/>
+        <StackPanel x:Name="layerCanvas" Grid.Column="3" Grid.Row="1" Height="493" VerticalAlignment="Top" Background="LightSkyBlue">
+            
+        </StackPanel>
         <TextBox Margin="0,12,306,6" x:Name="text" Grid.Column="1" Grid.Row="2"/>
         <Button Height="33" HorizontalAlignment="Left" 
         Margin="12,0,0,6" Name="btnOpen" VerticalAlignment="Bottom" 
