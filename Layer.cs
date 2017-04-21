@@ -25,7 +25,8 @@ namespace WpfApplication1
 
         public int LayerIndex { get; set; }
 
-        public ImageBrush layerBrush { get; set; }
+        public SolidColorBrush layerColorBrush { get; set; }
+        public ImageBrush layerImageBrush { get; set; }
 
         public Layer(string name, int index)
         {

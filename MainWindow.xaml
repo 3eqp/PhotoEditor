@@ -21,7 +21,7 @@
         </Grid.ColumnDefinitions>
         <Canvas x:Name="mainCanvas" Grid.Column="1" Grid.Row="1">
         </Canvas>
-        <TextBox Margin="0,12,345,6" x:Name="text" Grid.Column="1" Grid.Row="2"/>
+        <TextBox Margin="0,12,476,6" x:Name="text" Grid.Column="1" Grid.Row="2"/>
         <Button Height="23" HorizontalAlignment="Left" 
         Margin="174,0,0,6" Name="btnOpen" VerticalAlignment="Bottom" 
         Width="75" Grid.Column="1" Grid.Row="2" Click="btnOpen_Click">Open</Button>
@@ -34,5 +34,6 @@
         <Button Height="23" HorizontalAlignment="Left" 
             Margin="414,0,0,6" x:Name="btnDeleteLayer" VerticalAlignment="Bottom" 
             Width="75" Grid.Column="1" Grid.Row="2" Content="DeleteLayer" Click="btnDeleteLayer_Click"/>
+        <TextBox Margin="29,12,331,6" x:Name="text_2" Grid.Column="1" Grid.Row="2"/>
     </Grid>
 </Window>

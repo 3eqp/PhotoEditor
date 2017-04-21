@@ -25,8 +25,9 @@ namespace WpfApplication1
         public MainWindow()
         {
             InitializeComponent();
+
             text.Text = "" + mainCanvas.Children.Count;
-            GlobalState.LayersCount = 0;
+            GlobalState.refreshGlobal();
         }
 
         private void btnOpen_Click(object sender, RoutedEventArgs e)
@@ -39,13 +40,17 @@ namespace WpfApplication1
 
             if (op.ShowDialog() == true)
             {
-                newLayer();
+                newLayer(0.5);
+
+                int index = GlobalState.currentLayerIndex;
+                Layer layer = (Layer)LayerList.layersList[index];
 
                 BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
                 ImageBrush brush = new ImageBrush();
                 brush.ImageSource = bmpFrame;
-                int index = GlobalState.currentLayerIndex;
-                LayerList.layersList[0].Background = brush;
+                layer.layerImageBrush = brush;
+
+                LayerList.layersList[index].Background = brush;
             }
         }
 
@@ -54,33 +59,43 @@ namespace WpfApplication1
 
         }
 
-        public void newLayer()
+        public void newLayer(double opacity)
         {
             string layerName = "NewLayer" + GlobalState.LayersCount;
-            GlobalState.LayersCount++;
-            GlobalState.currentLayerIndex = GlobalState.LayersCount++;
-            Layer layer = new Layer(layerName, GlobalState.LayersCount - 1);
+            Layer layer = new Layer(layerName, GlobalState.currentLayerIndex);
             LayerList.layersList.Add(layer);
+            GlobalState.refreshGlobal();
+            GlobalState.currentLayerIndex = GlobalState.LayersCount - 1;
             mainCanvas.Children.Add(layer);
 
             layer.Name = layerName;
             layer.Width = 500;
             layer.Height = 264;
+            layer.Opacity = opacity;
             Grid.SetColumn(layer, 1);
             Grid.SetRow(layer, 1);
-            layer.Opacity = 0.5;
 
             text.Text = "" + mainCanvas.Children.Count;
         }
 
         private void btnNewLayer_Click(object sender, RoutedEventArgs e)
         {
-            newLayer();
+            newLayer(0.5);
         }
 
         private void btnDeleteLayer_Click(object sender, RoutedEventArgs e)
         {
+            int index = GlobalState.currentLayerIndex;
+            if (GlobalState.LayersCount > 0)
+            {
+                Layer layer = (Layer)LayerList.layersList[index];
+                mainCanvas.Children.Remove(layer);
+                LayerList.layersList.Remove(layer);
+                GlobalState.refreshGlobal();
+                GlobalState.currentLayerIndex = GlobalState.LayersCount - 1;
+            }
 
+            text.Text = "" + mainCanvas.Children.Count;
         }
     }
 }
