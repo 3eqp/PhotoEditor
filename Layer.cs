@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace PhotoEditor
 {
@@ -14,6 +15,7 @@ namespace PhotoEditor
 
         public SolidColorBrush layerColorBrush { get; set; }
         public ImageBrush layerImageBrush { get; set; }
+        public BitmapFrame bmpFrame {get; set;}
         public LayerWidget widget;
 
         public Layer(string name, int index, double width, double height, double opacity, int col, int colspan, int row, StackPanel layerCanvas)

@@ -49,7 +49,7 @@ namespace PhotoEditor
 
             if (op.ShowDialog() == true)
             {
-                newLayer(0.5);
+                newLayer(1);
 
                 int index = LayerList.currentLayerIndex;
                 Layer layer = (Layer)LayerList.layersList[index];
@@ -58,6 +58,7 @@ namespace PhotoEditor
                 ImageBrush brush = new ImageBrush();
                 brush.ImageSource = bmpFrame;
                 layer.layerImageBrush = brush;
+                layer.bmpFrame = bmpFrame;
 
                 LayerList.layersList[index].Background = brush;
             }
@@ -124,7 +125,7 @@ namespace PhotoEditor
 
         private void btnNewLayer_Click(object sender, RoutedEventArgs e)
         {
-            newLayer(0.5);
+            newLayer(1);
         }
 
         private void btnDeleteLayer_Click(object sender, RoutedEventArgs e)
@@ -140,6 +141,15 @@ namespace PhotoEditor
                 layerCanvas.Children.Remove(widget);
             }
             text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
+        }
+
+        private void btnEffect_Click(object sender, RoutedEventArgs e)
+        {
+            Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];
+            Effects.Negative(layer);
+            ImageBrush brush = new ImageBrush();
+            brush.ImageSource = layer.bmpFrame;
+            layer.Background = brush;
         }
     }
 }

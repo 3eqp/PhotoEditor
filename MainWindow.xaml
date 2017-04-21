@@ -41,5 +41,8 @@
             Margin="535,0,0,6" x:Name="btnDeleteLayer" VerticalAlignment="Bottom" 
             Width="75" Grid.Column="2" Grid.Row="2" Content="DeleteLayer" Click="btnDeleteLayer_Click"/>
         <TextBox Margin="51,12,10,6" x:Name="text_2" Grid.Column="1" Grid.Row="2"/>
+        <Button Height="33" HorizontalAlignment="Left" 
+            Margin="251,0,0,6" x:Name="btnEffect" VerticalAlignment="Bottom" 
+            Width="76" Grid.Column="2" Grid.Row="2" Content="Effect" Click="btnEffect_Click"/>
     </Grid>
 </Window>
