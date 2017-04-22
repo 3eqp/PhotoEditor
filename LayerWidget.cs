@@ -11,7 +11,7 @@ namespace PhotoEditor
         {
             Name = name;
             Height = 50;
-            Background = new SolidColorBrush(Colors.Red);
+            Background = new SolidColorBrush(Colors.Gray);
 
             ThisLayer = layer;
         }
