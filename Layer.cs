@@ -12,6 +12,8 @@ namespace PhotoEditor
     public class Layer : Canvas
     {
         public int LayerIndex { get; set; }
+        public bool isCurrentLayer { get; set; }
+
 
         public SolidColorBrush layerColorBrush { get; set; }
         public ImageBrush layerImageBrush { get; set; }
