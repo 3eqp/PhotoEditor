@@ -1,35 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Microsoft.Win32;
-using System.Collections.ObjectModel;
-using System.IO;
+using PhotoEditor.Controls;
 
 namespace PhotoEditor
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-            LayersList = new List<Canvas>();
+            LayersWidgets = new List<LayerWidget>();
         }
 
-        public List<Canvas> LayersList { get; set; }
+        // Layer -> Widget
+        public List<LayerWidget> LayersWidgets { get; set; }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -37,7 +36,6 @@ namespace PhotoEditor
             text_2.Text = "" + mainCanvas.ActualHeight + " " + mainCanvas.ActualWidth;
 
             newLayer(1);
-            LayersList[0].Background = new SolidColorBrush(Colors.White);
 
             text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
         }
@@ -55,7 +53,7 @@ namespace PhotoEditor
                 newLayer(1);
 
                 int index = GlobalState.currentLayerIndex;
-                Layer layer = (Layer)LayersList[index];
+                var layer = (Layer)mainCanvas.Children[index];
 
                 BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
                 ImageBrush brush = new ImageBrush();
@@ -63,7 +61,7 @@ namespace PhotoEditor
                 layer.layerImageBrush = brush;
                 layer.bmpFrame = bmpFrame;
 
-                LayersList[index].Background = brush;
+                layer.Background = brush;
             }
         }
 
@@ -117,11 +115,11 @@ namespace PhotoEditor
         {
             double Width = GlobalState.layerWidth;
             double Height = GlobalState.layerHeight;
-            string layerName = "NewLayer" + LayersList.Count;
-            Layer layer = new Layer(layerName, GlobalState.currentLayerIndex, Width, Height, opacity, 1, 2, 1, layerCanvas);
-            LayersList.Add(layer);
-            GlobalState.currentLayerIndex = LayersList.Count - 1;
+            string layerName = "NewLayer" + LayersWidgets.Count;
+            var layer = new Layer(layerName, GlobalState.currentLayerIndex, Width, Height, opacity, 1, 2, 1, layerCanvas);
             mainCanvas.Children.Add(layer);
+            LayersWidgets.Add(layer.Widget);
+            GlobalState.currentLayerIndex = LayersWidgets.Count - 1;
             
             text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
         }
@@ -134,13 +132,13 @@ namespace PhotoEditor
         private void btnDeleteLayer_Click(object sender, RoutedEventArgs e)
         {
             int index = GlobalState.currentLayerIndex;
-            if (LayersList.Count > 0)
+            if (LayersWidgets.Count > 0)
             {
-                Layer layer = (Layer)LayersList[index];
-                LayerWidget widget = layer.widget;
+                var layer = (Layer)mainCanvas.Children[index];
+                LayerWidget widget = layer.Widget;
                 mainCanvas.Children.Remove(layer);
-                LayersList.Remove(layer);
-                GlobalState.currentLayerIndex = LayersList.Count - 1;
+                LayersWidgets.Remove(widget);
+                GlobalState.currentLayerIndex = LayersWidgets.Count - 1;
                 layerCanvas.Children.Remove(widget);
             }
             text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
@@ -148,7 +146,7 @@ namespace PhotoEditor
 
         private void btnEffect_Click(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)LayersList[GlobalState.currentLayerIndex];
+            var layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.Negative(layer);
             ImageBrush brush = new ImageBrush();
             brush.ImageSource = layer.bmpFrame;

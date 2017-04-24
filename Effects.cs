@@ -8,6 +8,7 @@ using System.IO;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using PhotoEditor.Controls;
 
 namespace PhotoEditor
 {

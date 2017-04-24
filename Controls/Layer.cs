@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace PhotoEditor
+namespace PhotoEditor.Controls
 {
     public class Layer : Canvas
     {
@@ -18,7 +18,7 @@ namespace PhotoEditor
         public SolidColorBrush layerColorBrush { get; set; }
         public ImageBrush layerImageBrush { get; set; }
         public BitmapFrame bmpFrame {get; set;}
-        public LayerWidget widget;
+        public LayerWidget Widget { get; set; }
 
         public Layer(string name, int index, double width, double height, double opacity, int col, int colspan, int row, StackPanel layerCanvas)
         {
@@ -31,8 +31,8 @@ namespace PhotoEditor
             if (colspan != 0) Grid.SetColumnSpan(this, colspan);
 
             LayerIndex = index;
-            widget = new LayerWidget(this, name, index);
-            layerCanvas.Children.Add(widget);
+            Widget = new LayerWidget(this, name, index);
+            layerCanvas.Children.Add(Widget);
         }
     }
 }
