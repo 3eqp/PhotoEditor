@@ -12,17 +12,17 @@ namespace PhotoEditor.Controls
     public class Layer : Canvas
     {
         public int LayerIndex { get; set; }
-        public bool isCurrentLayer { get; set; }
-
+        public string LayerName { get; set; }
 
         public SolidColorBrush layerColorBrush { get; set; }
         public ImageBrush layerImageBrush { get; set; }
-        public BitmapFrame bmpFrame {get; set;}
+        public BitmapFrame bmpFrame { get; set; }
         public LayerWidget Widget { get; set; }
 
         public Layer(string name, int index, double width, double height, double opacity, int col, int colspan, int row, StackPanel layerCanvas)
         {
-            Name = name;
+            LayerName = Name = name;
+            LayerIndex = index;
             Height = height;
             Width = width;
             Opacity = opacity;
@@ -31,7 +31,7 @@ namespace PhotoEditor.Controls
             if (colspan != 0) Grid.SetColumnSpan(this, colspan);
 
             LayerIndex = index;
-            Widget = new LayerWidget(this, name, index);
+            Widget = new LayerWidget(this, name);
             layerCanvas.Children.Add(Widget);
         }
     }

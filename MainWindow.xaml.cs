@@ -28,7 +28,7 @@ namespace PhotoEditor
         }
 
         // Layer -> Widget
-        public List<LayerWidget> LayersWidgets { get; set; }
+        public static List<LayerWidget> LayersWidgets { get; set; }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -37,7 +37,7 @@ namespace PhotoEditor
 
             newLayer(1);
 
-            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
+            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;
         }
         
         private void btnOpen_Click(object sender, RoutedEventArgs e)
@@ -111,17 +111,32 @@ namespace PhotoEditor
             }
         }
 
+        public static void RefreshLayersWidgets()
+        {
+            int count = 0;
+            foreach (LayerWidget widget in LayersWidgets)
+            {
+                if (GlobalState.currentLayerIndex != count)
+                    widget.Background = new SolidColorBrush(Colors.Transparent);
+                else widget.Background = new SolidColorBrush(Colors.Red);
+                count += 1;
+            }
+        }
+
         public void newLayer(double opacity)
         {
             double Width = GlobalState.layerWidth;
             double Height = GlobalState.layerHeight;
             string layerName = "NewLayer" + LayersWidgets.Count;
-            var layer = new Layer(layerName, GlobalState.currentLayerIndex, Width, Height, opacity, 1, 2, 1, layerCanvas);
+            var layer = new Layer(layerName, LayersWidgets.Count, Width, Height, opacity, 1, 2, 1, layerCanvas);
             mainCanvas.Children.Add(layer);
             LayersWidgets.Add(layer.Widget);
             GlobalState.currentLayerIndex = LayersWidgets.Count - 1;
-            
-            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
+            layer.Background = new SolidColorBrush(Colors.White);
+
+
+            RefreshLayersWidgets();
+            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;
         }
 
         private void btnNewLayer_Click(object sender, RoutedEventArgs e)
@@ -141,7 +156,10 @@ namespace PhotoEditor
                 GlobalState.currentLayerIndex = LayersWidgets.Count - 1;
                 layerCanvas.Children.Remove(widget);
             }
-            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
+
+
+            RefreshLayersWidgets();
+            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;
         }
 
         private void btnEffect_Click(object sender, RoutedEventArgs e)
@@ -151,6 +169,13 @@ namespace PhotoEditor
             ImageBrush brush = new ImageBrush();
             brush.ImageSource = layer.bmpFrame;
             layer.Background = brush;
+        }
+        
+
+        // TEST OUTPUT
+        static public void Text_2(Layer layer)
+        {
+            ((MainWindow)System.Windows.Application.Current.MainWindow).text_2.Text = "" + layer.LayerName + " " + GlobalState.currentLayerIndex;
         }
     }
 }

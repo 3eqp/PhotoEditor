@@ -8,11 +8,10 @@ namespace PhotoEditor.Controls
     public partial class LayerWidget : UserControl
     {
         public Layer ThisLayer;
-        public LayerWidget(Layer layer, string name, int index)
+
+        public LayerWidget(Layer layer, string name)
         {
-            Name = name;
             Height = 50;
-            //Background = new SolidColorBrush(Colors.Gray);
             ThisLayer = layer;
             DataContext = ThisLayer;
 
@@ -35,7 +34,16 @@ namespace PhotoEditor.Controls
                 WidgetText.Text = EditBox.Text;
                 EditBox.Visibility = Visibility.Hidden;
                 WidgetText.Visibility = Visibility.Visible;
+                ThisLayer.LayerName = WidgetText.Text;
             }
+        }
+
+        public void UserContol_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            GlobalState.currentLayerIndex = ThisLayer.LayerIndex;
+
+            MainWindow.RefreshLayersWidgets();
+            MainWindow.Text_2(ThisLayer);
         }
     }
 }

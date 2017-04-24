@@ -4,64 +4,56 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
-             d:DesignHeight="20" d:DesignWidth="120" Background="Gray">
-    <UserControl.Resources>
-        <Style
-            TargetType="Button"
-            x:Key="PaletteStyle">
-            <Setter Property="Width"
-                    Value="25" />
-            <Setter Property="Height"
-                    Value="25" />
-            <Setter Property="Cursor"
-                    Value="Hand" />
-        </Style>
-        <Style
-            TargetType="Button"
-            x:Key="ClearStyle">
-            <Setter Property="Background"
-                    Value="Transparent" />
-            <Setter Property="BorderThickness"
-                    Value="0" />
-        </Style>
-    </UserControl.Resources>
+             d:DesignHeight="50"
+             d:DesignWidth="240">
 
-    <Grid>
+    <Grid MouseLeftButtonDown="UserContol_MouseLeftButtonDown">
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Name="ContextRow" Height="0"
-                           x:FieldModifier="private" />
+            <RowDefinition Height="0"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="0"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20px" />
+            <ColumnDefinition Width="40px"/>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="20px" />
+            <ColumnDefinition Width="40px" />
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0"
-               Grid.Column="1"
-               VerticalAlignment="Center"
-               HorizontalAlignment="Left"
-               HorizontalContentAlignment="Left"
-               MouseDoubleClick="Label_MouseDoubleClick">
+        <Button Grid.Row="2"></Button>
+        <Button Grid.Column="2" Grid.Row="2"></Button>
+        <Label
+            Grid.Column="1"
+            Grid.Row="1"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Left"
+            HorizontalContentAlignment="Left"
+            MouseDoubleClick="Label_MouseDoubleClick" 
+            Height="50" 
+            Width="160" Grid.RowSpan="3">
             <TextBlock Name="WidgetText"
                        Text="{Binding Path=LayerName, Mode=TwoWay}"
-                       FontSize="8"
-                       HorizontalAlignment="Left"
+                       FontSize="12"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
                        Background="Transparent"
                        Visibility="Visible"
-                       x:FieldModifier="private" />
+                       Width="{Binding Path=Label}"
+                       x:FieldModifier="private" 
+                       Margin="0,11,0,8"/>
         </Label>
         <TextBox Name="EditBox"
-                 Grid.Row="0"
+                 Grid.Row="2"
                  Grid.Column="1"
                  VerticalAlignment="Center"
                  HorizontalAlignment="Left"
                  HorizontalContentAlignment="Left"
-                 FontSize="8"
+                 FontSize="12"
+                 TextAlignment="Center"
                  Background="Transparent"
-                 BorderThickness="0.5"
                  KeyUp="editBox_KeyUp"
                  Visibility="Hidden"
-                 x:FieldModifier="private" />
+                 x:FieldModifier="private" Margin="0,11"/>
     </Grid>
 </UserControl>

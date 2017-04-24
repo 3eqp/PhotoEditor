@@ -9,7 +9,8 @@
         Height="600"
         Width="1200" 
         WindowStartupLocation="CenterScreen"
-        Loaded="MainWindow_Loaded">
+        Loaded="MainWindow_Loaded"
+        Background="DarkGray">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25*"/>
@@ -18,15 +19,20 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="18*" />
-            <ColumnDefinition Width="352*" />
-            <ColumnDefinition Width="621*"/>
-            <ColumnDefinition Width="181*"/>
-            <ColumnDefinition Width="21*" />
+            <ColumnDefinition Width="361*" />
+            <ColumnDefinition Width="573*"/>
+            <ColumnDefinition Width="240*"/>
         </Grid.ColumnDefinitions>
         <Canvas x:Name="mainCanvas" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
-        <StackPanel x:Name="layerCanvas" Grid.Column="3" Grid.Row="1" Height="493" VerticalAlignment="Top" Background="LightSkyBlue">
-            
-        </StackPanel>
+        <ScrollViewer
+            Grid.Column="3" 
+            Grid.Row="1"
+            Background="Gainsboro"
+            ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <StackPanel
+            x:Name="layerCanvas"
+            VerticalAlignment="Top"/>
+        </ScrollViewer>
         <TextBox Margin="0,12,306,6" x:Name="text" Grid.Column="1" Grid.Row="2"/>
         <Button Height="33" HorizontalAlignment="Left" 
         Margin="12,0,0,6" Name="btnOpen" VerticalAlignment="Bottom" 
@@ -39,7 +45,7 @@
             Width="76" Grid.Column="2" Grid.Row="2" Content="NewLayer" Click="btnNewLayer_Click"/>
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="535,0,0,6" x:Name="btnDeleteLayer" VerticalAlignment="Bottom" 
-            Width="75" Grid.Column="2" Grid.Row="2" Content="DeleteLayer" Click="btnDeleteLayer_Click"/>
+            Width="75" Grid.Column="2" Grid.Row="2" Content="DeleteLayer" Click="btnDeleteLayer_Click" Grid.ColumnSpan="2"/>
         <TextBox Margin="51,12,10,6" x:Name="text_2" Grid.Column="1" Grid.Row="2"/>
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="251,0,0,6" x:Name="btnEffect" VerticalAlignment="Bottom" 
