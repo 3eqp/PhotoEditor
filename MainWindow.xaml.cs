@@ -116,6 +116,7 @@ namespace PhotoEditor
             int count = 0;
             foreach (LayerWidget widget in LayersWidgets)
             {
+                widget.widgetIndex = LayersWidgets.IndexOf(widget);
                 if (GlobalState.currentLayerIndex != count)
                     widget.Background = new SolidColorBrush(Colors.Transparent);
                 else widget.Background = new SolidColorBrush(Colors.Red);
@@ -128,7 +129,7 @@ namespace PhotoEditor
             double Width = GlobalState.layerWidth;
             double Height = GlobalState.layerHeight;
             string layerName = "NewLayer" + LayersWidgets.Count;
-            var layer = new Layer(layerName, LayersWidgets.Count, Width, Height, opacity, 1, 2, 1, layerCanvas);
+            var layer = new Layer(layerName, Width, Height, opacity, 1, 2, 1, layerCanvas);
             mainCanvas.Children.Add(layer);
             LayersWidgets.Add(layer.Widget);
             GlobalState.currentLayerIndex = LayersWidgets.Count - 1;
@@ -153,7 +154,7 @@ namespace PhotoEditor
                 LayerWidget widget = layer.Widget;
                 mainCanvas.Children.Remove(layer);
                 LayersWidgets.Remove(widget);
-                GlobalState.currentLayerIndex = LayersWidgets.Count - 1;
+                GlobalState.currentLayerIndex = index - 1;
                 layerCanvas.Children.Remove(widget);
             }
 
@@ -178,7 +179,7 @@ namespace PhotoEditor
         }
         private void Grayscale(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];
+            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.Grayscale(layer);
             ImageBrush brush = new ImageBrush();
             brush.ImageSource = layer.bmpFrame;
@@ -187,7 +188,7 @@ namespace PhotoEditor
 
         private void GaussianBlur(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];
+            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.GaussianBlur(layer, 4);
             ImageBrush brush = new ImageBrush();
             brush.ImageSource = layer.bmpFrame;
@@ -196,7 +197,7 @@ namespace PhotoEditor
 
         private void SobelFilter(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];
+            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.SobelFilter(layer);
             ImageBrush brush = new ImageBrush();
             brush.ImageSource = layer.bmpFrame;
@@ -205,7 +206,7 @@ namespace PhotoEditor
 
         private void SobelFilterGrayscale(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];
+            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.SobelFilter(layer, true);
             ImageBrush brush = new ImageBrush();
             brush.ImageSource = layer.bmpFrame;
@@ -214,7 +215,7 @@ namespace PhotoEditor
 
         private void Rotate90(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];
+            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.Rotate(layer, 90);
             ImageBrush brush = new ImageBrush();
             brush.ImageSource = layer.bmpFrame;

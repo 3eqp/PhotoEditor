@@ -8,12 +8,14 @@ namespace PhotoEditor.Controls
     public partial class LayerWidget : UserControl
     {
         public Layer ThisLayer;
+        public int widgetIndex { get; set; }
 
         public LayerWidget(Layer layer, string name)
         {
             Height = 50;
             ThisLayer = layer;
             DataContext = ThisLayer;
+            widgetIndex = MainWindow.LayersWidgets.IndexOf(this);
 
             InitializeComponent();
         }
@@ -40,7 +42,7 @@ namespace PhotoEditor.Controls
 
         public void UserContol_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            GlobalState.currentLayerIndex = ThisLayer.LayerIndex;
+            GlobalState.currentLayerIndex = widgetIndex;
 
             MainWindow.RefreshLayersWidgets();
             MainWindow.Text_2(ThisLayer);
