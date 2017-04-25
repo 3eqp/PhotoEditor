@@ -144,16 +144,15 @@ namespace PhotoEditor
         private void btnDeleteLayer_Click(object sender, RoutedEventArgs e)
         {
             int index = GlobalState.currentLayerIndex;
-            if (LayersWidgets.Count > 0)
+            if (LayersWidgets.Count > 0 && index <= LayersWidgets.Count)
             {
                 var layer = (Layer)mainCanvas.Children[index];
                 LayerWidget widget = layer.Widget;
                 mainCanvas.Children.Remove(layer);
                 LayersWidgets.Remove(widget);
-                GlobalState.currentLayerIndex = index - 1;
+                if (index > 0) GlobalState.currentLayerIndex = index - 1;
                 layerCanvas.Children.Remove(widget);
             }
-
 
             RefreshLayersWidgets();
             text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;

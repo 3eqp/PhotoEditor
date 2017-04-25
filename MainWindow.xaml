@@ -30,8 +30,8 @@
             Background="Gainsboro"
             ScrollViewer.VerticalScrollBarVisibility="Auto">
             <StackPanel
-            x:Name="layerCanvas"
-            VerticalAlignment="Top"/>
+                x:Name="layerCanvas"
+                VerticalAlignment="Top"/>
         </ScrollViewer>
         <TextBox Margin="0,12,306,6" x:Name="text" Grid.Column="1" Grid.Row="2"/>
         <Button Height="33" HorizontalAlignment="Left" 
