@@ -170,12 +170,55 @@ namespace PhotoEditor
             brush.ImageSource = layer.bmpFrame;
             layer.Background = brush;
         }
-        
-
         // TEST OUTPUT
         static public void Text_2(Layer layer)
         {
             ((MainWindow)System.Windows.Application.Current.MainWindow).text_2.Text = "" + layer.LayerName + " " + GlobalState.currentLayerIndex;
+
+        }
+        private void Grayscale(object sender, RoutedEventArgs e)
+        {
+            Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];
+            Effects.Grayscale(layer);
+            ImageBrush brush = new ImageBrush();
+            brush.ImageSource = layer.bmpFrame;
+            layer.Background = brush;
+        }
+
+        private void GaussianBlur(object sender, RoutedEventArgs e)
+        {
+            Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];
+            Effects.GaussianBlur(layer, 4);
+            ImageBrush brush = new ImageBrush();
+            brush.ImageSource = layer.bmpFrame;
+            layer.Background = brush;
+        }
+
+        private void SobelFilter(object sender, RoutedEventArgs e)
+        {
+            Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];
+            Effects.SobelFilter(layer);
+            ImageBrush brush = new ImageBrush();
+            brush.ImageSource = layer.bmpFrame;
+            layer.Background = brush;
+        }
+
+        private void SobelFilterGrayscale(object sender, RoutedEventArgs e)
+        {
+            Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];
+            Effects.SobelFilter(layer, true);
+            ImageBrush brush = new ImageBrush();
+            brush.ImageSource = layer.bmpFrame;
+            layer.Background = brush;
+        }
+
+        private void Rotate90(object sender, RoutedEventArgs e)
+        {
+            Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];
+            Effects.Rotate(layer, 90);
+            ImageBrush brush = new ImageBrush();
+            brush.ImageSource = layer.bmpFrame;
+            layer.Background = brush;
         }
     }
 }
