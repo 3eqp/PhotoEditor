@@ -1,32 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Microsoft.Win32;
-using System.Collections.ObjectModel;
-using System.IO;
+using PhotoEditor.Controls;
 
 namespace PhotoEditor
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+            LayersWidgets = new List<LayerWidget>();
         }
+
+        // Layer -> Widget
+        public static List<LayerWidget> LayersWidgets { get; set; }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -34,9 +36,8 @@ namespace PhotoEditor
             text_2.Text = "" + mainCanvas.ActualHeight + " " + mainCanvas.ActualWidth;
 
             newLayer(1);
-            LayerList.layersList[0].Background = new SolidColorBrush(Colors.White);
 
-            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
+            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;
         }
         
         private void btnOpen_Click(object sender, RoutedEventArgs e)
@@ -51,8 +52,8 @@ namespace PhotoEditor
             {
                 newLayer(1);
 
-                int index = LayerList.currentLayerIndex;
-                Layer layer = (Layer)LayerList.layersList[index];
+                int index = GlobalState.currentLayerIndex;
+                var layer = (Layer)mainCanvas.Children[index];
 
                 BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
                 ImageBrush brush = new ImageBrush();
@@ -60,7 +61,7 @@ namespace PhotoEditor
                 layer.layerImageBrush = brush;
                 layer.bmpFrame = bmpFrame;
 
-                LayerList.layersList[index].Background = brush;
+                layer.Background = brush;
             }
         }
 
@@ -110,17 +111,32 @@ namespace PhotoEditor
             }
         }
 
+        public static void RefreshLayersWidgets()
+        {
+            int count = 0;
+            foreach (LayerWidget widget in LayersWidgets)
+            {
+                if (GlobalState.currentLayerIndex != count)
+                    widget.Background = new SolidColorBrush(Colors.Transparent);
+                else widget.Background = new SolidColorBrush(Colors.Red);
+                count += 1;
+            }
+        }
+
         public void newLayer(double opacity)
         {
             double Width = GlobalState.layerWidth;
             double Height = GlobalState.layerHeight;
-            string layerName = "NewLayer" + LayerList.layersList.Count;
-            Layer layer = new Layer(layerName, LayerList.currentLayerIndex, Width, Height, opacity, 1, 2, 1, layerCanvas);
-            LayerList.layersList.Add(layer);
-            LayerList.currentLayerIndex = LayerList.layersList.Count - 1;
+            string layerName = "NewLayer" + LayersWidgets.Count;
+            var layer = new Layer(layerName, LayersWidgets.Count, Width, Height, opacity, 1, 2, 1, layerCanvas);
             mainCanvas.Children.Add(layer);
-            
-            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
+            LayersWidgets.Add(layer.Widget);
+            GlobalState.currentLayerIndex = LayersWidgets.Count - 1;
+            layer.Background = new SolidColorBrush(Colors.White);
+
+
+            RefreshLayersWidgets();
+            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;
         }
 
         private void btnNewLayer_Click(object sender, RoutedEventArgs e)
@@ -130,28 +146,36 @@ namespace PhotoEditor
 
         private void btnDeleteLayer_Click(object sender, RoutedEventArgs e)
         {
-            int index = LayerList.currentLayerIndex;
-            if (LayerList.layersList.Count > 0)
+            int index = GlobalState.currentLayerIndex;
+            if (LayersWidgets.Count > 0)
             {
-                Layer layer = (Layer)LayerList.layersList[index];
-                LayerWidget widget = layer.widget;
+                var layer = (Layer)mainCanvas.Children[index];
+                LayerWidget widget = layer.Widget;
                 mainCanvas.Children.Remove(layer);
-                LayerList.layersList.Remove(layer);
-                LayerList.currentLayerIndex = LayerList.layersList.Count - 1;
+                LayersWidgets.Remove(widget);
+                GlobalState.currentLayerIndex = LayersWidgets.Count - 1;
                 layerCanvas.Children.Remove(widget);
             }
-            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count;
+
+
+            RefreshLayersWidgets();
+            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;
         }
 
         private void btnEffect_Click(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];
+            var layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.Negative(layer);
             ImageBrush brush = new ImageBrush();
             brush.ImageSource = layer.bmpFrame;
             layer.Background = brush;
         }
+        // TEST OUTPUT
+        static public void Text_2(Layer layer)
+        {
+            ((MainWindow)System.Windows.Application.Current.MainWindow).text_2.Text = "" + layer.LayerName + " " + GlobalState.currentLayerIndex;
 
+        }
         private void Grayscale(object sender, RoutedEventArgs e)
         {
             Layer layer = (Layer)LayerList.layersList[LayerList.currentLayerIndex];

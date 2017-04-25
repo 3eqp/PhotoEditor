@@ -8,6 +8,7 @@ namespace PhotoEditor
 {
     class GlobalState
     {
+        public static int currentLayerIndex { get; set; }
         public static double layerWidth { get; set; }
         public static double layerHeight { get; set; }
 
