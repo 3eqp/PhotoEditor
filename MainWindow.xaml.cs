@@ -56,12 +56,8 @@ namespace PhotoEditor
                 var layer = (Layer)mainCanvas.Children[index];
 
                 BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
-                ImageBrush brush = new ImageBrush();
-                brush.ImageSource = bmpFrame;
-                layer.layerImageBrush = brush;
-                layer.bmpFrame = bmpFrame;
-
-                layer.Background = brush;
+                layer.layerBmpFrame = bmpFrame;
+                layer.refreshBrush();
             }
         }
 
@@ -167,59 +163,50 @@ namespace PhotoEditor
         {
             var layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.Negative(layer);
-            ImageBrush brush = new ImageBrush();
-            brush.ImageSource = layer.bmpFrame;
-            layer.Background = brush;
+            layer.refreshBrush();
         }
-        // TEST OUTPUT
-        static public void Text_2(Layer layer)
-        {
-            ((MainWindow)System.Windows.Application.Current.MainWindow).text_2.Text = "" + layer.LayerName + " " + GlobalState.currentLayerIndex;
 
-        }
         private void Grayscale(object sender, RoutedEventArgs e)
         {
             Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.Grayscale(layer);
-            ImageBrush brush = new ImageBrush();
-            brush.ImageSource = layer.bmpFrame;
-            layer.Background = brush;
+            layer.refreshBrush();
         }
 
         private void GaussianBlur(object sender, RoutedEventArgs e)
         {
             Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.GaussianBlur(layer, 4);
-            ImageBrush brush = new ImageBrush();
-            brush.ImageSource = layer.bmpFrame;
-            layer.Background = brush;
+            layer.refreshBrush();
         }
 
         private void SobelFilter(object sender, RoutedEventArgs e)
         {
             Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.SobelFilter(layer);
-            ImageBrush brush = new ImageBrush();
-            brush.ImageSource = layer.bmpFrame;
-            layer.Background = brush;
+            layer.refreshBrush();
         }
 
         private void SobelFilterGrayscale(object sender, RoutedEventArgs e)
         {
             Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.SobelFilter(layer, true);
-            ImageBrush brush = new ImageBrush();
-            brush.ImageSource = layer.bmpFrame;
-            layer.Background = brush;
+            layer.refreshBrush();
         }
 
         private void Rotate90(object sender, RoutedEventArgs e)
         {
             Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
             Effects.Rotate(layer, 90);
-            ImageBrush brush = new ImageBrush();
-            brush.ImageSource = layer.bmpFrame;
-            layer.Background = brush;
+            layer.refreshBrush();
+        }
+
+
+        // TEST OUTPUT
+        static public void Text_2(Layer layer)
+        {
+            ((MainWindow)System.Windows.Application.Current.MainWindow).text_2.Text = "" + layer.LayerName + " " + GlobalState.currentLayerIndex;
+
         }
     }
 }

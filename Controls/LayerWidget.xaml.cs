@@ -47,5 +47,10 @@ namespace PhotoEditor.Controls
             MainWindow.RefreshLayersWidgets();
             MainWindow.Text_2(ThisLayer);
         }
+
+        public void refreshPreviewCanvas()
+        {
+            previewCanvas.Background = ThisLayer.layerImageBrush;
+        }
     }
 }

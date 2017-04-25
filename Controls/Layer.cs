@@ -15,7 +15,7 @@ namespace PhotoEditor.Controls
 
         public SolidColorBrush layerColorBrush { get; set; }
         public ImageBrush layerImageBrush { get; set; }
-        public BitmapFrame bmpFrame { get; set; }
+        public BitmapFrame layerBmpFrame { get; set; }
         public LayerWidget Widget { get; set; }
 
         public Layer(string name, double width, double height, double opacity, int col, int colspan, int row, StackPanel layerCanvas)
@@ -30,6 +30,16 @@ namespace PhotoEditor.Controls
 
             Widget = new LayerWidget(this, name);
             layerCanvas.Children.Add(Widget);
+        }
+
+        public void refreshBrush()
+        {
+            ImageBrush brush = new ImageBrush();
+            brush.ImageSource = layerBmpFrame;
+            layerImageBrush = brush;
+
+            Widget.refreshPreviewCanvas();
+            Background = brush;
         }
     }
 }
