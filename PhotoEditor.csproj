@@ -65,6 +65,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Effects.cs" />
+    <Compile Include="GaussianBlur.cs" />
     <Compile Include="GlobalState.cs" />
     <Compile Include="Layer.cs" />
     <Compile Include="LayerList.cs" />
