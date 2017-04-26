@@ -41,7 +41,18 @@ namespace PhotoEditor
 
             text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;
         }
-        
+        private void btnSavePng(object sender, RoutedEventArgs e)
+        {
+            btnSave_Click(new PngBitmapEncoder(), ".png");
+        }
+        private void SaveToJpg(object sender, RoutedEventArgs e)
+        {
+            btnSave_Click(new PngBitmapEncoder(), ".jpg");
+        }
+        private void SaveToBmp(object sender, RoutedEventArgs e)
+        {
+            btnSave_Click(new PngBitmapEncoder(), ".bmp");
+        }
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog op = new OpenFileDialog();
@@ -80,10 +91,10 @@ namespace PhotoEditor
                 );
             rtb.Render(canvas);
 
-            SaveAsPng(rtb, filename);
+            SaveAs(rtb, filename);
         }
 
-        private static void SaveAsPng(RenderTargetBitmap bmp, string filename)
+        private static void SaveAs(RenderTargetBitmap bmp, string filename)
         {
             var enc = new PngBitmapEncoder();
             enc.Frames.Add(BitmapFrame.Create(bmp));
@@ -93,15 +104,23 @@ namespace PhotoEditor
                 enc.Save(stm);
             }
         }
+       
 
-        private void btnSave_Click(object sender, RoutedEventArgs e)
+        private void btnSave_Click(BitmapEncoder encoder, string format)
         {
-            var saveDlg = new SaveFileDialog
-            {
-                FileName = "Masterpiece",
-                DefaultExt = ".png",
-                Filter = "PNG (.png)|*.png"
-            };
+            var saveDlg = new SaveFileDialog();
+            switch (format) {
+                case ".jpg":
+                    saveDlg.Filter = "JPG|*.jpg";
+                    break;
+                case ".png":
+                    saveDlg.Filter = "PNG|*.png";
+                    break;
+                case ".bmp":
+                    saveDlg.Filter = "BMP|*.bmp";
+                    break;
+            }
+            
 
             if (saveDlg.ShowDialog() == true)
             {
@@ -221,5 +240,8 @@ namespace PhotoEditor
             ((MainWindow)System.Windows.Application.Current.MainWindow).text_2.Text = "" + layer.LayerName + " " + GlobalState.currentLayerIndex;
 
         }
+
+       
+
     }
 }

@@ -23,7 +23,7 @@
             <ColumnDefinition Width="573*"/>
             <ColumnDefinition Width="240*"/>
         </Grid.ColumnDefinitions>
-        <Canvas x:Name="mainCanvas" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
+        <Canvas x:Name="mainCanvas"  Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
         <ScrollViewer
             Grid.Column="3" 
             Grid.Row="1"
@@ -39,7 +39,7 @@
         Width="74" Grid.Column="2" Grid.Row="2" Click="btnOpen_Click">Open</Button>
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="91.4,0,0,6.2" x:Name="btnSave" VerticalAlignment="Bottom" 
-            Width="74" Grid.Column="2" Grid.Row="2" Content="Save" Click="btnSave_Click"/>
+            Width="74" Grid.Column="2" Grid.Row="2" Content="Save" Click="btnSavePng"/>
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="170.4,0,0,6.2" x:Name="btnNewLayer" VerticalAlignment="Bottom" 
             Width="76" Grid.Column="2" Grid.Row="2" Content="NewLayer" Click="btnNewLayer_Click"/>
@@ -59,6 +59,12 @@
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="251,0,0,50" x:Name="btnSobelFilter" VerticalAlignment="Bottom" 
             Width="76" Grid.Column="2" Grid.Row="2" Content="Собеля" Click="SobelFilter"/>
+        <Button Height="33" HorizontalAlignment="Left" 
+            Margin="151,0,0,50" x:Name="SaveToJpg1" VerticalAlignment="Bottom" 
+            Width="76" Grid.Column="2" Grid.Row="2" Content="Save Jpg" Click="SaveToJpg"/>
+        <Button Height="33" HorizontalAlignment="Left" 
+            Margin="50,0,0,50" x:Name="SaveToBmp1" VerticalAlignment="Bottom" 
+            Width="76" Grid.Column="2" Grid.Row="2" Content="Save BMP" Click="SaveToBmp"/>
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="350,0,0,50" x:Name="btnSobelFilterGrayscale" VerticalAlignment="Bottom" 
             Width="76" Grid.Column="2" Grid.Row="2" Content="Собеля ЧБ" Click="SobelFilterGrayscale"/>
