@@ -159,6 +159,10 @@ namespace PhotoEditor
             RefreshLayersWidgets();
             text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;
         }
+        
+
+        // EFFECTS
+
 
         private void btnEffect_Click(object sender, RoutedEventArgs e)
         {
@@ -211,6 +215,45 @@ namespace PhotoEditor
                 Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
                 Effects.Rotate(layer, x);
                 layer.refreshBrush();
+            }
+        }
+
+
+        // DRAWING
+
+
+        Point currentPoint = new Point();
+        Point nextPoint = new Point();
+
+        private void mainCanvas_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+                currentPoint = e.GetPosition(this);
+        }
+
+        private void mainCanvas_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Line line = new Line();
+                currentPoint = TranslatePoint(currentPoint, mainCanvas);
+
+                line.Stroke = SystemColors.WindowFrameBrush;
+                line.X1 = currentPoint.X;
+                line.Y1 = currentPoint.Y;
+
+                nextPoint.X = e.GetPosition(this).X;
+                nextPoint.Y = e.GetPosition(this).Y;
+                nextPoint = TranslatePoint(nextPoint, mainCanvas);
+
+                line.X2 = nextPoint.X;
+                line.Y2 = nextPoint.Y;
+
+                currentPoint = e.GetPosition(this);
+
+                int index = GlobalState.currentLayerIndex;
+                var layer = (Layer)mainCanvas.Children[index];
+                layer.Children.Add(line);
             }
         }
 
