@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using System.Collections.Generic;
+using PhotoEditor;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -16,6 +17,7 @@ using System.Windows.Documents;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PhotoEditor.Controls;
+
 
 namespace PhotoEditor
 {
@@ -174,9 +176,14 @@ namespace PhotoEditor
 
         private void GaussianBlur(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
-            Effects.GaussianBlur(layer, 4);
-            layer.refreshBrush();
+            Turn BoxWindow = new Turn();
+            if (BoxWindow.ShowDialog() == true)
+            {
+                int x = int.Parse(BoxWindow.Turns);
+                Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+                Effects.GaussianBlur(layer, x);
+                layer.refreshBrush();
+            }
         }
 
         private void SobelFilter(object sender, RoutedEventArgs e)
@@ -195,9 +202,16 @@ namespace PhotoEditor
 
         private void Rotate90(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
-            Effects.Rotate(layer, 90);
-            layer.refreshBrush();
+            
+            Turn BoxWindow = new Turn();
+            if (BoxWindow.ShowDialog() == true)
+            {
+                
+                double x = double.Parse(BoxWindow.Turns);
+                Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+                Effects.Rotate(layer, x);
+                layer.refreshBrush();
+            }
         }
 
 
