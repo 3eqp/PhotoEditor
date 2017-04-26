@@ -45,7 +45,7 @@
         Width="74" Grid.Column="2" Grid.Row="2" Click="btnOpen_Click">Open</Button>
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="91.4,0,0,6.2" x:Name="btnSave" VerticalAlignment="Bottom" 
-            Width="74" Grid.Column="2" Grid.Row="2" Content="Save" Click="btnSave_Click"/>
+            Width="74" Grid.Column="2" Grid.Row="2" Content="png" Click="btnSavePng"/>
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="170.4,0,0,6.2" x:Name="btnNewLayer" VerticalAlignment="Bottom" 
             Width="76" Grid.Column="2" Grid.Row="2" Content="NewLayer" Click="btnNewLayer_Click"/>
@@ -65,6 +65,12 @@
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="251,0,0,50" x:Name="btnSobelFilter" VerticalAlignment="Bottom" 
             Width="76" Grid.Column="2" Grid.Row="2" Content="Собеля" Click="SobelFilter"/>
+        <Button Height="33" HorizontalAlignment="Left" 
+            Margin="150,0,0,50" x:Name="savetojpg" VerticalAlignment="Bottom" 
+            Width="76" Grid.Column="2" Grid.Row="2" Content="jpg" Click="SaveToJpg"/>
+        <Button Height="33" HorizontalAlignment="Left" 
+            Margin="50,0,0,50" x:Name="savetobmp" VerticalAlignment="Bottom" 
+            Width="76" Grid.Column="2" Grid.Row="2" Content="bmp" Click="SaveToBmp"/>
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="350,0,0,50" x:Name="btnSobelFilterGrayscale" VerticalAlignment="Bottom" 
             Width="76" Grid.Column="2" Grid.Row="2" Content="Собеля ЧБ" Click="SobelFilterGrayscale"/>
