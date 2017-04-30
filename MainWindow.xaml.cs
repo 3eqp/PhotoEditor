@@ -26,11 +26,11 @@ namespace PhotoEditor
         public MainWindow()
         {
             InitializeComponent();
-            LayersWidgets = new List<LayerWidget>();
+            LayersWidgets = new ObservableCollection<LayerWidget>();
         }
 
         // Layer -> Widget
-        public static List<LayerWidget> LayersWidgets { get; set; }
+        public static ObservableCollection<LayerWidget> LayersWidgets { get; set; }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -41,18 +41,22 @@ namespace PhotoEditor
 
             text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;
         }
+
         private void btnSavePng(object sender, RoutedEventArgs e)
         {
             btnSave_Click(new PngBitmapEncoder(), ".png");
         }
+
         private void SaveToJpg(object sender, RoutedEventArgs e)
         {
             btnSave_Click(new PngBitmapEncoder(), ".jpg");
         }
+
         private void SaveToBmp(object sender, RoutedEventArgs e)
         {
             btnSave_Click(new PngBitmapEncoder(), ".bmp");
         }
+
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog op = new OpenFileDialog();
@@ -105,7 +109,6 @@ namespace PhotoEditor
             }
         }
        
-
         private void btnSave_Click(BitmapEncoder encoder, string format)
         {
             var saveDlg = new SaveFileDialog();
@@ -121,7 +124,6 @@ namespace PhotoEditor
                     break;
             }
             
-
             if (saveDlg.ShowDialog() == true)
             {
                 SaveCanvas(mainCanvas, 96, saveDlg.FileName);
