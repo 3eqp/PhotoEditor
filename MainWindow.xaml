@@ -28,7 +28,8 @@
             Grid.Column="1" 
             Grid.Row="1" 
             Grid.ColumnSpan="2"
-            MouseDown="mainCanvas_MouseDown"
+            MouseLeftButtonDown="mainCanvas_MouseLeftButtonDown"
+            MouseLeftButtonUp="mainCanvas_MouseLeftButtonUp"
             MouseMove="mainCanvas_MouseMove" Margin="10,0,0,0"/>
         <ScrollViewer
             Grid.Column="3" 
@@ -36,6 +37,7 @@
             Background="Gainsboro"
             ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 MouseLeftButtonDown="widgetCanvas_MouseDown"
                 x:Name="widgetsCanvas"
                 VerticalAlignment="Top">

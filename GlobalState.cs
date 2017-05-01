@@ -11,6 +11,7 @@ namespace PhotoEditor
         public static int currentLayerIndex { get; set; }
         public static double layerWidth { get; set; }
         public static double layerHeight { get; set; }
+        public static bool MousePressed { get; set; }
 
         public static void setLayerSize(double width, double height)
         {

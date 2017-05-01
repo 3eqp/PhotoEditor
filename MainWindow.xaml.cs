@@ -30,13 +30,6 @@ namespace PhotoEditor
             widgetsCanvas.ItemsSource = LayersWidgets;
         }
 
-        void widgetCanvas_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            GlobalState.currentLayerIndex = widgetsCanvas.SelectedIndex;
-
-            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
-        }
-
         // Layer -> Widget
         public static ObservableCollection<LayerWidget> LayersWidgets { get; set; }
 
@@ -75,16 +68,15 @@ namespace PhotoEditor
 
             if (op.ShowDialog() == true)
             {
-                int index = GlobalState.currentLayerIndex;
-                var layer = (Layer)mainCanvas.Children[index];
                 BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
                 int x = bmpFrame.PixelHeight;
                 int y = bmpFrame.PixelWidth;
                 newLayer(1,x,y);
 
-                
+                int index = GlobalState.currentLayerIndex;
+                var layer = (Layer)mainCanvas.Children[index];
 
-                
+
                 layer.layerBmpFrame = bmpFrame;
                 layer.refreshBrush();
             }
@@ -155,6 +147,13 @@ namespace PhotoEditor
             }
         }
 
+        void widgetCanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            GlobalState.currentLayerIndex = widgetsCanvas.SelectedIndex;
+
+            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
+        }
+
         public void newLayer(double opacity, int PixelHeight, int PixelWidth)
         {
             double Width = GlobalState.layerWidth;
@@ -195,6 +194,7 @@ namespace PhotoEditor
                 var layer = (Layer)mainCanvas.Children[index];
                 LayerWidget widget = layer.Widget;
 
+                layer.Children.Clear();
                 mainCanvas.Children.Remove(layer);
                 LayersWidgets.Remove(widget);
                 if (index > 0) GlobalState.currentLayerIndex = index - 1;
@@ -268,16 +268,31 @@ namespace PhotoEditor
         Point currentPoint = new Point();
         Point nextPoint = new Point();
 
-        private void mainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        private void mainCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                GlobalState.MousePressed = true;
                 currentPoint = e.GetPosition(this);
+                text_2.Text = "pressed leftButtonDown";
+            }
+        }
+        
+        private void mainCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Released)
+            {
+                GlobalState.MousePressed = false;
+                text_2.Text = "released";
+            }
         }
 
         private void mainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (GlobalState.MousePressed == true)
             {
+                int index = GlobalState.currentLayerIndex;
+                var layer = (Layer)mainCanvas.Children[index];
                 Line line = new Line();
                 currentPoint = TranslatePoint(currentPoint, mainCanvas);
 
@@ -293,23 +308,15 @@ namespace PhotoEditor
                 line.Y2 = nextPoint.Y;
 
                 currentPoint = e.GetPosition(this);
-
-                int index = GlobalState.currentLayerIndex;
-                var layer = (Layer)mainCanvas.Children[index];
+                
                 layer.Children.Add(line);
             }
         }
-
 
         // TEST OUTPUT
         static public void Text_2(Layer layer)
         {
             ((MainWindow)System.Windows.Application.Current.MainWindow).text_2.Text = "" + layer.LayerName + " " + GlobalState.currentLayerIndex;
-
-        }
-
-        private void widgetsCanvas_IsMouseCapturedChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
 
         }
     }
