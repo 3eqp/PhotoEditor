@@ -35,9 +35,11 @@
             Grid.Row="1"
             Background="Gainsboro"
             ScrollViewer.VerticalScrollBarVisibility="Auto">
-            <StackPanel
-                x:Name="layerCanvas"
-                VerticalAlignment="Top"/>
+            <ListBox
+                MouseLeftButtonDown="widgetCanvas_MouseDown"
+                x:Name="widgetsCanvas"
+                VerticalAlignment="Top">
+            </ListBox>
         </ScrollViewer>
         
         

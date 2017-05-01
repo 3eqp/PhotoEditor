@@ -18,7 +18,7 @@ namespace PhotoEditor.Controls
         public BitmapFrame layerBmpFrame { get; set; }
         public LayerWidget Widget { get; set; }
 
-        public Layer(string name, double width, double height, double opacity, int col, int colspan, int row, StackPanel layerCanvas)
+        public Layer(string name, double width, double height, double opacity, int col, int colspan, int row)
         {
             LayerName = Name = name;
             Height = height;
@@ -29,7 +29,6 @@ namespace PhotoEditor.Controls
             if (colspan != 0) Grid.SetColumnSpan(this, colspan);
 
             Widget = new LayerWidget(this, name);
-            layerCanvas.Children.Add(Widget);
         }
 
         public void refreshBrush()

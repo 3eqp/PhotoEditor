@@ -6,8 +6,8 @@
              mc:Ignorable="d"
              d:DesignHeight="50"
              d:DesignWidth="240">
-
-    <Grid MouseLeftButtonDown="UserContol_MouseLeftButtonDown">
+    <!--MouseLeftButtonDown="UserContol_MouseLeftButtonDown"-->
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0"/>
             <RowDefinition Height="5"/>

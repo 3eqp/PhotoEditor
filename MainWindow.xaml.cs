@@ -27,6 +27,14 @@ namespace PhotoEditor
         {
             InitializeComponent();
             LayersWidgets = new ObservableCollection<LayerWidget>();
+            widgetsCanvas.ItemsSource = LayersWidgets;
+        }
+
+        void widgetCanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            GlobalState.currentLayerIndex = widgetsCanvas.SelectedIndex;
+
+            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
         // Layer -> Widget
@@ -39,7 +47,7 @@ namespace PhotoEditor
 
             newLayer(1);
 
-            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;
+            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
         private void btnSavePng(object sender, RoutedEventArgs e)
@@ -148,15 +156,26 @@ namespace PhotoEditor
             double Width = GlobalState.layerWidth;
             double Height = GlobalState.layerHeight;
             string layerName = "NewLayer" + LayersWidgets.Count;
-            var layer = new Layer(layerName, Width, Height, opacity, 1, 2, 1, layerCanvas);
+            var layer = new Layer(layerName, Width, Height, opacity, 1, 2, 1);
+
             mainCanvas.Children.Add(layer);
             LayersWidgets.Add(layer.Widget);
+
+            // Перемещение элемента в самый верх списка, для наглядности отображения верхних слоев пользователю
+            LayerWidget last = LayersWidgets.Last();
+            for (int i = LayersWidgets.Count - 1; i > 0; i--)
+            {
+                LayersWidgets[i] = LayersWidgets[i - 1];
+            }
+            LayersWidgets[0] = last;
+
+            if (widgetsCanvas.Items.Count > 0)
+                widgetsCanvas.SelectedIndex = 0;
+
             GlobalState.currentLayerIndex = LayersWidgets.Count - 1;
             layer.Background = new SolidColorBrush(Colors.White);
-
-
-            RefreshLayersWidgets();
-            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;
+            
+            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
         private void btnNewLayer_Click(object sender, RoutedEventArgs e)
@@ -171,16 +190,15 @@ namespace PhotoEditor
             {
                 var layer = (Layer)mainCanvas.Children[index];
                 LayerWidget widget = layer.Widget;
+
                 mainCanvas.Children.Remove(layer);
                 LayersWidgets.Remove(widget);
                 if (index > 0) GlobalState.currentLayerIndex = index - 1;
-                layerCanvas.Children.Remove(widget);
             }
 
-            RefreshLayersWidgets();
-            text.Text = "" + mainCanvas.Children.Count + layerCanvas.Children.Count + GlobalState.currentLayerIndex;
+            widgetsCanvas.SelectedIndex = GlobalState.currentLayerIndex;
+            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
-        
 
         // EFFECTS
 
@@ -246,13 +264,13 @@ namespace PhotoEditor
         Point currentPoint = new Point();
         Point nextPoint = new Point();
 
-        private void mainCanvas_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void mainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
                 currentPoint = e.GetPosition(this);
         }
 
-        private void mainCanvas_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void mainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
@@ -286,7 +304,9 @@ namespace PhotoEditor
 
         }
 
-       
+        private void widgetsCanvas_IsMouseCapturedChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
 
+        }
     }
 }

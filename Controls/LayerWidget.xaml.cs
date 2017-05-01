@@ -40,14 +40,6 @@ namespace PhotoEditor.Controls
             }
         }
 
-        public void UserContol_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            GlobalState.currentLayerIndex = widgetIndex;
-
-            MainWindow.RefreshLayersWidgets();
-            MainWindow.Text_2(ThisLayer);
-        }
-
         public void refreshPreviewCanvas()
         {
             previewCanvas.Background = ThisLayer.layerImageBrush;
