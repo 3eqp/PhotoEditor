@@ -45,7 +45,7 @@ namespace PhotoEditor
             GlobalState.setLayerSize(mainCanvas.ActualWidth, mainCanvas.ActualHeight);
             text_2.Text = "" + mainCanvas.ActualHeight + " " + mainCanvas.ActualWidth;
 
-            newLayer(1);
+            newLayer(1,350,350);
 
             text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
@@ -75,12 +75,16 @@ namespace PhotoEditor
 
             if (op.ShowDialog() == true)
             {
-                newLayer(1);
-
                 int index = GlobalState.currentLayerIndex;
                 var layer = (Layer)mainCanvas.Children[index];
-
                 BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
+                int x = bmpFrame.PixelHeight;
+                int y = bmpFrame.PixelWidth;
+                newLayer(1,x,y);
+
+                
+
+                
                 layer.layerBmpFrame = bmpFrame;
                 layer.refreshBrush();
             }
@@ -151,12 +155,12 @@ namespace PhotoEditor
             }
         }
 
-        public void newLayer(double opacity)
+        public void newLayer(double opacity, int PixelHeight, int PixelWidth)
         {
             double Width = GlobalState.layerWidth;
             double Height = GlobalState.layerHeight;
             string layerName = "NewLayer" + LayersWidgets.Count;
-            var layer = new Layer(layerName, Width, Height, opacity, 1, 2, 1);
+            var layer = new Layer(layerName, PixelWidth, PixelHeight, opacity, 1, 2, 1);
 
             mainCanvas.Children.Add(layer);
             LayersWidgets.Add(layer.Widget);
@@ -180,7 +184,7 @@ namespace PhotoEditor
 
         private void btnNewLayer_Click(object sender, RoutedEventArgs e)
         {
-            newLayer(1);
+            newLayer(1,350,350);
         }
 
         private void btnDeleteLayer_Click(object sender, RoutedEventArgs e)
