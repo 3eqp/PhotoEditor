@@ -40,7 +40,7 @@ namespace PhotoEditor
 
             newLayer(1,350,350);
 
-            text.Text = "" + GlobalState.LayersCount + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
+            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
         private void btnSavePng(object sender, RoutedEventArgs e)
@@ -175,10 +175,10 @@ namespace PhotoEditor
             }
             LayersWidgets[0] = last;
 
-
             if (widgetsCanvas.Items.Count > 0)
                 widgetsCanvas.SelectedIndex = 0;
-            
+
+            GlobalState.LayersCount = mainCanvas.Children.Count;
             GlobalState.currentLayerIndex = widgetsCanvas.SelectedIndex;
             layer.Background = new SolidColorBrush(Colors.White);
             
@@ -204,12 +204,13 @@ namespace PhotoEditor
                 LayersWidgets.Remove(widget);
                 widgetsCanvas.Items.Refresh();
 
-                widgetsCanvas.SelectedIndex = GlobalState.currentLayerIndex = index - 1;
+                if (index != 0) widgetsCanvas.SelectedIndex = GlobalState.currentLayerIndex = index - 1;
+                else widgetsCanvas.SelectedIndex = GlobalState.currentLayerIndex = 0;
             }
             GlobalState.LayersCount = mainCanvas.Children.Count;
             UpdateLayersZIndex();
 
-            text.Text = "" + GlobalState.LayersCount + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
+            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
         // EFFECTS
@@ -300,7 +301,8 @@ namespace PhotoEditor
             if (GlobalState.MousePressed == true)
             {
                 int index = GlobalState.currentLayerIndex;
-                var layer = (Layer)mainCanvas.Children[index];
+                int count = mainCanvas.Children.Count - 1;
+                var layer = (Layer)mainCanvas.Children[count - index];
                 Line line = new Line();
                 currentPoint = TranslatePoint(currentPoint, mainCanvas);
 

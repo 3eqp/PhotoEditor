@@ -14,8 +14,7 @@ namespace PhotoEditor
         public static double layerHeight { get; set; }
 
         public static int currentLayerIndex { get; set; }
-
-        // Используется для изменения порядка слоев 
+        
         public static int LayersCount { get; set; }
 
         public static void setLayerSize(double width, double height)
