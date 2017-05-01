@@ -30,7 +30,6 @@ namespace PhotoEditor
             widgetsCanvas.DataContext = this;
         }
 
-        // Layer -> Widget
         public static ObservableCollection<LayerWidget> LayersWidgets { get; set; }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -43,7 +42,9 @@ namespace PhotoEditor
             text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
+
         // SAVE/OPEN
+
 
         private void btnSavePng(object sender, RoutedEventArgs e)
         {
@@ -136,7 +137,9 @@ namespace PhotoEditor
             }
         }
 
+
         // NEW/DELETE
+
 
         public void UpdateLayersZIndex()
         {
@@ -157,6 +160,8 @@ namespace PhotoEditor
             mainCanvas.Children.Add(layer);
             LayersWidgets.Add(layer.Widget);
 
+            layer.Background = new SolidColorBrush(Colors.White);
+
             // Перемещение элемента в самый верх списка, для наглядности отображения верхних слоев пользователю
             LayerWidget last = LayersWidgets.Last();
             for (int i = LayersWidgets.Count - 1; i > 0; i--)
@@ -171,7 +176,6 @@ namespace PhotoEditor
 
             GlobalState.LayersCount = mainCanvas.Children.Count;
             GlobalState.currentLayerIndex = widgetsCanvas.SelectedIndex;
-            layer.Background = new SolidColorBrush(Colors.White);
             
             text.Text = ""  + widgetsCanvas.Items.Count + LayersWidgets.IndexOf(layer.Widget) + GlobalState.currentLayerIndex;
         }
@@ -203,7 +207,9 @@ namespace PhotoEditor
             text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
-        // SWAP LAYERS
+
+        // LAYERS SWAP/OPACITY
+
 
         private void SwapLayers(int curIndx, int nextIndx)
         {
@@ -228,6 +234,13 @@ namespace PhotoEditor
         {
             if (GlobalState.currentLayerIndex < widgetsCanvas.Items.Count - 1)
                SwapLayers(GlobalState.currentLayerIndex, GlobalState.currentLayerIndex + 1);
+        }
+        
+        private void sliderOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int index = GlobalState.currentLayerIndex;
+            var layer = LayersWidgets[index].ThisLayer;
+            layer.Opacity = sliderOpacity.Value / 100;
         }
 
 
@@ -340,10 +353,13 @@ namespace PhotoEditor
             }
         }
 
+
         // TEST OUTPUT
+
+
         static public void Text_2(Layer layer)
         {
-            ((MainWindow)System.Windows.Application.Current.MainWindow).text_2.Text = "ln "
+            ((MainWindow)Application.Current.MainWindow).text_2.Text = "ln "
                 + layer.LayerName
                 + " zi "
                 + Panel.GetZIndex(layer)
@@ -353,6 +369,10 @@ namespace PhotoEditor
                 + GlobalState.currentLayerIndex;
 
         }
+
+
+        // LISTBOX KEY SELECT RESTRICTION
+
 
         private void listBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
