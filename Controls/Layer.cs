@@ -27,6 +27,7 @@ namespace PhotoEditor.Controls
             if (col != 0) Grid.SetColumn(this, col);
             if (row != 0) Grid.SetRow(this, row);
             if (colspan != 0) Grid.SetColumnSpan(this, colspan);
+            SetZIndex(this, GlobalState.LayersCount++);
 
             Widget = new LayerWidget(this, name);
         }

@@ -40,7 +40,7 @@ namespace PhotoEditor
 
             newLayer(1,350,350);
 
-            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
+            text.Text = "" + GlobalState.LayersCount + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
         private void btnSavePng(object sender, RoutedEventArgs e)
@@ -134,15 +134,25 @@ namespace PhotoEditor
             }
         }
 
-        public static void RefreshLayersWidgets()
+        public void UpdateLayersZIndex()
         {
-            int count = 0;
-            foreach (LayerWidget widget in LayersWidgets)
+            if (mainCanvas.Children.Count > 0)
             {
-                if (GlobalState.currentLayerIndex != count)
-                    widget.Background = new SolidColorBrush(Colors.Transparent);
-                else widget.Background = new SolidColorBrush(Colors.Red);
-                count += 1;
+                var first = (Layer)mainCanvas.Children[0];
+                Panel.SetZIndex(first, 0);
+                int count = mainCanvas.Children.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    var layer = (Layer)mainCanvas.Children[i];
+                    int layerInd = Panel.GetZIndex(layer);
+                    if (layerInd != i)
+                        for (int j = count - mainCanvas.Children.IndexOf(layer); j >= 0; j--)
+                        {
+                            int layerPrevInd = Panel.GetZIndex(mainCanvas.Children[j]);
+                            if (layerInd != layerPrevInd)
+                                Panel.SetZIndex(layer, layerInd--);
+                        }
+                }
             }
         }
 
@@ -156,21 +166,23 @@ namespace PhotoEditor
             mainCanvas.Children.Add(layer);
             LayersWidgets.Add(layer.Widget);
 
-            /* Перемещение элемента в самый верх списка, для наглядности отображения верхних слоев пользователю
+            // Перемещение элемента в самый верх списка, для наглядности отображения верхних слоев пользователю
             LayerWidget last = LayersWidgets.Last();
             for (int i = LayersWidgets.Count - 1; i > 0; i--)
             {
                 LayersWidgets[i] = LayersWidgets[i - 1];
+             
             }
             LayersWidgets[0] = last;
-            */
+
+
             if (widgetsCanvas.Items.Count > 0)
                 widgetsCanvas.SelectedIndex = 0;
             
             GlobalState.currentLayerIndex = widgetsCanvas.SelectedIndex;
             layer.Background = new SolidColorBrush(Colors.White);
             
-            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + LayersWidgets.IndexOf(layer.Widget) + GlobalState.currentLayerIndex;
+            text.Text = ""  + widgetsCanvas.Items.Count + LayersWidgets.IndexOf(layer.Widget) + GlobalState.currentLayerIndex;
         }
 
         private void btnNewLayer_Click(object sender, RoutedEventArgs e)
@@ -181,9 +193,10 @@ namespace PhotoEditor
         private void btnDeleteLayer_Click(object sender, RoutedEventArgs e)
         {
             int index = GlobalState.currentLayerIndex;
+            int count = mainCanvas.Children.Count - 1;
             if (LayersWidgets.Count > 0 && index <= LayersWidgets.Count)
             {
-                var layer = (Layer)mainCanvas.Children[index];
+                var layer = (Layer)mainCanvas.Children[count - index];
                 LayerWidget widget = layer.Widget;
 
                 layer.Children.Clear();
@@ -191,10 +204,12 @@ namespace PhotoEditor
                 LayersWidgets.Remove(widget);
                 widgetsCanvas.Items.Refresh();
 
-                GlobalState.currentLayerIndex = 0;
-                widgetsCanvas.SelectedIndex = 0;
+                widgetsCanvas.SelectedIndex = GlobalState.currentLayerIndex = index - 1;
             }
-            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
+            GlobalState.LayersCount = mainCanvas.Children.Count;
+            UpdateLayersZIndex();
+
+            text.Text = "" + GlobalState.LayersCount + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
         // EFFECTS
@@ -311,6 +326,8 @@ namespace PhotoEditor
         {
             ((MainWindow)System.Windows.Application.Current.MainWindow).text_2.Text = "ln "
                 + layer.LayerName
+                + " zi "
+                + Panel.GetZIndex(layer)
                 + " wi "
                 + LayersWidgets.IndexOf(layer.Widget)
                 + " cur " 

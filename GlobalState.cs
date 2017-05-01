@@ -8,10 +8,15 @@ namespace PhotoEditor
 {
     class GlobalState
     {
-        public static int currentLayerIndex { get; set; }
+        public static bool MousePressed { get; set; }
+
         public static double layerWidth { get; set; }
         public static double layerHeight { get; set; }
-        public static bool MousePressed { get; set; }
+
+        public static int currentLayerIndex { get; set; }
+
+        // Используется для изменения порядка слоев 
+        public static int LayersCount { get; set; }
 
         public static void setLayerSize(double width, double height)
         {
