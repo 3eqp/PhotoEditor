@@ -37,9 +37,10 @@
             Background="Gainsboro"
             ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox
+                ItemsSource="{Binding LayersWidgets, Mode=TwoWay}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                MouseLeftButtonDown="widgetCanvas_MouseDown"
                 x:Name="widgetsCanvas"
+                x:FieldModifier="public"
                 VerticalAlignment="Top">
             </ListBox>
         </ScrollViewer>

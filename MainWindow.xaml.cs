@@ -27,7 +27,7 @@ namespace PhotoEditor
         {
             InitializeComponent();
             LayersWidgets = new ObservableCollection<LayerWidget>();
-            widgetsCanvas.ItemsSource = LayersWidgets;
+            widgetsCanvas.DataContext = this;
         }
 
         // Layer -> Widget
@@ -139,19 +139,11 @@ namespace PhotoEditor
             int count = 0;
             foreach (LayerWidget widget in LayersWidgets)
             {
-                widget.widgetIndex = LayersWidgets.IndexOf(widget);
                 if (GlobalState.currentLayerIndex != count)
                     widget.Background = new SolidColorBrush(Colors.Transparent);
                 else widget.Background = new SolidColorBrush(Colors.Red);
                 count += 1;
             }
-        }
-
-        void widgetCanvas_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            GlobalState.currentLayerIndex = widgetsCanvas.SelectedIndex;
-
-            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
         public void newLayer(double opacity, int PixelHeight, int PixelWidth)
@@ -164,21 +156,21 @@ namespace PhotoEditor
             mainCanvas.Children.Add(layer);
             LayersWidgets.Add(layer.Widget);
 
-            // Перемещение элемента в самый верх списка, для наглядности отображения верхних слоев пользователю
+            /* Перемещение элемента в самый верх списка, для наглядности отображения верхних слоев пользователю
             LayerWidget last = LayersWidgets.Last();
             for (int i = LayersWidgets.Count - 1; i > 0; i--)
             {
                 LayersWidgets[i] = LayersWidgets[i - 1];
             }
             LayersWidgets[0] = last;
-
+            */
             if (widgetsCanvas.Items.Count > 0)
                 widgetsCanvas.SelectedIndex = 0;
-
-            GlobalState.currentLayerIndex = LayersWidgets.Count - 1;
+            
+            GlobalState.currentLayerIndex = widgetsCanvas.SelectedIndex;
             layer.Background = new SolidColorBrush(Colors.White);
             
-            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
+            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + LayersWidgets.IndexOf(layer.Widget) + GlobalState.currentLayerIndex;
         }
 
         private void btnNewLayer_Click(object sender, RoutedEventArgs e)
@@ -197,10 +189,11 @@ namespace PhotoEditor
                 layer.Children.Clear();
                 mainCanvas.Children.Remove(layer);
                 LayersWidgets.Remove(widget);
-                if (index > 0) GlobalState.currentLayerIndex = index - 1;
-            }
+                widgetsCanvas.Items.Refresh();
 
-            widgetsCanvas.SelectedIndex = GlobalState.currentLayerIndex;
+                GlobalState.currentLayerIndex = 0;
+                widgetsCanvas.SelectedIndex = 0;
+            }
             text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
@@ -274,7 +267,7 @@ namespace PhotoEditor
             {
                 GlobalState.MousePressed = true;
                 currentPoint = e.GetPosition(this);
-                text_2.Text = "pressed leftButtonDown";
+                text_2.Text += "\npressed leftButtonDown";
             }
         }
         
@@ -283,7 +276,7 @@ namespace PhotoEditor
             if (e.ButtonState == MouseButtonState.Released)
             {
                 GlobalState.MousePressed = false;
-                text_2.Text = "released";
+                text_2.Text += "\nreleased";
             }
         }
 
@@ -316,7 +309,12 @@ namespace PhotoEditor
         // TEST OUTPUT
         static public void Text_2(Layer layer)
         {
-            ((MainWindow)System.Windows.Application.Current.MainWindow).text_2.Text = "" + layer.LayerName + " " + GlobalState.currentLayerIndex;
+            ((MainWindow)System.Windows.Application.Current.MainWindow).text_2.Text = "ln "
+                + layer.LayerName
+                + " wi "
+                + LayersWidgets.IndexOf(layer.Widget)
+                + " cur " 
+                + GlobalState.currentLayerIndex;
 
         }
     }
