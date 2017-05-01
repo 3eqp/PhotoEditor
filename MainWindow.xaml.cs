@@ -43,6 +43,8 @@ namespace PhotoEditor
             text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
+        // SAVE/OPEN
+
         private void btnSavePng(object sender, RoutedEventArgs e)
         {
             btnSave_Click(new PngBitmapEncoder(), ".png");
@@ -134,6 +136,8 @@ namespace PhotoEditor
             }
         }
 
+        // NEW/DELETE
+
         public void UpdateLayersZIndex()
         {
             if (mainCanvas.Children.Count > 0)
@@ -193,10 +197,9 @@ namespace PhotoEditor
         private void btnDeleteLayer_Click(object sender, RoutedEventArgs e)
         {
             int index = GlobalState.currentLayerIndex;
-            int count = mainCanvas.Children.Count - 1;
             if (LayersWidgets.Count > 0 && index <= LayersWidgets.Count)
             {
-                var layer = (Layer)mainCanvas.Children[count - index];
+                var layer = LayersWidgets[index].ThisLayer;
                 LayerWidget widget = layer.Widget;
 
                 layer.Children.Clear();
@@ -208,10 +211,42 @@ namespace PhotoEditor
                 else widgetsCanvas.SelectedIndex = GlobalState.currentLayerIndex = 0;
             }
             GlobalState.LayersCount = mainCanvas.Children.Count;
-            UpdateLayersZIndex();
+            //UpdateLayersZIndex();
 
             text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
+
+        // SWAP LAYERS
+
+        private void SwapLayers(int curIndx, int nextIndx)
+        {
+            int count = mainCanvas.Children.Count - 1;
+            LayerWidget curWidget = LayersWidgets[curIndx];
+            LayerWidget nextWidget = LayersWidgets[nextIndx];
+            
+            int curZIndex = Panel.GetZIndex(mainCanvas.Children[count - curIndx]);
+            int nextZIndex = Panel.GetZIndex(mainCanvas.Children[count - nextIndx]);
+
+            Panel.SetZIndex(mainCanvas.Children[count - curIndx], nextZIndex);
+            Panel.SetZIndex(mainCanvas.Children[count - nextIndx], curZIndex);
+
+            LayersWidgets[curIndx] = LayersWidgets[nextIndx];
+            LayersWidgets[nextIndx] = curWidget;
+            widgetsCanvas.SelectedIndex = nextIndx;
+        }
+
+        private void MoveLayerUp(object sender, RoutedEventArgs e)
+        {
+            if (widgetsCanvas.SelectedIndex > 0)
+                SwapLayers(widgetsCanvas.SelectedIndex, widgetsCanvas.SelectedIndex - 1);
+        }
+
+        private void MoveLayerDown(object sender, RoutedEventArgs e)
+        {
+            if (widgetsCanvas.SelectedIndex < widgetsCanvas.Items.Count - 1)
+               SwapLayers(widgetsCanvas.SelectedIndex, widgetsCanvas.SelectedIndex + 1);
+        }
+
 
         // EFFECTS
 
@@ -301,8 +336,7 @@ namespace PhotoEditor
             if (GlobalState.MousePressed == true)
             {
                 int index = GlobalState.currentLayerIndex;
-                int count = mainCanvas.Children.Count - 1;
-                var layer = (Layer)mainCanvas.Children[count - index];
+                var layer = LayersWidgets[index].ThisLayer;
                 Line line = new Line();
                 currentPoint = TranslatePoint(currentPoint, mainCanvas);
 
@@ -335,6 +369,11 @@ namespace PhotoEditor
                 + " cur " 
                 + GlobalState.currentLayerIndex;
 
+        }
+
+        private void listBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

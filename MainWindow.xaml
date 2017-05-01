@@ -37,16 +37,19 @@
             Background="Gainsboro"
             ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox
+                PreviewKeyDown="listBox_PreviewKeyDown"
                 ItemsSource="{Binding LayersWidgets, Mode=TwoWay}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 x:Name="widgetsCanvas"
                 x:FieldModifier="public"
+                KeyUp="MoveLayerUp"
+                KeyDown="MoveLayerDown"
                 VerticalAlignment="Top">
             </ListBox>
         </ScrollViewer>
-        
-        
-        
+
+
+
         <TextBox Margin="0,12,306,6" x:Name="text" Grid.Column="1" Grid.Row="2"/>
         <Button Height="33" HorizontalAlignment="Left" 
         Margin="12.4,0,0,6.2" Name="btnOpen" VerticalAlignment="Bottom" 
@@ -85,6 +88,13 @@
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="450,0,0,50" x:Name="btnRotate90" VerticalAlignment="Bottom" 
             Width="76" Grid.Column="2" Grid.Row="2" Content="Поворот" Click="Rotate90"/>
+
+        <Button Height="33" HorizontalAlignment="Left" 
+            Margin="145,0,0,46" x:Name="btnUp" VerticalAlignment="Bottom" 
+            Width="38" Grid.Column="3" Grid.Row="2" Content="Up" Click="MoveLayerUp"/>
+        <Button Height="33" HorizontalAlignment="Left" 
+            Margin="192,0,0,46" x:Name="btnDown" VerticalAlignment="Bottom" 
+            Width="38" Grid.Column="3" Grid.Row="2" Content="Down" Click="MoveLayerDown"/>
     </Grid>
 
 </Window>
