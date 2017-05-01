@@ -142,21 +142,8 @@ namespace PhotoEditor
         {
             if (mainCanvas.Children.Count > 0)
             {
-                var first = (Layer)mainCanvas.Children[0];
-                Panel.SetZIndex(first, 0);
-                int count = mainCanvas.Children.Count;
-                for (int i = 0; i < count; i++)
-                {
-                    var layer = (Layer)mainCanvas.Children[i];
-                    int layerInd = Panel.GetZIndex(layer);
-                    if (layerInd != i)
-                        for (int j = count - mainCanvas.Children.IndexOf(layer); j >= 0; j--)
-                        {
-                            int layerPrevInd = Panel.GetZIndex(mainCanvas.Children[j]);
-                            if (layerInd != layerPrevInd)
-                                Panel.SetZIndex(layer, layerInd--);
-                        }
-                }
+                for(int i = LayersWidgets.Count - 1; i >= 0; i--)
+                    Panel.SetZIndex(LayersWidgets[i].ThisLayer, LayersWidgets.Count - 1 - i);
             }
         }
 
@@ -211,7 +198,7 @@ namespace PhotoEditor
                 else widgetsCanvas.SelectedIndex = GlobalState.currentLayerIndex = 0;
             }
             GlobalState.LayersCount = mainCanvas.Children.Count;
-            //UpdateLayersZIndex();
+            UpdateLayersZIndex();
 
             text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
@@ -220,31 +207,27 @@ namespace PhotoEditor
 
         private void SwapLayers(int curIndx, int nextIndx)
         {
-            int count = mainCanvas.Children.Count - 1;
             LayerWidget curWidget = LayersWidgets[curIndx];
             LayerWidget nextWidget = LayersWidgets[nextIndx];
-            
-            int curZIndex = Panel.GetZIndex(mainCanvas.Children[count - curIndx]);
-            int nextZIndex = Panel.GetZIndex(mainCanvas.Children[count - nextIndx]);
-
-            Panel.SetZIndex(mainCanvas.Children[count - curIndx], nextZIndex);
-            Panel.SetZIndex(mainCanvas.Children[count - nextIndx], curZIndex);
 
             LayersWidgets[curIndx] = LayersWidgets[nextIndx];
             LayersWidgets[nextIndx] = curWidget;
-            widgetsCanvas.SelectedIndex = nextIndx;
+
+            UpdateLayersZIndex();
+
+            GlobalState.currentLayerIndex = nextIndx;
         }
 
         private void MoveLayerUp(object sender, RoutedEventArgs e)
         {
-            if (widgetsCanvas.SelectedIndex > 0)
-                SwapLayers(widgetsCanvas.SelectedIndex, widgetsCanvas.SelectedIndex - 1);
+            if (GlobalState.currentLayerIndex > 0)
+                SwapLayers(GlobalState.currentLayerIndex, GlobalState.currentLayerIndex - 1);
         }
 
         private void MoveLayerDown(object sender, RoutedEventArgs e)
         {
-            if (widgetsCanvas.SelectedIndex < widgetsCanvas.Items.Count - 1)
-               SwapLayers(widgetsCanvas.SelectedIndex, widgetsCanvas.SelectedIndex + 1);
+            if (GlobalState.currentLayerIndex < widgetsCanvas.Items.Count - 1)
+               SwapLayers(GlobalState.currentLayerIndex, GlobalState.currentLayerIndex + 1);
         }
 
 
