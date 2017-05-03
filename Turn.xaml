@@ -19,10 +19,10 @@
 
         <TextBlock Grid.ColumnSpan="2" Margin="0,0,0.4,0">Ведите угол поворота:</TextBlock>
         <StackPanel FocusManager.FocusedElement="{Binding ElementName=Box}">
-            <TextBox Name="Box" Grid.Row="1" MinWidth="250" Grid.ColumnSpan="2" Margin="0,0,-0.6,0" KeyDown="Box_KeyDown"> </TextBox>
+            <TextBox x:Name="Box" MinWidth="250" Margin="130,0,-258.4,0" KeyDown="Box_KeyDown" RenderTransformOrigin="0.469,1.945"/>
         </StackPanel>
 
-        <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,20,-25" Grid.Column="1">
+        <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Margin="0,23.4,21.6,-48.6" Grid.Column="1">
             <Button IsCancel="True" MinWidth="60">Отмена</Button>
             <Button IsDefault="True" Click="Accept_Click" MinWidth="60" Margin="0,0,10,0" Content="OK"/>
         </WrapPanel>

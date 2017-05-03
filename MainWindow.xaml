@@ -27,6 +27,8 @@
             x:Name="mainCanvas" 
             Grid.Column="1" 
             Grid.Row="1" 
+            Width="Auto"
+            Height="Auto"
             Grid.ColumnSpan="2"
             MouseLeftButtonDown="mainCanvas_MouseLeftButtonDown"
             MouseLeftButtonUp="mainCanvas_MouseLeftButtonUp"
@@ -88,6 +90,9 @@
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="431,0,0,50" x:Name="btnRotate90" VerticalAlignment="Bottom" 
             Width="76" Grid.Column="2" Grid.Row="2" Content="Поворот" Click="Rotate90"/>
+        <Button Height="33" HorizontalAlignment="Left" 
+            Margin="550,0,0,50" x:Name="btnSizeImg" VerticalAlignment="Bottom" 
+            Width="76" Grid.Column="2" Grid.Row="2" Content="size" Click="SizeImg"/>
 
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="145,0,0,46" x:Name="btnUp" VerticalAlignment="Bottom" 
