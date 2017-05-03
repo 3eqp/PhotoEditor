@@ -19,6 +19,9 @@ using System.Windows.Shapes;
 using PhotoEditor.Controls;
 
 
+
+
+
 namespace PhotoEditor
 {
     public partial class MainWindow : Window
@@ -37,7 +40,7 @@ namespace PhotoEditor
             //?????GlobalState.setLayerSize(mainCanvas.ActualWidth, mainCanvas.ActualHeight);
             text_2.Text = "" + mainCanvas.ActualHeight + " " + mainCanvas.ActualWidth;
 
-            newLayer(1,350,350);
+            //newLayer(1,350,350);
 
             text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
@@ -61,6 +64,11 @@ namespace PhotoEditor
             btnSave_Click(new PngBitmapEncoder(), ".bmp");
         }
 
+
+
+        
+
+
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog op = new OpenFileDialog();
@@ -71,10 +79,30 @@ namespace PhotoEditor
 
             if (op.ShowDialog() == true)
             {
+
                 BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
-                int x = bmpFrame.PixelHeight;
+                int x = bmpFrame.PixelHeight; //размер изображения
                 int y = bmpFrame.PixelWidth;
-                newLayer(1,x,y);
+                int index_size = 0; 
+                if (x > 300 || y > 400) // если большое, уменьшается в 2 раза 
+                {
+                    BitmapFrame img = Effects.CreateResizedImage(bmpFrame, x/2, y/2, 20);
+                    index_size = 1; 
+                } else
+                {
+                    BitmapFrame img = Effects.CreateResizedImage(bmpFrame, x , y , 20);
+                }
+                
+
+                if (index_size == 0) // чтобы создался такой же как размер изображения canvas
+                {
+                    newLayer(1, x, y);
+                } else
+                {
+                    newLayer(1, x/2, y/2);
+                }
+
+              
 
                 int index = GlobalState.currentLayerIndex;
                 var layer = (Layer)mainCanvas.Children[index];
@@ -301,7 +329,41 @@ namespace PhotoEditor
             }
         }
 
+        //изминение размера 
+        private void SizeImg(object sender, RoutedEventArgs e)
+        {
 
+            sizeimage Size = new sizeimage();
+
+            if (Size.ShowDialog() == true)
+            {
+
+                double SizeW = double.Parse(Size.SizeWs);
+                double SizeH = double.Parse(Size.SizeHs);
+                Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+               int  SizeHi = (int)SizeH;
+                int SizeWi = (int)SizeW;
+                BitmapFrame img = Effects.CreateResizedImage(layer.layerImageBrush.ImageSource, SizeWi, SizeHi, 20); 
+             
+                layer.refreshBrush();
+            }
+        }
+        //--
+
+
+        //private void Resize(object sender, RoutedEventArgs e)
+        //{
+        //    SizeImage BoxWindow = new SizeImage(); 
+        //    if (BoxWindow.ShowDialog() == true)
+        //    {
+        //        int x = int.Parse(BoxWindow.SizeImagesHeight);
+        //        int y = int.Parse(BoxWindow.SizeImageWidth);
+        //        Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+        //        Effects.Resized(layer, y, x, BitmapScalingMode.LowQuality);
+        //        layer.refreshBrush();
+
+        //    }
+        //}
         // DRAWING
 
 
@@ -378,5 +440,6 @@ namespace PhotoEditor
         {
             e.Handled = true;
         }
+
     }
 }

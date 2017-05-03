@@ -1,0 +1,19 @@
+﻿<Window x:Class="PhotoEditor.sizeimage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PhotoEditor"
+        mc:Ignorable="d"
+        Title="sizeimage" Height="300" Width="300">
+    <Grid>
+        <StackPanel FocusManager.FocusedElement="{Binding ElementName=Box}">
+            <TextBox x:Name="SizeW" MinWidth="200" Margin="50,15,50,50"  RenderTransformOrigin="0.469,1.945"/>
+            <TextBox x:Name="SizeH" MinWidth="200" Margin="50,25,50,10"  RenderTransformOrigin="0.469,1.945"/>
+            <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Margin="0,23.4,21.6,-48.6" Grid.Column="1">
+                <Button IsCancel="True" MinWidth="60">Отмена</Button>
+                <Button IsDefault="True" Click="Accept_Click" MinWidth="60" Margin="0,0,10,0" Content="OK"/>
+            </WrapPanel>
+        </StackPanel>
+    </Grid>
+</Window>
