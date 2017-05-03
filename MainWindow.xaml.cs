@@ -34,7 +34,7 @@ namespace PhotoEditor
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            GlobalState.setLayerSize(mainCanvas.ActualWidth, mainCanvas.ActualHeight);
+            //?????GlobalState.setLayerSize(mainCanvas.ActualWidth, mainCanvas.ActualHeight);
             text_2.Text = "" + mainCanvas.ActualHeight + " " + mainCanvas.ActualWidth;
 
             newLayer(1,350,350);
