@@ -79,34 +79,25 @@ namespace PhotoEditor
 
             if (op.ShowDialog() == true)
             {
-
                 BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
                 int x = bmpFrame.PixelHeight; //размер изображения
                 int y = bmpFrame.PixelWidth;
-                int index_size = 0; 
+                int ind = 0;
+
                 if (x > 300 || y > 400) // если большое, уменьшается в 2 раза 
                 {
                     BitmapFrame img = Effects.CreateResizedImage(bmpFrame, x/2, y/2, 20);
-                    index_size = 1; 
+                    ind = 1;
                 } else
                 {
                     BitmapFrame img = Effects.CreateResizedImage(bmpFrame, x , y , 20);
                 }
-                
 
-                if (index_size == 0) // чтобы создался такой же как размер изображения canvas
-                {
-                    newLayer(1, x, y);
-                } else
-                {
-                    newLayer(1, x/2, y/2);
-                }
-
-              
-
+                if (mainCanvas.Children.Count == 0)
+                    if (ind == 0) newLayer(1, x, y);
+                    else newLayer(1, x / 2, y / 2);
                 int index = GlobalState.currentLayerIndex;
-                var layer = (Layer)mainCanvas.Children[index];
-
+                var layer = LayersWidgets[index].ThisLayer;
 
                 layer.layerBmpFrame = bmpFrame;
                 layer.refreshBrush();
@@ -250,6 +241,7 @@ namespace PhotoEditor
             UpdateLayersZIndex();
 
             GlobalState.currentLayerIndex = nextIndx;
+            widgetsCanvas.SelectedIndex = GlobalState.currentLayerIndex;
         }
 
         private void MoveLayerUp(object sender, RoutedEventArgs e)
