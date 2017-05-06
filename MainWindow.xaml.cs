@@ -18,10 +18,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PhotoEditor.Controls;
 
-
-
-
-
 namespace PhotoEditor
 {
     public partial class MainWindow : Window
@@ -356,6 +352,8 @@ namespace PhotoEditor
 
         //    }
         //}
+
+
         // DRAWING
 
 
@@ -364,7 +362,7 @@ namespace PhotoEditor
 
         private void mainCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ButtonState == MouseButtonState.Pressed)
+            if (e.ButtonState == MouseButtonState.Pressed && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
             {
                 GlobalState.MousePressed = true;
                 currentPoint = e.GetPosition(this);
@@ -374,7 +372,7 @@ namespace PhotoEditor
         
         private void mainCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.ButtonState == MouseButtonState.Released)
+            if (e.ButtonState == MouseButtonState.Released && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
             {
                 GlobalState.MousePressed = false;
                 text_2.Text += "\nreleased";
@@ -383,14 +381,14 @@ namespace PhotoEditor
 
         private void mainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (GlobalState.MousePressed == true)
+            if (GlobalState.MousePressed == true && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
             {
                 int index = GlobalState.currentLayerIndex;
                 var layer = LayersWidgets[index].ThisLayer;
                 Line line = new Line();
                 currentPoint = TranslatePoint(currentPoint, mainCanvas);
 
-                line.Stroke = SystemColors.WindowFrameBrush;
+                line.Stroke = VisualHost.Color;
                 line.X1 = currentPoint.X;
                 line.Y1 = currentPoint.Y;
 
@@ -433,5 +431,32 @@ namespace PhotoEditor
             e.Handled = true;
         }
 
+
+        // INSTRUMENTS
+
+
+        private void Brush_Selected(object sender, RoutedEventArgs e)
+        {
+            GlobalState.CurrentTool = GlobalState.Instruments.Brush;
+            ArrowButton.BorderThickness = new Thickness(1);
+            BrushButton.BorderThickness = new Thickness(0.5);
+        }
+
+        private void Arrow_Selected(object sender, RoutedEventArgs e)
+        {
+            GlobalState.CurrentTool = GlobalState.Instruments.Arrow;
+            BrushButton.BorderThickness = new Thickness(1);
+            ArrowButton.BorderThickness = new Thickness(0.5);
+        }
+
+        private void colorRedSelected(object sender, RoutedEventArgs e)
+        {
+            VisualHost.Color = Brushes.Red;
+        }
+
+        private void colorBlackSelected(object sender, RoutedEventArgs e)
+        {
+            VisualHost.Color = Brushes.Black;
+        }
     }
 }

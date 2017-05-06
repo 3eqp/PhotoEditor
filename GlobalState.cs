@@ -8,6 +8,12 @@ namespace PhotoEditor
 {
     class GlobalState
     {
+        internal enum Instruments
+        {
+            Arrow, Brush
+        }
+        public static Instruments CurrentTool;
+
         public static bool MousePressed { get; set; }
 
         public static double layerWidth { get; set; }
