@@ -62,6 +62,7 @@
     <Compile Include="Turn.xaml.cs">
       <DependentUpon>Turn.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\VisualHost.cs" />
     <Page Include="Controls\LayerWidget.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

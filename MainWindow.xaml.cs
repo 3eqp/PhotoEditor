@@ -419,7 +419,7 @@ namespace PhotoEditor
                 + Panel.GetZIndex(layer)
                 + " wi "
                 + LayersWidgets.IndexOf(layer.Widget)
-                + " cur " 
+                + " cur "
                 + GlobalState.currentLayerIndex;
 
         }
