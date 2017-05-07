@@ -386,7 +386,7 @@ namespace PhotoEditor
                 int index = GlobalState.currentLayerIndex;
                 var layer = LayersWidgets[index].ThisLayer;
                 Line line = new Line();
-                currentPoint = TranslatePoint(currentPoint, mainCanvas);
+                currentPoint = TranslatePoint(currentPoint, layer);
 
                 line.Stroke = VisualHost.Color;
                 line.X1 = currentPoint.X;
@@ -394,7 +394,7 @@ namespace PhotoEditor
 
                 nextPoint.X = e.GetPosition(this).X;
                 nextPoint.Y = e.GetPosition(this).Y;
-                nextPoint = TranslatePoint(nextPoint, mainCanvas);
+                nextPoint = TranslatePoint(nextPoint, layer);
 
                 line.X2 = nextPoint.X;
                 line.Y2 = nextPoint.Y;

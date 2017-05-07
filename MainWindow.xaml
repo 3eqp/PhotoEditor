@@ -23,7 +23,7 @@
             <ColumnDefinition Width="573*"/>
             <ColumnDefinition Width="240*"/>
         </Grid.ColumnDefinitions>
-        <Canvas 
+        <Canvas
             x:Name="mainCanvas" 
             Grid.Column="1" 
             Grid.Row="1" 
