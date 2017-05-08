@@ -11,12 +11,13 @@ namespace PhotoEditor
     {
         internal enum Instruments
         {
-            Arrow, Brush, Resize
+            Arrow, Brush, Resize, Eraser
         }
         public static Instruments CurrentTool;
 
         public static bool MousePressed { get; set; }
         public static bool isResizing { get; set; }
+        public static bool isErasing { get; set; }
 
         public static int currentLayerIndex { get; set; }
         public static int LayersCount { get; set; }

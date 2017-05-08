@@ -8,13 +8,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
-using System.Collections.Generic;
-using PhotoEditor;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PhotoEditor.Controls;
 using System.Runtime.InteropServices;
@@ -51,7 +44,7 @@ namespace PhotoEditor
         }
 
 
-        // SAVE/OPEN
+        // SAVE / OPEN
 
 
         private void btnSavePng(object sender, RoutedEventArgs e)
@@ -362,11 +355,113 @@ namespace PhotoEditor
 
         public Point clickPosition;
 
+        //!!!!!!!!!test function!!!!!!!!
+        private void bitmap(Point pos)
+        {
+            const int width = 5;
+            const int height = 5;
+            int indexs = GlobalState.currentLayerIndex;
+            var layer = LayersWidgets[indexs].ThisLayer;
+
+
+            BitmapSource source = (BitmapSource)layer.layerBmpFrame;
+
+            // Calculate stride of source
+            int stride = source.PixelWidth * (source.Format.BitsPerPixel + 7) / 8;
+
+            // Create data array to hold source pixel data
+            byte[] data = new byte[stride * source.PixelHeight];
+
+            // Copy source image pixels to the data array
+            source.CopyPixels(data, stride, 0);
+
+            // Create WriteableBitmap to copy the pixel data to.      
+            WriteableBitmap target = new WriteableBitmap(
+              source.PixelWidth,
+              source.PixelHeight,
+              source.DpiX, source.DpiY,
+              source.Format, null);
+
+            // Write the pixel data to the WriteableBitmap.
+            target.WritePixels(
+              new Int32Rect(0, 0, source.PixelWidth, source.PixelHeight),
+              data, stride, 0);
+
+            byte[,,] pixels = new byte[height, width, 4];
+
+            // Clear to black.
+            for (int row = 0; row < height; row++)
+            {
+                for (int col = 0; col < width; col++)
+                {
+                    for (int i = 0; i < 3; i++)
+                        pixels[row, col, i] = 0;
+                    pixels[row, col, 3] = 255;
+                }
+            }
+
+            // Blue.
+            for (int row = 0; row < 80; row++)
+            {
+                for (int col = 0; col <= row; col++)
+                {
+                    pixels[row, col, 0] = 255;
+                }
+            }
+
+            // Green.
+            for (int row = 80; row < 160; row++)
+            {
+                for (int col = 0; col < 80; col++)
+                {
+                    pixels[row, col, 1] = 255;
+                }
+            }
+
+            // Red.
+            for (int row = 160; row < 240; row++)
+            {
+                for (int col = 0; col < 80; col++)
+                {
+                    pixels[row, col, 2] = 255;
+                }
+            }
+
+            // Copy the data into a one-dimensional array.
+            byte[] pixels1d = new byte[height * width * 4];
+            int index = 0;
+            for (int row = 0; row < height; row++)
+            {
+                for (int col = 0; col < width; col++)
+                {
+                    for (int i = 0; i < 4; i++)
+                        pixels1d[index++] = pixels[row, col, i];
+                }
+            }
+
+            // Update writeable bitmap with the colorArray to the image.
+            Int32Rect rect = new Int32Rect(0, 0, width, height);
+            stride = 4 * width;
+            target.WritePixels(rect, pixels1d, stride, 0);
+
+            var bf = BitmapFrame.Create(target);
+            layer.layerBmpFrame = bf;
+            layer.refreshBrush();
+        }
+
         private void mainCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             int index = GlobalState.currentLayerIndex;
             var layer = LayersWidgets[index].ThisLayer;
+            
+            // Erase
+            if (GlobalState.CurrentTool == GlobalState.Instruments.Eraser)
+            {
+                clickPosition = e.GetPosition(layer);
+                bitmap(clickPosition);
+            }
 
+            // Resize
             if (GlobalState.CurrentTool == GlobalState.Instruments.Resize)
             {
                 clickPosition = e.GetPosition(layer);
@@ -374,6 +469,7 @@ namespace PhotoEditor
                 GlobalState.isResizing = true;
             }
 
+            // Brush
             if (e.ButtonState == MouseButtonState.Pressed && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
             {
                 Polyline polyLine = new Polyline();
@@ -384,7 +480,6 @@ namespace PhotoEditor
 
                 GlobalState.MousePressed = true;
             }
-            Console.WriteLine("mousedown " + Cursor + " " + clickPosition.X + " " + clickPosition.Y);
         }
         
         private void mainCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -392,12 +487,20 @@ namespace PhotoEditor
             int index = GlobalState.currentLayerIndex;
             var layer = LayersWidgets[index].ThisLayer;
 
+            // Erase
+            if (GlobalState.CurrentTool == GlobalState.Instruments.Eraser)
+            {
+                
+            }
+
+            // Resize
             if (GlobalState.CurrentTool == GlobalState.Instruments.Resize)
             {
                 GlobalState.MousePressed = false;
                 GlobalState.isResizing = false;
             }
 
+            // Brush
             if (e.ButtonState == MouseButtonState.Released && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
             {
                 GlobalState.MousePressed = false;
@@ -410,6 +513,14 @@ namespace PhotoEditor
             {
                 int index = GlobalState.currentLayerIndex;
                 var layer = LayersWidgets[index].ThisLayer;
+
+                // Erase
+                if (GlobalState.MousePressed && GlobalState.CurrentTool == GlobalState.Instruments.Eraser)
+                {
+
+                }
+
+                #region Check_Cursor & Resize
                 Point newPosition = new Point();
 
                 // Setting Cursor
@@ -474,6 +585,7 @@ namespace PhotoEditor
                     clickPosition.X = mousePosX;
                     clickPosition.Y = mousePosY;
                 }
+                #endregion
 
                 // Drawing
                 if (GlobalState.MousePressed && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
@@ -540,6 +652,7 @@ namespace PhotoEditor
             ArrowButton.BorderThickness = new Thickness(0.5);
             BrushButton.BorderThickness = new Thickness(1);
             ResizeButton.BorderThickness = new Thickness(0.5);
+            EraserButton.BorderThickness = new Thickness(0.5);
         }
 
         private void Resize_Selected(object sender, RoutedEventArgs e)
@@ -548,6 +661,16 @@ namespace PhotoEditor
             ArrowButton.BorderThickness = new Thickness(0.5);
             BrushButton.BorderThickness = new Thickness(0.5);
             ResizeButton.BorderThickness = new Thickness(1);
+            EraserButton.BorderThickness = new Thickness(0.5);
+        }
+
+        private void Erase_Selected(object sender, RoutedEventArgs e)
+        {
+            GlobalState.CurrentTool = GlobalState.Instruments.Eraser;
+            ArrowButton.BorderThickness = new Thickness(0.5);
+            BrushButton.BorderThickness = new Thickness(0.5);
+            ResizeButton.BorderThickness = new Thickness(0.5);
+            EraserButton.BorderThickness = new Thickness(1);
         }
 
         private void Arrow_Selected(object sender, RoutedEventArgs e)
@@ -556,6 +679,7 @@ namespace PhotoEditor
             ArrowButton.BorderThickness = new Thickness(1);
             BrushButton.BorderThickness = new Thickness(0.5);
             ResizeButton.BorderThickness = new Thickness(0.5);
+            EraserButton.BorderThickness = new Thickness(0.5);
         }
 
         private void colorRedSelected(object sender, RoutedEventArgs e)
@@ -567,7 +691,6 @@ namespace PhotoEditor
         {
             VisualHost.BrushColor = Brushes.Black;
         }
-
 
     }
 }

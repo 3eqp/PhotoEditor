@@ -67,6 +67,9 @@ namespace PhotoEditor.Controls
                 var draggableControl = sender as Canvas;
                 clickPosition = e.GetPosition(this);
                 draggableControl.CaptureMouse();
+                var widgetIndex = MainWindow.LayersWidgets.IndexOf(this.Widget);
+                GlobalState.currentLayerIndex = widgetIndex;
+                ((MainWindow)Application.Current.MainWindow).widgetsCanvas.SelectedIndex = widgetIndex;
             }
         }
 

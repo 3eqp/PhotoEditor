@@ -48,7 +48,7 @@ namespace PhotoEditor.Controls
             var widgetIndex = MainWindow.LayersWidgets.IndexOf(this);
             GlobalState.currentLayerIndex = widgetIndex;
             ((MainWindow)Application.Current.MainWindow).sliderOpacity.Value = ThisLayer.Opacity * 100;
-
+            ((MainWindow)Application.Current.MainWindow).widgetsCanvas.SelectedIndex = widgetIndex;
 
             MainWindow.Text_2(ThisLayer);
         }
