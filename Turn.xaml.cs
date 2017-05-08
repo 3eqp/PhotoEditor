@@ -63,6 +63,9 @@ namespace PhotoEditor
                 case Key.D8:
                     e.Handled = false;
                     break;
+                case Key.D9:
+                    e.Handled = false;
+                    break;
                 case Key.D0:
                     e.Handled = false;
                     break;

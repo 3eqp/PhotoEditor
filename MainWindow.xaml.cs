@@ -312,7 +312,8 @@ namespace PhotoEditor
                 
                 double x = double.Parse(BoxWindow.Turns);
                 Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
-                Effects.Rotate(layer, x);
+                if (x==90 || x==180 || x == 360) { Effects.Rotate(layer, x); } else { Effects.RotateBilinear(layer, x); }
+                
                 layer.refreshBrush();
             }
         }
@@ -456,5 +457,7 @@ namespace PhotoEditor
         {
             VisualHost.BrushColor = Brushes.Black;
         }
+
+        
     }
 }
