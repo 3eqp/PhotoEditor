@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,10 +15,11 @@ namespace PhotoEditor.Controls
     public class Layer : Canvas
     {
         protected bool isDragging;
-        private Point clickPosition;
+        public Point clickPosition;
 
         public string LayerName { get; set; }
-        
+        public Point LayerPosition;
+
         public SolidColorBrush layerColorBrush { get; set; }
         public ImageBrush layerImageBrush { get; set; }
         public BitmapFrame layerBmpFrame { get; set; }
@@ -32,6 +34,8 @@ namespace PhotoEditor.Controls
             LayerName = Name = name;
             Height = height;
             Width = width;
+            MinHeight = 100;
+            MinWidth = 100;
             Opacity = opacity;
             if (col != 0) Grid.SetColumn(this, col);
             if (row != 0) Grid.SetRow(this, row);
@@ -51,7 +55,7 @@ namespace PhotoEditor.Controls
             Background = brush;
         }
 
-        
+
         // DRAGGING LAYER
 
 
@@ -93,6 +97,9 @@ namespace PhotoEditor.Controls
 
                 transform.X = currentPosition.X - clickPosition.X;
                 transform.Y = currentPosition.Y - clickPosition.Y;
+                LayerPosition.X = transform.X;
+                LayerPosition.Y = transform.Y;
+                Console.WriteLine("layer " + LayerPosition.X + " " + LayerPosition.Y);
             }
         }
     }

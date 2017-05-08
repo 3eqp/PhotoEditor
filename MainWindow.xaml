@@ -103,6 +103,10 @@
             Grid.Column="2" Grid.Row="2" Margin="473,48,64,10"/>
         <Button Content="brush" Name="BrushButton" Click="Brush_Selected"
             Grid.Column="2" Grid.Row="2" Margin="514,48,23,10"/>
+        <Button Content="resize" Name="ResizeButton" Click="Resize_Selected"
+            Grid.Column="2" Grid.Row="2" Margin="555,48,222,10" Grid.ColumnSpan="2"/>
+        <Button Content="console" Name="ConsoleButton" Click="OpenConsole"
+            Grid.Column="2" Grid.Row="2" Margin="555,8,222,50" Grid.ColumnSpan="2"/>
         <Slider x:Name="sliderBrushSize" 
                 Grid.Column="2" 
                 HorizontalAlignment="Left"

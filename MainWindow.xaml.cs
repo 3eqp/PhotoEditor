@@ -17,26 +17,35 @@ using System.Windows.Documents;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PhotoEditor.Controls;
+using System.Runtime.InteropServices;
 
 namespace PhotoEditor
 {
     public partial class MainWindow : Window
     {
+        [DllImport("Kernel32")]
+        public static extern void AllocConsole();
+        [DllImport("Kernel32")]
+        public static extern void FreeConsole();
+        [DllImport("Kernel32")]
+        static extern IntPtr GetConsoleWindow();
+
+
         public MainWindow()
         {
             InitializeComponent();
             LayersWidgets = new ObservableCollection<LayerWidget>();
             widgetsCanvas.DataContext = this;
+            MouseMove += new MouseEventHandler(mainCanvas_MouseMove);
         }
 
         public static ObservableCollection<LayerWidget> LayersWidgets { get; set; }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            //?????GlobalState.setLayerSize(mainCanvas.ActualWidth, mainCanvas.ActualHeight);
             text_2.Text = "" + mainCanvas.ActualHeight + " " + mainCanvas.ActualWidth;
 
-            //newLayer(1,350,350);
+            newLayer(1, 350, 350);
 
             text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
@@ -59,11 +68,6 @@ namespace PhotoEditor
         {
             btnSave_Click(new PngBitmapEncoder(), ".bmp");
         }
-
-
-
-        
-
 
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
@@ -153,7 +157,7 @@ namespace PhotoEditor
         }
 
 
-        // NEW/DELETE
+        // LAYER NEW / DELETE
 
 
         public void UpdateLayersZIndex()
@@ -165,10 +169,8 @@ namespace PhotoEditor
             }
         }
 
-        public void newLayer(double opacity, int PixelHeight, int PixelWidth)
+        public void newLayer(double opacity, double PixelHeight, double PixelWidth)
         {
-            double Width = GlobalState.layerWidth;
-            double Height = GlobalState.layerHeight;
             string layerName = "NewLayer" + LayersWidgets.Count;
             var layer = new Layer(layerName, PixelWidth, PixelHeight, opacity, 1, 2, 1);
 
@@ -223,7 +225,7 @@ namespace PhotoEditor
         }
 
 
-        // LAYERS SWAP/OPACITY
+        // LAYERS SWAP / OPACITY
 
 
         private void SwapLayers(int curIndx, int nextIndx)
@@ -355,18 +357,25 @@ namespace PhotoEditor
         //}
 
 
-        // DRAWING
+        // MainCanvas actions (DRAWING / RESIZING)
 
 
-       // Point currentPoint = new Point();
-        //Point nextPoint = new Point();
+        public Point clickPosition;
 
         private void mainCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            int index = GlobalState.currentLayerIndex;
+            var layer = LayersWidgets[index].ThisLayer;
+
+            if (GlobalState.CurrentTool == GlobalState.Instruments.Resize)
+            {
+                clickPosition = e.GetPosition(layer);
+                GlobalState.MousePressed = true;
+                GlobalState.isResizing = true;
+            }
+
             if (e.ButtonState == MouseButtonState.Pressed && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
             {
-                int index = GlobalState.currentLayerIndex;
-                var layer = LayersWidgets[index].ThisLayer;
                 Polyline polyLine = new Polyline();
                 polyLine.Stroke = VisualHost.BrushColor;
                 polyLine.StrokeThickness = VisualHost.BrushSize;
@@ -374,28 +383,105 @@ namespace PhotoEditor
                 layer.Children.Add(polyLine);
 
                 GlobalState.MousePressed = true;
-                text_2.Text += "\npressed leftButtonDown";
             }
+            Console.WriteLine("mousedown " + Cursor + " " + clickPosition.X + " " + clickPosition.Y);
         }
         
         private void mainCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            int index = GlobalState.currentLayerIndex;
+            var layer = LayersWidgets[index].ThisLayer;
+
+            if (GlobalState.CurrentTool == GlobalState.Instruments.Resize)
+            {
+                GlobalState.MousePressed = false;
+                GlobalState.isResizing = false;
+            }
+
             if (e.ButtonState == MouseButtonState.Released && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
             {
                 GlobalState.MousePressed = false;
-                text_2.Text += "\nreleased";
             }
         }
 
         private void mainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (GlobalState.MousePressed == true && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
+            if (LayersWidgets.Count > 0)
             {
                 int index = GlobalState.currentLayerIndex;
                 var layer = LayersWidgets[index].ThisLayer;
-                var polyLine = (Polyline)layer.Children[layer.Children.Count - 1];
-                Point currentPoint = e.GetPosition(layer);
-                polyLine.Points.Add(currentPoint);
+                Point newPosition = new Point();
+
+                // Setting Cursor
+                if (GlobalState.CurrentTool == GlobalState.Instruments.Resize)
+                {
+                    newPosition.X = e.GetPosition(layer).X;
+                    newPosition.Y = e.GetPosition(layer).Y;
+                    var width = layer.ActualWidth;
+                    var height = layer.ActualHeight;
+                    var xPos = layer.LayerPosition.X;
+                    var yPos = layer.LayerPosition.Y;
+                    TranslatePoint(newPosition, layer);
+                    bool stretchWidth = (newPosition.X >= 0 && newPosition.X <= width) ? true : false;
+                    bool stretchHeight = (newPosition.Y >= 0 && newPosition.Y <= height) ? true : false;
+                    bool stretchRight = (newPosition.X > width - 5 && newPosition.X < width && stretchHeight && stretchWidth) ? true : false;
+                    bool stretchBottom = (newPosition.Y > height - 5 && newPosition.Y < height && stretchHeight && stretchWidth) ? true : false;
+                    
+                    Console.WriteLine(e.GetPosition(mainCanvas) + " " + (xPos + width));
+
+                    if (stretchRight && stretchBottom && !GlobalState.isResizing)
+                    {
+                        Cursor = Cursors.SizeNWSE;
+                    }
+                    else if (stretchRight && !stretchBottom && !GlobalState.isResizing)
+                    {
+                        // <->
+                        Cursor = Cursors.SizeWE;
+                    }
+                    else if (stretchBottom && !stretchRight && !GlobalState.isResizing)
+                    {
+                        Cursor = Cursors.SizeNS;
+                    }
+                    else if (!stretchBottom && !stretchRight && !GlobalState.isResizing)
+                    {
+                        Cursor = Cursors.Arrow;
+                    }
+                }
+
+                // Resizing Layer
+                if (GlobalState.MousePressed && GlobalState.isResizing)
+                {
+                    Text_2(layer);
+                    double mousePosX = e.GetPosition(layer).X;
+                    double mousePosY = e.GetPosition(layer).Y;
+
+                    double xDiff = mousePosX - clickPosition.X;
+                    double yDiff = mousePosY - clickPosition.Y;
+                    
+                    xDiff = (layer.Width + xDiff) > layer.MinWidth ? xDiff : layer.MinWidth;
+                    yDiff = (layer.Height + yDiff) > layer.MinHeight ? yDiff : layer.MinHeight;
+                   
+                    if (Cursor == Cursors.SizeNWSE)
+                    {
+                        layer.Width += xDiff;
+                        layer.Height += yDiff;
+                    }
+                    else if (Cursor == Cursors.SizeWE)
+                        layer.Width += xDiff;
+                    else if (Cursor == Cursors.SizeNS)
+                        layer.Height += yDiff;
+                    
+                    clickPosition.X = mousePosX;
+                    clickPosition.Y = mousePosY;
+                }
+
+                // Drawing
+                if (GlobalState.MousePressed && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
+                {
+                    var polyLine = (Polyline)layer.Children[layer.Children.Count - 1];
+                    Point currentPoint = e.GetPosition(layer);
+                    polyLine.Points.Add(currentPoint);
+                }
             }
         }
 
@@ -417,8 +503,22 @@ namespace PhotoEditor
                 + " wi "
                 + LayersWidgets.IndexOf(layer.Widget)
                 + " cur "
-                + GlobalState.currentLayerIndex;
+                + GlobalState.currentLayerIndex
+                + "\npos "
+                + Mouse.GetPosition(layer);
 
+        }
+
+        private void OpenConsole(object sender, RoutedEventArgs e)
+        {
+            if (GetConsoleWindow() != IntPtr.Zero)
+            {
+                FreeConsole();
+            }
+            else
+            {
+                AllocConsole();
+            }
         }
 
 
@@ -437,15 +537,25 @@ namespace PhotoEditor
         private void Brush_Selected(object sender, RoutedEventArgs e)
         {
             GlobalState.CurrentTool = GlobalState.Instruments.Brush;
-            ArrowButton.BorderThickness = new Thickness(1);
+            ArrowButton.BorderThickness = new Thickness(0.5);
+            BrushButton.BorderThickness = new Thickness(1);
+            ResizeButton.BorderThickness = new Thickness(0.5);
+        }
+
+        private void Resize_Selected(object sender, RoutedEventArgs e)
+        {
+            GlobalState.CurrentTool = GlobalState.Instruments.Resize;
+            ArrowButton.BorderThickness = new Thickness(0.5);
             BrushButton.BorderThickness = new Thickness(0.5);
+            ResizeButton.BorderThickness = new Thickness(1);
         }
 
         private void Arrow_Selected(object sender, RoutedEventArgs e)
         {
             GlobalState.CurrentTool = GlobalState.Instruments.Arrow;
-            BrushButton.BorderThickness = new Thickness(1);
-            ArrowButton.BorderThickness = new Thickness(0.5);
+            ArrowButton.BorderThickness = new Thickness(1);
+            BrushButton.BorderThickness = new Thickness(0.5);
+            ResizeButton.BorderThickness = new Thickness(0.5);
         }
 
         private void colorRedSelected(object sender, RoutedEventArgs e)
@@ -458,6 +568,6 @@ namespace PhotoEditor
             VisualHost.BrushColor = Brushes.Black;
         }
 
-        
+
     }
 }
