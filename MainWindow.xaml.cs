@@ -357,15 +357,22 @@ namespace PhotoEditor
         // DRAWING
 
 
-        Point currentPoint = new Point();
-        Point nextPoint = new Point();
+       // Point currentPoint = new Point();
+        //Point nextPoint = new Point();
 
         private void mainCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
             {
+                int index = GlobalState.currentLayerIndex;
+                var layer = LayersWidgets[index].ThisLayer;
+                Polyline polyLine = new Polyline();
+                polyLine.Stroke = VisualHost.BrushColor;
+                polyLine.StrokeThickness = VisualHost.BrushSize;
+
+                layer.Children.Add(polyLine);
+
                 GlobalState.MousePressed = true;
-                currentPoint = e.GetPosition(this);
                 text_2.Text += "\npressed leftButtonDown";
             }
         }
@@ -385,24 +392,15 @@ namespace PhotoEditor
             {
                 int index = GlobalState.currentLayerIndex;
                 var layer = LayersWidgets[index].ThisLayer;
-                Line line = new Line();
-                currentPoint = TranslatePoint(currentPoint, layer);
-
-                line.Stroke = VisualHost.Color;
-                line.X1 = currentPoint.X;
-                line.Y1 = currentPoint.Y;
-
-                nextPoint.X = e.GetPosition(this).X;
-                nextPoint.Y = e.GetPosition(this).Y;
-                nextPoint = TranslatePoint(nextPoint, layer);
-
-                line.X2 = nextPoint.X;
-                line.Y2 = nextPoint.Y;
-
-                currentPoint = e.GetPosition(this);
-                
-                layer.Children.Add(line);
+                var polyLine = (Polyline)layer.Children[layer.Children.Count - 1];
+                Point currentPoint = e.GetPosition(layer);
+                polyLine.Points.Add(currentPoint);
             }
+        }
+
+        private void sliderBrushSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            VisualHost.BrushSize = sliderBrushSize.Value;
         }
 
 
@@ -451,12 +449,12 @@ namespace PhotoEditor
 
         private void colorRedSelected(object sender, RoutedEventArgs e)
         {
-            VisualHost.Color = Brushes.Red;
+            VisualHost.BrushColor = Brushes.Red;
         }
 
         private void colorBlackSelected(object sender, RoutedEventArgs e)
         {
-            VisualHost.Color = Brushes.Black;
+            VisualHost.BrushColor = Brushes.Black;
         }
     }
 }

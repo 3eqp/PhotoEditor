@@ -54,55 +54,67 @@
 
         <TextBox Margin="0,12,306,6" x:Name="text" Grid.Column="1" Grid.Row="2"/>
         <Button Height="33" HorizontalAlignment="Left" 
-        Margin="12.4,0,0,6.2" Name="btnOpen" VerticalAlignment="Bottom" 
-        Width="74" Grid.Column="2" Grid.Row="2" Click="btnOpen_Click">Open</Button>
+        Margin="1,0,0,6" Name="btnOpen" VerticalAlignment="Bottom" 
+        Width="64" Grid.Column="2" Grid.Row="2" Click="btnOpen_Click">Open</Button>
         <Button Height="33" HorizontalAlignment="Left" 
-            Margin="93,0,0,50" x:Name="btnSave" VerticalAlignment="Bottom" 
-            Width="74" Grid.Column="2" Grid.Row="2" Content="png" Click="btnSavePng"/>
+            Margin="71,0,0,50" x:Name="btnSave" VerticalAlignment="Bottom" 
+            Width="64" Grid.Column="2" Grid.Row="2" Content="png" Click="btnSavePng"/>
         <Button Height="33" HorizontalAlignment="Left" 
-            Margin="93,0,0,6" x:Name="btnNewLayer" VerticalAlignment="Bottom" 
-            Width="76" Grid.Column="2" Grid.Row="2" Content="NewLayer" Click="btnNewLayer_Click"/>
+            Margin="71,0,0,6" x:Name="btnNewLayer" VerticalAlignment="Bottom" 
+            Width="66" Grid.Column="2" Grid.Row="2" Content="NewLayer" Click="btnNewLayer_Click"/>
         <Button Height="33" HorizontalAlignment="Left"
-            Margin="174,0,0,6" x:Name="btnDeleteLayer" VerticalAlignment="Bottom" 
-            Width="75" Grid.Column="2" Grid.Row="2" Content="DeleteLayer" Click="btnDeleteLayer_Click"/>
+            Margin="141,0,0,6" x:Name="btnDeleteLayer" VerticalAlignment="Bottom" 
+            Width="65" Grid.Column="2" Grid.Row="2" Content="DeleteLayer" Click="btnDeleteLayer_Click"/>
         <TextBox Margin="51,12,10,6" x:Name="text_2" Grid.Column="1" Grid.Row="2"/>
         <Button Height="33" HorizontalAlignment="Left" 
-            Margin="269,0,0,6" x:Name="btnEffect" VerticalAlignment="Bottom" 
-            Width="76" Grid.Column="2" Grid.Row="2" Content="Негатив" Click="btnEffect_Click"/>
+            Margin="210,0,0,6" x:Name="btnEffect" VerticalAlignment="Bottom" 
+            Width="64" Grid.Column="2" Grid.Row="2" Content="Негатив" Click="btnEffect_Click"/>
         <Button Height="33" HorizontalAlignment="Left" 
-            Margin="350.4,0,0,6.2" x:Name="btnGrayscale" VerticalAlignment="Bottom" 
-            Width="76" Grid.Column="2" Grid.Row="2" Content="ЧБ" Click="Grayscale"/>
+            Margin="278,0,0,6" x:Name="btnGrayscale" VerticalAlignment="Bottom" 
+            Width="64" Grid.Column="2" Grid.Row="2" Content="ЧБ" Click="Grayscale"/>
         <Button Height="33" HorizontalAlignment="Left" 
-            Margin="431,0,0,6" x:Name="btnGaussianBlur" VerticalAlignment="Bottom" 
-            Width="76" Grid.Column="2" Grid.Row="2" Content="Размытие" Click="GaussianBlur"/>
+            Margin="345,0,0,6" x:Name="btnGaussianBlur" VerticalAlignment="Bottom" 
+            Width="64" Grid.Column="2" Grid.Row="2" Content="Размытие" Click="GaussianBlur"/>
         <Button Height="33" HorizontalAlignment="Left" 
-            Margin="269,0,0,50" x:Name="btnSobelFilter" VerticalAlignment="Bottom" 
-            Width="76" Grid.Column="2" Grid.Row="2" Content="Собеля" Click="SobelFilter"/>
+            Margin="210,0,0,50" x:Name="btnSobelFilter" VerticalAlignment="Bottom" 
+            Width="64" Grid.Column="2" Grid.Row="2" Content="Собеля" Click="SobelFilter"/>
         <Button Height="33" HorizontalAlignment="Left" 
-            Margin="170,0,0,50" x:Name="savetojpg" VerticalAlignment="Bottom" 
-            Width="76" Grid.Column="2" Grid.Row="2" Content="jpg" Click="SaveToJpg"/>
+            Margin="138,0,0,50" x:Name="savetojpg" VerticalAlignment="Bottom" 
+            Width="65" Grid.Column="2" Grid.Row="2" Content="jpg" Click="SaveToJpg"/>
         <Button Height="33" HorizontalAlignment="Left" 
-            Margin="12,0,0,50" x:Name="savetobmp" VerticalAlignment="Bottom" 
-            Width="76" Grid.Column="2" Grid.Row="2" Content="bmp" Click="SaveToBmp"/>
+            Margin="1,0,0,50" x:Name="savetobmp" VerticalAlignment="Bottom" 
+            Width="66" Grid.Column="2" Grid.Row="2" Content="bmp" Click="SaveToBmp"/>
         <Button Height="33" HorizontalAlignment="Left" 
-            Margin="350,0,0,50" x:Name="btnSobelFilterGrayscale" VerticalAlignment="Bottom" 
-            Width="76" Grid.Column="2" Grid.Row="2" Content="Собеля ЧБ" Click="SobelFilterGrayscale"/>
+            Margin="278,0,0,50" x:Name="btnSobelFilterGrayscale" VerticalAlignment="Bottom" 
+            Width="63" Grid.Column="2" Grid.Row="2" Content="Собеля ЧБ" Click="SobelFilterGrayscale"/>
         <Button Height="33" HorizontalAlignment="Left" 
-            Margin="431,0,0,50" x:Name="btnRotate90" VerticalAlignment="Bottom" 
-            Width="76" Grid.Column="2" Grid.Row="2" Content="Поворот" Click="Rotate90"/>
+            Margin="345,0,0,50" x:Name="btnRotate90" VerticalAlignment="Bottom" 
+            Width="64" Grid.Column="2" Grid.Row="2" Content="Поворот" Click="Rotate90"/>
         <Button Height="33" HorizontalAlignment="Left" 
-            Margin="513,0,0,50" x:Name="btnSizeImg" VerticalAlignment="Bottom" 
+            Margin="414,0,0,50" x:Name="btnSizeImg" VerticalAlignment="Bottom" 
             Width="51" Grid.Column="2" Grid.Row="2" Content="size" Click="SizeImg"/>
 
 
         <Button Background="Black" Name="colorBlack" Click="colorBlackSelected"
-            Grid.Column="3" Grid.Row="2" Margin="10,8,194,50"/>
+            Grid.Column="2" Grid.Row="2" Margin="473,8,64,50"/>
         <Button Background="Red" Name="colorRed" Click="colorRedSelected"
-            Grid.Column="3" Grid.Row="2" Margin="51,8,153,50"/>
+            Grid.Column="2" Grid.Row="2" Margin="514,8,23,50"/>
         <Button Content="arrow" Name="ArrowButton" Click="Arrow_Selected"
-            Grid.Column="3" Grid.Row="2" Margin="10,48,194,10"/>
+            Grid.Column="2" Grid.Row="2" Margin="473,48,64,10"/>
         <Button Content="brush" Name="BrushButton" Click="Brush_Selected"
-            Grid.Column="3" Grid.Row="2" Margin="51,48,153,10"/>
+            Grid.Column="2" Grid.Row="2" Margin="514,48,23,10"/>
+        <Slider x:Name="sliderBrushSize" 
+                Grid.Column="2" 
+                HorizontalAlignment="Left"
+                Margin="414,63,0,0" 
+                Grid.Row="2" 
+                VerticalAlignment="Top" 
+                Width="51"
+                Maximum="10"
+                Minimum="1"
+                ValueChanged="sliderBrushSize_ValueChanged"/>
+
+
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="145,0,0,46" x:Name="btnUp" VerticalAlignment="Bottom" 
             Width="38" Grid.Column="3" Grid.Row="2" Content="Up" Click="MoveLayerUp"/>

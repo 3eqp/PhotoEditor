@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows;
+using System.Windows.Shapes;
 
 namespace PhotoEditor
 {
@@ -13,10 +14,7 @@ namespace PhotoEditor
     /// </summary>
     class VisualHost : FrameworkElement
     {
-        public Brush FillBrush { get; set; }
-        public static Brush Color = Brushes.Black;
-        public static Size BrushSize { get; set; }
-
-
+        public static SolidColorBrush BrushColor = Brushes.Black;
+        public static double BrushSize { get; set; }
     }
 }
