@@ -682,6 +682,13 @@ namespace PhotoEditor
             EraserButton.BorderThickness = new Thickness(0.5);
         }
 
+        private void Fill_Selected(object sender, RoutedEventArgs e)
+        {
+            int index = GlobalState.currentLayerIndex;
+            var layer = LayersWidgets[index].ThisLayer;
+            layer.Background = new SolidColorBrush(VisualHost.BrushColor.Color);
+        }
+
         private void colorRedSelected(object sender, RoutedEventArgs e)
         {
             VisualHost.BrushColor = Brushes.Red;
@@ -690,6 +697,11 @@ namespace PhotoEditor
         private void colorBlackSelected(object sender, RoutedEventArgs e)
         {
             VisualHost.BrushColor = Brushes.Black;
+        }
+
+        private void colorTranspSelected(object sender, RoutedEventArgs e)
+        {
+            VisualHost.BrushColor = Brushes.Transparent;
         }
 
     }
