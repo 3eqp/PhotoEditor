@@ -157,8 +157,10 @@ namespace PhotoEditor
         {
             if (mainCanvas.Children.Count > 0)
             {
-                for(int i = LayersWidgets.Count - 1; i >= 0; i--)
+                for (int i = LayersWidgets.Count - 1; i >= 0; i--)
+                {
                     Panel.SetZIndex(LayersWidgets[i].ThisLayer, LayersWidgets.Count - 1 - i);
+                }
             }
         }
 
@@ -177,7 +179,6 @@ namespace PhotoEditor
             for (int i = LayersWidgets.Count - 1; i > 0; i--)
             {
                 LayersWidgets[i] = LayersWidgets[i - 1];
-             
             }
             LayersWidgets[0] = last;
 
