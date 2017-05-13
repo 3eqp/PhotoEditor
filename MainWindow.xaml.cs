@@ -505,6 +505,7 @@ namespace PhotoEditor
             if (e.ButtonState == MouseButtonState.Released && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
             {
                 GlobalState.MousePressed = false;
+                brushToBitmap();
             }
         }
 
@@ -603,6 +604,30 @@ namespace PhotoEditor
             VisualHost.BrushSize = sliderBrushSize.Value;
         }
 
+        private void brushToBitmap()
+        {
+            int index = GlobalState.currentLayerIndex;
+            var layer = LayersWidgets[index].ThisLayer;
+            var width = layer.ActualWidth;
+            var height = layer.ActualHeight; 
+
+            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)width, (int)height, 96d, 96d, PixelFormats.Pbgra32);
+            bitmap.Render(layer);
+            BitmapEncoder encoder = new BmpBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmap));
+
+            BitmapImage bmpImg = new BitmapImage() { CacheOption = BitmapCacheOption.OnLoad };
+            MemoryStream outStream = new MemoryStream();
+            encoder.Save(outStream);
+            outStream.Seek(0, SeekOrigin.Begin);
+            bmpImg.BeginInit();
+            bmpImg.StreamSource = outStream;
+            bmpImg.EndInit();
+            BitmapFrame bmpFrame = BitmapFrame.Create(bmpImg);
+            layer.layerBmpFrame = bmpFrame;
+            layer.refreshBrush();
+            layer.Children.Clear();
+        }
 
         // TEST OUTPUT
 
