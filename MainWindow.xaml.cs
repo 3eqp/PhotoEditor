@@ -608,22 +608,20 @@ namespace PhotoEditor
         {
             int index = GlobalState.currentLayerIndex;
             var layer = LayersWidgets[index].ThisLayer;
-            var width = layer.ActualWidth;
-            var height = layer.ActualHeight; 
+            var size = new Size(layer.ActualWidth, layer.ActualHeight);
+            var bitmap = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96d, 96d, PixelFormats.Pbgra32);
 
-            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)width, (int)height, 96d, 96d, PixelFormats.Pbgra32);
-            bitmap.Render(layer);
-            BitmapEncoder encoder = new BmpBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(bitmap));
+            //fix for render position 
+            DrawingVisual drawingVisual = new DrawingVisual();
+            using (DrawingContext drawingContext = drawingVisual.RenderOpen())
+            {
+                VisualBrush visualBrush = new VisualBrush(layer);
+                drawingContext.DrawRectangle(visualBrush, null,
+                    new Rect(new Point(0, 0), size));
+            }
+            bitmap.Render(drawingVisual);
 
-            BitmapImage bmpImg = new BitmapImage() { CacheOption = BitmapCacheOption.OnLoad };
-            MemoryStream outStream = new MemoryStream();
-            encoder.Save(outStream);
-            outStream.Seek(0, SeekOrigin.Begin);
-            bmpImg.BeginInit();
-            bmpImg.StreamSource = outStream;
-            bmpImg.EndInit();
-            BitmapFrame bmpFrame = BitmapFrame.Create(bmpImg);
+            BitmapFrame bmpFrame = BitmapFrame.Create(bitmap);
             layer.layerBmpFrame = bmpFrame;
             layer.refreshBrush();
             layer.Children.Clear();
