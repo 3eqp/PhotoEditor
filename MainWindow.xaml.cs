@@ -711,6 +711,7 @@ namespace PhotoEditor
             int index = GlobalState.currentLayerIndex;
             var layer = LayersWidgets[index].ThisLayer;
             layer.Background = new SolidColorBrush(VisualHost.BrushColor.Color);
+            layer.Widget.previewCanvas.Background = new SolidColorBrush(VisualHost.BrushColor.Color);
         }
 
         private void colorRedSelected(object sender, RoutedEventArgs e)

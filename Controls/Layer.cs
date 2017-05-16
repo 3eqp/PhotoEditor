@@ -25,6 +25,7 @@ namespace PhotoEditor.Controls
         public BitmapFrame layerBmpFrame { get; set; }
         public LayerWidget Widget { get; set; }
 
+
         public Layer(string name, double width, double height, double opacity, int col, int colspan, int row)
         {
             this.MouseLeftButtonDown += new MouseButtonEventHandler(Control_MouseLeftButtonDown);
