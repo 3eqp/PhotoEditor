@@ -11,6 +11,7 @@ using Microsoft.Win32;
 using System.Windows.Shapes;
 using PhotoEditor.Controls;
 using System.Runtime.InteropServices;
+using Xceed.Wpf.Toolkit; 
 
 namespace PhotoEditor
 {
@@ -714,19 +715,41 @@ namespace PhotoEditor
             layer.Widget.previewCanvas.Background = new SolidColorBrush(VisualHost.BrushColor.Color);
         }
 
-        private void colorRedSelected(object sender, RoutedEventArgs e)
-        {
-            VisualHost.BrushColor = Brushes.Red;
-        }
-
-        private void colorBlackSelected(object sender, RoutedEventArgs e)
-        {
-            VisualHost.BrushColor = Brushes.Black;
-        }
+      
 
         private void colorTranspSelected(object sender, RoutedEventArgs e)
         {
             VisualHost.BrushColor = Brushes.Transparent;
+        }
+
+        //select color
+        public Color? ColorName
+        {
+            get
+            {
+                return ColorPicker1.SelectedColor;
+            }
+        }
+        private void SelectColor(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+
+
+            Color Colorid = (Color)ColorName;
+            var mySolidColorBrush = new SolidColorBrush(Colorid);
+
+            VisualHost.BrushColor = mySolidColorBrush;
+        }
+
+        private void Pouring(object sender, RoutedEventArgs e)
+        {
+            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+
+
+            Color Colorid = (Color)ColorName;
+
+            layer.Background = new SolidColorBrush(Colorid);
+
+            // layer.refreshBrush();
         }
 
     }
