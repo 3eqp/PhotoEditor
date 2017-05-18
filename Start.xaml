@@ -1,0 +1,12 @@
+﻿<Window x:Class="PhotoEditor.Start"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Start" Height="600" Width="1200"
+        ShowInTaskbar="True"
+        >
+    <Grid>
+        <Button Click="NewFile" Name="CreateNewFile" Margin="48,184,1019.6,293.4" Content="Create File"/>
+        <Button Click="btnOpenFile" Name="OpenFileGialog" Margin="214,184,853.6,293.4" Content="Open File"/>
+        <Button Click="OpenEx" Name="OpenExisting" Margin="374,184,693.6,293.4" Content="Open Existing"/>
+    </Grid>
+</Window>

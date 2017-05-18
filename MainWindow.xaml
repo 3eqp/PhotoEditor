@@ -11,7 +11,10 @@
         Width="1200" 
         WindowStartupLocation="CenterScreen"
         Loaded="MainWindow_Loaded"
-        Background="DarkGray">
+        Background="DarkGray"
+       
+        >
+       
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="11*"/>
@@ -55,9 +58,7 @@
 
 
         <TextBox Margin="0,12,306,6" x:Name="text" Grid.Column="1" Grid.Row="2"/>
-        <Button Height="33" HorizontalAlignment="Left" 
-        Margin="1,0,0,6" Name="btnOpen" VerticalAlignment="Bottom" 
-        Width="64" Grid.Column="2" Grid.Row="2" Click="btnOpen_Click">Open</Button>
+       
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="71,0,0,50" x:Name="btnSave" VerticalAlignment="Bottom" 
             Width="64" Grid.Column="2" Grid.Row="2" Content="png" Click="btnSavePng"/>
@@ -92,9 +93,9 @@
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="345,0,0,50" x:Name="btnRotate90" VerticalAlignment="Bottom" 
             Width="64" Grid.Column="2" Grid.Row="2" Content="Поворот" Click="Rotate90"/>
-        <Button Height="33" HorizontalAlignment="Left" 
+        <!--<Button Height="33" HorizontalAlignment="Left" 
             Margin="414,0,0,50" x:Name="btnSizeImg" VerticalAlignment="Bottom" 
-            Width="51" Grid.Column="2" Grid.Row="2" Content="size" Click="SizeImg"/>
+            Width="51" Grid.Column="2" Grid.Row="2" Content="size" Click="SizeImg"/>-->
 
 
       

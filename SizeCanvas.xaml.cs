@@ -15,27 +15,28 @@ using System.Windows.Shapes;
 namespace PhotoEditor
 {
     /// <summary>
-    /// Логика взаимодействия для Turn.xaml
+    /// Логика взаимодействия для SizeCanvas.xaml
     /// </summary>
-    public partial class Turn : Window
+    public partial class SizeCanvas : Window
     {
-        public Turn()
+        public SizeCanvas()
         {
             InitializeComponent();
+        }
+        public string SizeWs
+        {
+            get { return WidthBox.Text; }
+        }
+        public string SizeHs
+        {
+            get { return HeightBox.Text; }
         }
 
         private void Accept_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
-
         }
-
-        public string Turns
-        {
-            get { return Box.Text; }
-        }
-
-        private void Box_KeyDown(object sender, KeyEventArgs e)
+        private void BoxWidth(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
@@ -70,7 +71,7 @@ namespace PhotoEditor
                     e.Handled = false;
                     break;
                 case Key.OemMinus:
-                    e.Handled = false; 
+                    e.Handled = false;
                     break;
 
                 default:
@@ -78,7 +79,49 @@ namespace PhotoEditor
                     break;
             }
         }
+             private void BoxHeight(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.D1:
+                    e.Handled = false;
+                    break;
+                case Key.D2:
+                    e.Handled = false;
+                    break;
+                case Key.D3:
+                    e.Handled = false;
+                    break;
+                case Key.D4:
+                    e.Handled = false;
+                    break;
+                case Key.D5:
+                    e.Handled = false;
+                    break;
+                case Key.D6:
+                    e.Handled = false;
+                    break;
+                case Key.D7:
+                    e.Handled = false;
+                    break;
+                case Key.D8:
+                    e.Handled = false;
+                    break;
+                case Key.D9:
+                    e.Handled = false;
+                    break;
+                case Key.D0:
+                    e.Handled = false;
+                    break;
+                case Key.OemMinus:
+                    e.Handled = false;
+                    break;
 
-        
+                default:
+                    e.Handled = true;
+                    break;
+            }
+
+        }
     }
 }

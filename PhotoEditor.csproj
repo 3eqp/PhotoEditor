@@ -74,8 +74,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="sizeimage.xaml.cs">
-      <DependentUpon>sizeimage.xaml</DependentUpon>
+    <Compile Include="Form.cs" />
+    <Compile Include="SizeCanvas.xaml.cs">
+      <DependentUpon>SizeCanvas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Start.xaml.cs">
+      <DependentUpon>Start.xaml</DependentUpon>
     </Compile>
     <Compile Include="Turn.xaml.cs">
       <DependentUpon>Turn.xaml</DependentUpon>
@@ -104,7 +108,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="sizeimage.xaml">
+    <Page Include="SizeCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Start.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
