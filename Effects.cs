@@ -349,10 +349,10 @@ namespace PhotoEditor
                     originY = newImgHeight;
                 }
             }
-            Bitmap newImg = new Bitmap((int)newImgWidth, (int)newImgHeight, pf);
+            Bitmap newImg = new Bitmap((int)newImgWidth*2, (int)newImgHeight*2, pf);
             Graphics g = Graphics.FromImage(newImg);
             g.Clear(bkColor);
-            g.TranslateTransform(originX, originY); // смещение начала координат
+            g.TranslateTransform(originX*2, originY*2); // смещение начала координат
             g.RotateTransform((float)angle); // начало поворота
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
             g.DrawImageUnscaled(img, 0, 0); // Рисую изображение  0, 0
