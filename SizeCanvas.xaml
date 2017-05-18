@@ -1,0 +1,15 @@
+﻿<Window x:Class="PhotoEditor.SizeCanvas"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SizeCanvas" Height="300" Width="300">
+    <Grid Margin="0,10,-0.4,0.4">
+        <TextBlock Margin="27,0,199,179" Height="15" VerticalAlignment="Bottom">Ширина:</TextBlock>
+        <TextBlock Margin="27,0,198,131" Height="15" VerticalAlignment="Bottom">Высота:</TextBlock>
+        <TextBox x:Name="WidthBox" MinWidth="150" Margin="113,64,9.6,181.4" KeyDown="BoxHeight" RenderTransformOrigin="0.469,1.945"/>
+        <TextBox x:Name="HeightBox" MinWidth="150" Margin="113,115,9.6,130.4" KeyDown="BoxHeight" RenderTransformOrigin="0.469,1.945"/>
+        <WrapPanel HorizontalAlignment="Right" Margin="0,159,51,65">
+            <Button IsDefault="True" Click="Accept_Click" MinWidth="60" Margin="0,0,10,0" Content="OK"/>
+            <Button IsCancel="True" MinWidth="60" Content="Отмена"/>
+        </WrapPanel>
+    </Grid>
+</Window>

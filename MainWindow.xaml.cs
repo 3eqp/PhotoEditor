@@ -11,6 +11,7 @@ using Microsoft.Win32;
 using System.Windows.Shapes;
 using PhotoEditor.Controls;
 using System.Runtime.InteropServices;
+using Xceed.Wpf.Toolkit; 
 
 namespace PhotoEditor
 {
@@ -23,26 +24,42 @@ namespace PhotoEditor
         [DllImport("Kernel32")]
         static extern IntPtr GetConsoleWindow();
 
-
+        static public int WidthCanvas = 450;
+        static public int HeightCanvas = 450;
+        static public int indexi; 
         public MainWindow()
         {
             InitializeComponent();
             LayersWidgets = new ObservableCollection<LayerWidget>();
             widgetsCanvas.DataContext = this;
             MouseMove += new MouseEventHandler(mainCanvas_MouseMove);
+           
+           
         }
 
         public static ObservableCollection<LayerWidget> LayersWidgets { get; set; }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+
+           
+            Start StartPage = new Start();
+            this.Hide(); 
+            StartPage.ShowDialog();
+            this.Show();
+           
+            if (indexi == 1) {  }
+            if (indexi == 2) { btnOpen_Click(); }
+            if (indexi == 3) {   }
+            newLayer(1, WidthCanvas, HeightCanvas);
+        
+            
+            
             text_2.Text = "" + mainCanvas.ActualHeight + " " + mainCanvas.ActualWidth;
-
-            newLayer(1, 350, 350);
-
+           
             text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
-
+      
 
         // SAVE / OPEN
 
@@ -62,7 +79,13 @@ namespace PhotoEditor
             btnSave_Click(new PngBitmapEncoder(), ".bmp");
         }
 
-        private void btnOpen_Click(object sender, RoutedEventArgs e)
+        public void functionflag(bool id)
+        {
+            
+                btnOpen_Click(); 
+        
+        }
+        private void btnOpen_Click()
         {
             OpenFileDialog op = new OpenFileDialog();
             op.Title = "Select a picture";
@@ -75,20 +98,24 @@ namespace PhotoEditor
                 BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
                 int x = bmpFrame.PixelHeight; //размер изображения
                 int y = bmpFrame.PixelWidth;
-                int ind = 0;
+                //
 
-                if (x > 300 || y > 400) // если большое, уменьшается в 2 раза 
-                {
-                    BitmapFrame img = Effects.CreateResizedImage(bmpFrame, x/2, y/2, 20);
-                    ind = 1;
-                } else
-                {
-                    BitmapFrame img = Effects.CreateResizedImage(bmpFrame, x , y , 20);
-                }
 
-                if (mainCanvas.Children.Count == 0)
-                    if (ind == 0) newLayer(1, x, y);
-                    else newLayer(1, x / 2, y / 2);
+               // int ind = 0;
+
+                //if (x > 300 || y > 400) // если большое, уменьшается в 2 раза 
+                //{
+                //    BitmapFrame img = Effects.CreateResizedImage(bmpFrame, x/2, y/2, 20);
+                //    ind = 1;
+                //} else
+                //{
+                //    BitmapFrame img = Effects.CreateResizedImage(bmpFrame, x , y , 20);
+                //}
+
+                //if (mainCanvas.Children.Count == 0)
+                //    if (ind == 0) newLayer(1, x, y);
+                //    else newLayer(1, x / 2, y / 2);
+                BitmapFrame img = Effects.CreateResizedImage(bmpFrame, x, y, 10);
                 int index = GlobalState.currentLayerIndex;
                 var layer = LayersWidgets[index].ThisLayer;
 
@@ -186,6 +213,7 @@ namespace PhotoEditor
                 widgetsCanvas.SelectedIndex = 0;
 
             GlobalState.LayersCount = mainCanvas.Children.Count;
+            widgetsCanvas.SelectedIndex = mainCanvas.Children.Count -1;
             GlobalState.currentLayerIndex = widgetsCanvas.SelectedIndex;
             
             text.Text = ""  + widgetsCanvas.Items.Count + LayersWidgets.IndexOf(layer.Widget) + GlobalState.currentLayerIndex;
@@ -315,24 +343,24 @@ namespace PhotoEditor
         }
 
         //изминение размера 
-        private void SizeImg(object sender, RoutedEventArgs e)
-        {
+        //private void SizeImg(object sender, RoutedEventArgs e)
+        //{
 
-            sizeimage Size = new sizeimage();
+        //    sizeimage Size = new sizeimage();
 
-            if (Size.ShowDialog() == true)
-            {
+        //    if (Size.ShowDialog() == true)
+        //    {
 
-                double SizeW = double.Parse(Size.SizeWs);
-                double SizeH = double.Parse(Size.SizeHs);
-                Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
-               int  SizeHi = (int)SizeH;
-                int SizeWi = (int)SizeW;
-                BitmapFrame img = Effects.CreateResizedImage(layer.layerImageBrush.ImageSource, SizeWi, SizeHi, 20); 
+        //        double SizeW = double.Parse(Size.SizeWs);
+        //        double SizeH = double.Parse(Size.SizeHs);
+        //        Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+        //       int  SizeHi = (int)SizeH;
+        //        int SizeWi = (int)SizeW;
+        //        BitmapFrame img = Effects.CreateResizedImage(layer.layerImageBrush.ImageSource, SizeWi, SizeHi, 20); 
              
-                layer.refreshBrush();
-            }
-        }
+        //        layer.refreshBrush();
+        //    }
+        //}
         //--
 
 
@@ -514,7 +542,7 @@ namespace PhotoEditor
             if (LayersWidgets.Count > 0)
             {
                 int index = GlobalState.currentLayerIndex;
-                var layer = LayersWidgets[index].ThisLayer;
+               var layer = LayersWidgets[index].ThisLayer;
 
                 // Erase
                 if (GlobalState.MousePressed && GlobalState.CurrentTool == GlobalState.Instruments.Eraser)
@@ -714,19 +742,41 @@ namespace PhotoEditor
             layer.Widget.previewCanvas.Background = new SolidColorBrush(VisualHost.BrushColor.Color);
         }
 
-        private void colorRedSelected(object sender, RoutedEventArgs e)
-        {
-            VisualHost.BrushColor = Brushes.Red;
-        }
-
-        private void colorBlackSelected(object sender, RoutedEventArgs e)
-        {
-            VisualHost.BrushColor = Brushes.Black;
-        }
+      
 
         private void colorTranspSelected(object sender, RoutedEventArgs e)
         {
             VisualHost.BrushColor = Brushes.Transparent;
+        }
+
+        //select color
+        public Color? ColorName
+        {
+            get
+            {
+                return ColorPicker1.SelectedColor;
+            }
+        }
+        private void SelectColor(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+
+
+            Color Colorid = (Color)ColorName;
+            var mySolidColorBrush = new SolidColorBrush(Colorid);
+
+            VisualHost.BrushColor = mySolidColorBrush;
+        }
+
+        private void Pouring(object sender, RoutedEventArgs e)
+        {
+            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+
+
+            Color Colorid = (Color)ColorName;
+
+            layer.Background = new SolidColorBrush(Colorid);
+
+            // layer.refreshBrush();
         }
 
     }
