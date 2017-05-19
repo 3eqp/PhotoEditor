@@ -14,7 +14,7 @@
         Background="DarkGray"
        
         >
-       
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="11*"/>
@@ -28,16 +28,17 @@
             <ColumnDefinition Width="240*"/>
         </Grid.ColumnDefinitions>
         <xctk:ColorPicker Name="ColorPicker1" Width="40" Height="30" SelectedColorChanged="SelectColor"  DisplayColorAndName="True" />
-        <Canvas
+        
+<Canvas
             x:Name="mainCanvas" 
             Grid.Column="1" 
             Grid.Row="1" 
             Width="Auto"
             Height="Auto"
-            Grid.ColumnSpan="2"
+            Grid.ColumnSpan="3"
             MouseLeftButtonDown="mainCanvas_MouseLeftButtonDown"
             MouseLeftButtonUp="mainCanvas_MouseLeftButtonUp"
-            MouseMove="mainCanvas_MouseMove" Margin="10,0,0,0"/>
+            MouseMove="mainCanvas_MouseMove" Margin="9.6,18,239.6,0.2"/>
         <ScrollViewer
             Grid.Column="3" 
             Grid.Row="1"
@@ -56,12 +57,27 @@
         </ScrollViewer>
 
 
+        <Menu Height="27" VerticalAlignment="Center" Margin="10,10,357.6,442.2" Grid.RowSpan="2" Grid.Column="2">
+            <MenuItem Header="File">
+                <MenuItem Header="New Project"  ></MenuItem>
+                <MenuItem Header="Open Project"  ></MenuItem>
+                <MenuItem Header="Save" >
 
+                    <MenuItem Header="to Png" Click="btnSavePng"></MenuItem>
+                    <MenuItem Header="to Jpg" Click="SaveToJpg" ></MenuItem>
+                    <MenuItem Header="to Bmp" Click="SaveToBmp"></MenuItem>
+                </MenuItem>
+
+                <MenuItem Header="Exit" ></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Help" ></MenuItem>
+
+        </Menu>
         <TextBox Margin="0,12,306,6" x:Name="text" Grid.Column="1" Grid.Row="2"/>
-       
-        <Button Height="33" HorizontalAlignment="Left" 
+
+        <!--<Button Height="33" HorizontalAlignment="Left" 
             Margin="71,0,0,50" x:Name="btnSave" VerticalAlignment="Bottom" 
-            Width="64" Grid.Column="2" Grid.Row="2" Content="png" Click="btnSavePng"/>
+            Width="64" Grid.Column="2" Grid.Row="2" Content="png" Click="btnSavePng"/>-->
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="71,0,0,6" x:Name="btnNewLayer" VerticalAlignment="Bottom" 
             Width="66" Grid.Column="2" Grid.Row="2" Content="NewLayer" Click="btnNewLayer_Click"/>
@@ -81,12 +97,12 @@
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="210,0,0,50" x:Name="btnSobelFilter" VerticalAlignment="Bottom" 
             Width="64" Grid.Column="2" Grid.Row="2" Content="Собеля" Click="SobelFilter"/>
-        <Button Height="33" HorizontalAlignment="Left" 
+        <!--<Button Height="33" HorizontalAlignment="Left" 
             Margin="138,0,0,50" x:Name="savetojpg" VerticalAlignment="Bottom" 
-            Width="65" Grid.Column="2" Grid.Row="2" Content="jpg" Click="SaveToJpg"/>
-        <Button Height="33" HorizontalAlignment="Left" 
+            Width="65" Grid.Column="2" Grid.Row="2" Content="jpg" Click="SaveToJpg"/>-->
+        <!--<Button Height="33" HorizontalAlignment="Left" 
             Margin="1,0,0,50" x:Name="savetobmp" VerticalAlignment="Bottom" 
-            Width="66" Grid.Column="2" Grid.Row="2" Content="bmp" Click="SaveToBmp"/>
+            Width="66" Grid.Column="2" Grid.Row="2" Content="bmp" Click="SaveToBmp"/>-->
         <Button Height="33" HorizontalAlignment="Left" 
             Margin="278,0,0,50" x:Name="btnSobelFilterGrayscale" VerticalAlignment="Bottom" 
             Width="63" Grid.Column="2" Grid.Row="2" Content="Собеля ЧБ" Click="SobelFilterGrayscale"/>
@@ -98,7 +114,7 @@
             Width="51" Grid.Column="2" Grid.Row="2" Content="size" Click="SizeImg"/>-->
 
 
-      
+
         <Button Background="Transparent" Name="colorTransp" Click="colorTranspSelected"
             Grid.Column="2" Grid.Row="2" Margin="555,8,222,50" Grid.ColumnSpan="2"/>
 
