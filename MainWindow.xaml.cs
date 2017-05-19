@@ -47,11 +47,15 @@ namespace PhotoEditor
             this.Hide(); 
             StartPage.ShowDialog();
             this.Show();
-           
-            if (indexi == 1) {  }
             if (indexi == 2) { btnOpen_Click(); }
-            if (indexi == 3) {   }
-            newLayer(1, WidthCanvas, HeightCanvas);
+            newLayer(1, HeightCanvas, WidthCanvas);
+            if (indexi == 1) { }
+            if (indexi == 3) { }
+            
+            
+            
+           
+        
         
             
             
@@ -79,12 +83,7 @@ namespace PhotoEditor
             btnSave_Click(new PngBitmapEncoder(), ".bmp");
         }
 
-        public void functionflag(bool id)
-        {
-            
-                btnOpen_Click(); 
-        
-        }
+      
         private void btnOpen_Click()
         {
             OpenFileDialog op = new OpenFileDialog();
@@ -96,8 +95,8 @@ namespace PhotoEditor
             if (op.ShowDialog() == true)
             {
                 BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
-                int x = bmpFrame.PixelHeight; //размер изображения
-                int y = bmpFrame.PixelWidth;
+                HeightCanvas = bmpFrame.PixelHeight; //размер изображения
+                WidthCanvas = bmpFrame.PixelWidth;
                 //
 
 
@@ -115,7 +114,8 @@ namespace PhotoEditor
                 //if (mainCanvas.Children.Count == 0)
                 //    if (ind == 0) newLayer(1, x, y);
                 //    else newLayer(1, x / 2, y / 2);
-                BitmapFrame img = Effects.CreateResizedImage(bmpFrame, x, y, 10);
+              //  BitmapFrame img = Effects.CreateResizedImage(bmpFrame, HeightCanvas, WidthCanvas, 10);
+                newLayer(1, HeightCanvas, WidthCanvas);
                 int index = GlobalState.currentLayerIndex;
                 var layer = LayersWidgets[index].ThisLayer;
 
