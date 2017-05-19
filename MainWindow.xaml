@@ -12,7 +12,7 @@
         WindowStartupLocation="CenterScreen"
         Loaded="MainWindow_Loaded"
         Background="DarkGray"
-       
+       WindowState="Maximized"
         >
 
     <Grid>
@@ -28,17 +28,16 @@
             <ColumnDefinition Width="240*"/>
         </Grid.ColumnDefinitions>
         <xctk:ColorPicker Name="ColorPicker1" Width="40" Height="30" SelectedColorChanged="SelectColor"  DisplayColorAndName="True" />
-        
-<Canvas
+      
+            <Canvas
             x:Name="mainCanvas" 
-            Grid.Column="1" 
-            Grid.Row="1" 
-            Width="Auto"
-            Height="Auto"
-            Grid.ColumnSpan="3"
+            Width="auto"
+            Height="auto"
+            Grid.ColumnSpan="2"
             MouseLeftButtonDown="mainCanvas_MouseLeftButtonDown"
             MouseLeftButtonUp="mainCanvas_MouseLeftButtonUp"
-            MouseMove="mainCanvas_MouseMove" Margin="9.6,18,239.6,0.2"/>
+            MouseMove="mainCanvas_MouseMove" Margin="9.6,32,107.6,29.2" Grid.Column="1" Grid.Row="1"/>
+        
         <ScrollViewer
             Grid.Column="3" 
             Grid.Row="1"
