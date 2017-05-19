@@ -21,8 +21,8 @@ namespace PhotoEditor.Controls
         public Point LayerPosition;
 
         public SolidColorBrush layerColorBrush { get; set; }
-        public ImageBrush layerImageBrush { get; set; }
-        public BitmapFrame layerBmpFrame { get; set; }
+        public ImageBrush LayerImageBrush { get; set; }
+        public BitmapFrame LayerBmpFrame { get; set; }
         public LayerWidget Widget { get; set; }
 
 
@@ -46,13 +46,13 @@ namespace PhotoEditor.Controls
             Widget = new LayerWidget(this, name);
         }
 
-        public void refreshBrush()
+        public void RefreshBrush()
         {
             ImageBrush brush = new ImageBrush();
-            brush.ImageSource = layerBmpFrame;
-            layerImageBrush = brush;
+            brush.ImageSource = LayerBmpFrame;
+            LayerImageBrush = brush;
 
-            Widget.refreshPreviewCanvas();
+            Widget.RefreshPreviewCanvas();
             Background = brush;
         }
 
@@ -69,7 +69,7 @@ namespace PhotoEditor.Controls
                 clickPosition = e.GetPosition(this);
                 draggableControl.CaptureMouse();
                 var widgetIndex = MainWindow.LayersWidgets.IndexOf(this.Widget);
-                GlobalState.currentLayerIndex = widgetIndex;
+                GlobalState.CurrentLayerIndex = widgetIndex;
                 ((MainWindow)Application.Current.MainWindow).widgetsCanvas.SelectedIndex = widgetIndex;
             }
         }

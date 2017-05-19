@@ -9,6 +9,7 @@ namespace SimpleImageGallery
 {
 
     //----------- Размытие по Гауссу -----------
+
     class GaussianBlur
     {
         private readonly int[] _red;

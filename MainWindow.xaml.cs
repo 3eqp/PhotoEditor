@@ -17,74 +17,80 @@ namespace PhotoEditor
 {
     public partial class MainWindow : Window
     {
-        [DllImport("Kernel32")]
-        public static extern void AllocConsole();
-        [DllImport("Kernel32")]
-        public static extern void FreeConsole();
-        [DllImport("Kernel32")]
-        static extern IntPtr GetConsoleWindow();
+        // Window Global Parameters
+        public static double WindowTop { get; set; }
+        public static double WindowLeft { get; set; }
+        public static double WindowWidth { get; set; }
+        public static double WindowHeight { get; set; }
 
-        static public int WidthCanvas = 450;
-        static public int HeightCanvas = 450;
-        static public int indexi; 
+        /// <summary>
+        /// Trigger that Window gets from StartWindow
+        /// 
+        /// 1 - New File
+        /// 2 - Open File
+        /// 3 - Open Photo
+        /// </summary>
+        static public int WindowTrigger;
+
         public MainWindow()
         {
             InitializeComponent();
+
             LayersWidgets = new ObservableCollection<LayerWidget>();
             widgetsCanvas.DataContext = this;
-            MouseMove += new MouseEventHandler(mainCanvas_MouseMove);
-           
-           
+
+            // Events
+            mainCanvas.MouseMove += new MouseEventHandler(MainCanvas_MouseMove);
+            mainCanvas.MouseWheel += new MouseWheelEventHandler(MainCanvas_MouseWheel);
+            
+            Hide();
+            Start StartWindow = new Start();
+            StartWindow.Show();
         }
 
         public static ObservableCollection<LayerWidget> LayersWidgets { get; set; }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            MainWindowState.IsOpen = true;
+        }
 
-           
-            Start StartPage = new Start();
-            this.Hide(); 
-            StartPage.ShowDialog();
-            this.Show();
-            if (indexi == 2) { btnOpen_Click(); }
-            newLayer(1, HeightCanvas, WidthCanvas);
-            if (indexi == 1) { }
-            if (indexi == 3) { }
-            
-            
-            
-           
-        
-        
-            
-            
-            text_2.Text = "" + mainCanvas.ActualHeight + " " + mainCanvas.ActualWidth;
-           
-            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
+        // Actions from Start Window
+        void WindowActions()
+        {
+            if (WindowTrigger == 1)
+            {
+                NewLayer(GlobalState.NewLayerHeight, GlobalState.NewLayerWidth);
+                Show();
+            }
+
+            if (WindowTrigger == 2)
+            {
+                // Add Open File
+                Show();
+            }
+
+            if (WindowTrigger == 3)
+            {
+                OpenPhoto();
+                Show();
+            }
         }
       
 
-        // SAVE / OPEN
+        // OPEN
 
-
-        private void btnSavePng(object sender, RoutedEventArgs e)
+        private void ButtonOpenFile_Click(object sender, RoutedEventArgs e)
         {
-            btnSave_Click(new PngBitmapEncoder(), ".png");
+            OpenPhoto();
         }
 
-        private void SaveToJpg(object sender, RoutedEventArgs e)
+        private void ButtonOpenPhoto_Click(object sender, RoutedEventArgs e)
         {
-            btnSave_Click(new PngBitmapEncoder(), ".jpg");
+            OpenPhoto();
         }
 
-        private void SaveToBmp(object sender, RoutedEventArgs e)
-        {
-            btnSave_Click(new PngBitmapEncoder(), ".bmp");
-        }
-
-      
-        private void btnOpen_Click()
+        private void OpenPhoto()
         {
             OpenFileDialog op = new OpenFileDialog();
             op.Title = "Select a picture";
@@ -94,35 +100,23 @@ namespace PhotoEditor
 
             if (op.ShowDialog() == true)
             {
+                double HeightCanvas, WidthCanvas;
                 BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
-                HeightCanvas = bmpFrame.PixelHeight; //размер изображения
+                HeightCanvas = bmpFrame.PixelHeight;
                 WidthCanvas = bmpFrame.PixelWidth;
-                //
-
-
-               // int ind = 0;
-
-                //if (x > 300 || y > 400) // если большое, уменьшается в 2 раза 
-                //{
-                //    BitmapFrame img = Effects.CreateResizedImage(bmpFrame, x/2, y/2, 20);
-                //    ind = 1;
-                //} else
-                //{
-                //    BitmapFrame img = Effects.CreateResizedImage(bmpFrame, x , y , 20);
-                //}
-
-                //if (mainCanvas.Children.Count == 0)
-                //    if (ind == 0) newLayer(1, x, y);
-                //    else newLayer(1, x / 2, y / 2);
-              //  BitmapFrame img = Effects.CreateResizedImage(bmpFrame, HeightCanvas, WidthCanvas, 10);
-                newLayer(1, HeightCanvas, WidthCanvas);
-                int index = GlobalState.currentLayerIndex;
+                
+                NewLayer(HeightCanvas, WidthCanvas);
+                int index = GlobalState.CurrentLayerIndex;
                 var layer = LayersWidgets[index].ThisLayer;
 
-                layer.layerBmpFrame = bmpFrame;
-                layer.refreshBrush();
+                layer.LayerBmpFrame = bmpFrame;
+                layer.RefreshBrush();
             }
         }
+
+
+        // SAVE
+
 
         private void SaveCanvas(Canvas canvas, int dpi, string filename)
         {
@@ -155,7 +149,7 @@ namespace PhotoEditor
             }
         }
        
-        private void btnSave_Click(BitmapEncoder encoder, string format)
+        private void ExportAs(BitmapEncoder encoder, string format)
         {
             var saveDlg = new SaveFileDialog();
             switch (format) {
@@ -177,6 +171,26 @@ namespace PhotoEditor
         }
 
 
+
+        // LAYER EXPORT
+
+
+        private void ExportAsPNG(object sender, RoutedEventArgs e)
+        {
+            ExportAs(new PngBitmapEncoder(), ".png");
+        }
+
+        private void ExportAsJPG(object sender, RoutedEventArgs e)
+        {
+            ExportAs(new PngBitmapEncoder(), ".jpg");
+        }
+
+        private void ExportAsBMP(object sender, RoutedEventArgs e)
+        {
+            ExportAs(new PngBitmapEncoder(), ".bmp");
+        }
+
+
         // LAYER NEW / DELETE
 
 
@@ -191,17 +205,17 @@ namespace PhotoEditor
             }
         }
 
-        public void newLayer(double opacity, double PixelHeight, double PixelWidth)
+        public void NewLayer(double PixelHeight, double PixelWidth)
         {
             string layerName = "NewLayer" + LayersWidgets.Count;
-            var layer = new Layer(layerName, PixelWidth, PixelHeight, opacity, 1, 2, 1);
+            var layer = new Layer(layerName, PixelWidth, PixelHeight, 1, 1, 2, 1);
 
             mainCanvas.Children.Add(layer);
             LayersWidgets.Add(layer.Widget);
 
             layer.Background = new SolidColorBrush(Colors.White);
 
-            // Перемещение элемента в самый верх списка, для наглядности отображения верхних слоев пользователю
+            // Replace layer to top of the list
             LayerWidget last = LayersWidgets.Last();
             for (int i = LayersWidgets.Count - 1; i > 0; i--)
             {
@@ -213,20 +227,18 @@ namespace PhotoEditor
                 widgetsCanvas.SelectedIndex = 0;
 
             GlobalState.LayersCount = mainCanvas.Children.Count;
-            widgetsCanvas.SelectedIndex = mainCanvas.Children.Count -1;
-            GlobalState.currentLayerIndex = widgetsCanvas.SelectedIndex;
-            
-            text.Text = ""  + widgetsCanvas.Items.Count + LayersWidgets.IndexOf(layer.Widget) + GlobalState.currentLayerIndex;
+            widgetsCanvas.SelectedIndex = GlobalState.LayersCount;
+            GlobalState.CurrentLayerIndex = widgetsCanvas.SelectedIndex;
         }
 
-        private void btnNewLayer_Click(object sender, RoutedEventArgs e)
+        private void NewLayer_Click(object sender, RoutedEventArgs e)
         {
-            newLayer(1,350,350);
+            NewLayer(GlobalState.DefaultLayerHeight, GlobalState.DefaultLayerWidth);
         }
 
-        private void btnDeleteLayer_Click(object sender, RoutedEventArgs e)
+        private void DeleteLayer_Click(object sender, RoutedEventArgs e)
         {
-            int index = GlobalState.currentLayerIndex;
+            int index = GlobalState.CurrentLayerIndex;
             if (LayersWidgets.Count > 0 && index <= LayersWidgets.Count)
             {
                 var layer = LayersWidgets[index].ThisLayer;
@@ -237,13 +249,11 @@ namespace PhotoEditor
                 LayersWidgets.Remove(widget);
                 widgetsCanvas.Items.Refresh();
 
-                if (index != 0) widgetsCanvas.SelectedIndex = GlobalState.currentLayerIndex = index - 1;
-                else widgetsCanvas.SelectedIndex = GlobalState.currentLayerIndex = 0;
+                if (index != 0) widgetsCanvas.SelectedIndex = GlobalState.CurrentLayerIndex = index - 1;
+                else widgetsCanvas.SelectedIndex = GlobalState.CurrentLayerIndex = 0;
             }
             GlobalState.LayersCount = mainCanvas.Children.Count;
             UpdateLayersZIndex();
-
-            text.Text = "" + mainCanvas.Children.Count + widgetsCanvas.Items.Count + GlobalState.currentLayerIndex;
         }
 
 
@@ -260,25 +270,25 @@ namespace PhotoEditor
 
             UpdateLayersZIndex();
 
-            GlobalState.currentLayerIndex = nextIndx;
-            widgetsCanvas.SelectedIndex = GlobalState.currentLayerIndex;
+            GlobalState.CurrentLayerIndex = nextIndx;
+            widgetsCanvas.SelectedIndex = GlobalState.CurrentLayerIndex;
         }
 
         private void MoveLayerUp(object sender, RoutedEventArgs e)
         {
-            if (GlobalState.currentLayerIndex > 0)
-                SwapLayers(GlobalState.currentLayerIndex, GlobalState.currentLayerIndex - 1);
+            if (GlobalState.CurrentLayerIndex > 0)
+                SwapLayers(GlobalState.CurrentLayerIndex, GlobalState.CurrentLayerIndex - 1);
         }
 
         private void MoveLayerDown(object sender, RoutedEventArgs e)
         {
-            if (GlobalState.currentLayerIndex < widgetsCanvas.Items.Count - 1)
-               SwapLayers(GlobalState.currentLayerIndex, GlobalState.currentLayerIndex + 1);
+            if (GlobalState.CurrentLayerIndex < widgetsCanvas.Items.Count - 1)
+               SwapLayers(GlobalState.CurrentLayerIndex, GlobalState.CurrentLayerIndex + 1);
         }
         
-        private void sliderOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void SliderOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            int index = GlobalState.currentLayerIndex;
+            int index = GlobalState.CurrentLayerIndex;
             var layer = LayersWidgets[index].ThisLayer;
             layer.Opacity = sliderOpacity.Value / 100;
         }
@@ -287,47 +297,47 @@ namespace PhotoEditor
         // EFFECTS
 
 
-        private void btnEffect_Click(object sender, RoutedEventArgs e)
+        private void Negative_Click(object sender, RoutedEventArgs e)
         {
-            var layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+            var layer = (Layer)mainCanvas.Children[GlobalState.CurrentLayerIndex];
             Effects.Negative(layer);
-            layer.refreshBrush();
+            layer.RefreshBrush();
         }
 
-        private void Grayscale(object sender, RoutedEventArgs e)
+        private void Grayscale_Click(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+            Layer layer = (Layer)mainCanvas.Children[GlobalState.CurrentLayerIndex];
             Effects.Grayscale(layer);
-            layer.refreshBrush();
+            layer.RefreshBrush();
         }
 
-        private void GaussianBlur(object sender, RoutedEventArgs e)
+        private void GaussianBlur_Click(object sender, RoutedEventArgs e)
         {
             Turn BoxWindow = new Turn();
             if (BoxWindow.ShowDialog() == true)
             {
                 int x = int.Parse(BoxWindow.Turns);
-                Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+                Layer layer = (Layer)mainCanvas.Children[GlobalState.CurrentLayerIndex];
                 Effects.GaussianBlur(layer, x);
-                layer.refreshBrush();
+                layer.RefreshBrush();
             }
         }
 
-        private void SobelFilter(object sender, RoutedEventArgs e)
+        private void SobelFilter_Click(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+            Layer layer = (Layer)mainCanvas.Children[GlobalState.CurrentLayerIndex];
             Effects.SobelFilter(layer);
-            layer.refreshBrush();
+            layer.RefreshBrush();
         }
 
-        private void SobelFilterGrayscale(object sender, RoutedEventArgs e)
+        private void SobelFilterGrayscale_Click(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+            Layer layer = (Layer)mainCanvas.Children[GlobalState.CurrentLayerIndex];
             Effects.SobelFilter(layer, true);
-            layer.refreshBrush();
+            layer.RefreshBrush();
         }
 
-        private void Rotate90(object sender, RoutedEventArgs e)
+        private void Rotate_Click(object sender, RoutedEventArgs e)
         {
             
             Turn BoxWindow = new Turn();
@@ -335,65 +345,27 @@ namespace PhotoEditor
             {
                 
                 double x = double.Parse(BoxWindow.Turns);
-                Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
+                Layer layer = (Layer)mainCanvas.Children[GlobalState.CurrentLayerIndex];
                 if (x==90 || x==180 || x == 360) { Effects.Rotate(layer, x); } else { Effects.RotateBilinear(layer, x); }
                 
-                layer.refreshBrush();
+                layer.RefreshBrush();
             }
         }
+        
 
-        //изминение размера 
-        //private void SizeImg(object sender, RoutedEventArgs e)
-        //{
-
-        //    sizeimage Size = new sizeimage();
-
-        //    if (Size.ShowDialog() == true)
-        //    {
-
-        //        double SizeW = double.Parse(Size.SizeWs);
-        //        double SizeH = double.Parse(Size.SizeHs);
-        //        Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
-        //       int  SizeHi = (int)SizeH;
-        //        int SizeWi = (int)SizeW;
-        //        BitmapFrame img = Effects.CreateResizedImage(layer.layerImageBrush.ImageSource, SizeWi, SizeHi, 20); 
-             
-        //        layer.refreshBrush();
-        //    }
-        //}
-        //--
-
-
-        //private void Resize(object sender, RoutedEventArgs e)
-        //{
-        //    SizeImage BoxWindow = new SizeImage(); 
-        //    if (BoxWindow.ShowDialog() == true)
-        //    {
-        //        int x = int.Parse(BoxWindow.SizeImagesHeight);
-        //        int y = int.Parse(BoxWindow.SizeImageWidth);
-        //        Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
-        //        Effects.Resized(layer, y, x, BitmapScalingMode.LowQuality);
-        //        layer.refreshBrush();
-
-        //    }
-        //}
-
-
-        // MainCanvas actions (DRAWING / RESIZING)
-
-
-        public Point clickPosition;
+        // 
+        
 
         //!!!!!!!!!test function!!!!!!!!
-        private void bitmap(Point pos)
+        private void Bitmap(Point pos)
         {
             const int width = 5;
             const int height = 5;
-            int indexs = GlobalState.currentLayerIndex;
+            int indexs = GlobalState.CurrentLayerIndex;
             var layer = LayersWidgets[indexs].ThisLayer;
 
 
-            BitmapSource source = (BitmapSource)layer.layerBmpFrame;
+            BitmapSource source = (BitmapSource)layer.LayerBmpFrame;
 
             // Calculate stride of source
             int stride = source.PixelWidth * (source.Format.BitsPerPixel + 7) / 8;
@@ -474,20 +446,49 @@ namespace PhotoEditor
             target.WritePixels(rect, pixels1d, stride, 0);
 
             var bf = BitmapFrame.Create(target);
-            layer.layerBmpFrame = bf;
-            layer.refreshBrush();
+            layer.LayerBmpFrame = bf;
+            layer.RefreshBrush();
         }
 
-        private void mainCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void BrushToBitmap()
         {
-            int index = GlobalState.currentLayerIndex;
+            int index = GlobalState.CurrentLayerIndex;
             var layer = LayersWidgets[index].ThisLayer;
-            
+            var size = new Size(layer.ActualWidth, layer.ActualHeight);
+            var bitmap = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96d, 96d, PixelFormats.Pbgra32);
+
+            //fix for render position 
+            DrawingVisual drawingVisual = new DrawingVisual();
+            using (DrawingContext drawingContext = drawingVisual.RenderOpen())
+            {
+                VisualBrush visualBrush = new VisualBrush(layer);
+                drawingContext.DrawRectangle(visualBrush, null,
+                    new Rect(new Point(0, 0), size));
+            }
+            bitmap.Render(drawingVisual);
+
+            BitmapFrame bmpFrame = BitmapFrame.Create(bitmap);
+            layer.LayerBmpFrame = bmpFrame;
+            layer.RefreshBrush();
+            layer.Children.Clear();
+        }
+
+
+        // MAIN CANVAS TRIGGERS (DRAW/RESIZE/ERASE)
+
+
+        public Point clickPosition;
+
+        private void MainCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            int index = GlobalState.CurrentLayerIndex;
+            var layer = LayersWidgets[index].ThisLayer;
+
             // Erase
             if (GlobalState.CurrentTool == GlobalState.Instruments.Eraser)
             {
                 clickPosition = e.GetPosition(layer);
-                bitmap(clickPosition);
+                Bitmap(clickPosition);
             }
 
             // Resize
@@ -495,7 +496,7 @@ namespace PhotoEditor
             {
                 clickPosition = e.GetPosition(layer);
                 GlobalState.MousePressed = true;
-                GlobalState.isResizing = true;
+                GlobalState.IsResizing = true;
             }
 
             // Brush
@@ -510,39 +511,39 @@ namespace PhotoEditor
                 GlobalState.MousePressed = true;
             }
         }
-        
-        private void mainCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+
+        private void MainCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            int index = GlobalState.currentLayerIndex;
+            int index = GlobalState.CurrentLayerIndex;
             var layer = LayersWidgets[index].ThisLayer;
 
             // Erase
             if (GlobalState.CurrentTool == GlobalState.Instruments.Eraser)
             {
-                
+
             }
 
             // Resize
             if (GlobalState.CurrentTool == GlobalState.Instruments.Resize)
             {
                 GlobalState.MousePressed = false;
-                GlobalState.isResizing = false;
+                GlobalState.IsResizing = false;
             }
 
             // Brush
             if (e.ButtonState == MouseButtonState.Released && GlobalState.CurrentTool == GlobalState.Instruments.Brush)
             {
                 GlobalState.MousePressed = false;
-                brushToBitmap();
+                BrushToBitmap();
             }
         }
 
-        private void mainCanvas_MouseMove(object sender, MouseEventArgs e)
+        private void MainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
             if (LayersWidgets.Count > 0)
             {
-                int index = GlobalState.currentLayerIndex;
-               var layer = LayersWidgets[index].ThisLayer;
+                int index = GlobalState.CurrentLayerIndex;
+                var layer = LayersWidgets[index].ThisLayer;
 
                 // Erase
                 if (GlobalState.MousePressed && GlobalState.CurrentTool == GlobalState.Instruments.Eraser)
@@ -567,41 +568,40 @@ namespace PhotoEditor
                     bool stretchHeight = (newPosition.Y >= 0 && newPosition.Y <= height) ? true : false;
                     bool stretchRight = (newPosition.X > width - 5 && newPosition.X < width && stretchHeight && stretchWidth) ? true : false;
                     bool stretchBottom = (newPosition.Y > height - 5 && newPosition.Y < height && stretchHeight && stretchWidth) ? true : false;
-                    
+
                     Console.WriteLine(e.GetPosition(mainCanvas) + " " + (xPos + width));
 
-                    if (stretchRight && stretchBottom && !GlobalState.isResizing)
+                    if (stretchRight && stretchBottom && !GlobalState.IsResizing)
                     {
                         Cursor = Cursors.SizeNWSE;
                     }
-                    else if (stretchRight && !stretchBottom && !GlobalState.isResizing)
+                    else if (stretchRight && !stretchBottom && !GlobalState.IsResizing)
                     {
                         // <->
                         Cursor = Cursors.SizeWE;
                     }
-                    else if (stretchBottom && !stretchRight && !GlobalState.isResizing)
+                    else if (stretchBottom && !stretchRight && !GlobalState.IsResizing)
                     {
                         Cursor = Cursors.SizeNS;
                     }
-                    else if (!stretchBottom && !stretchRight && !GlobalState.isResizing)
+                    else if (!stretchBottom && !stretchRight && !GlobalState.IsResizing)
                     {
                         Cursor = Cursors.Arrow;
                     }
                 }
 
                 // Resizing Layer
-                if (GlobalState.MousePressed && GlobalState.isResizing)
+                if (GlobalState.MousePressed && GlobalState.IsResizing)
                 {
-                    Text_2(layer);
                     double mousePosX = e.GetPosition(layer).X;
                     double mousePosY = e.GetPosition(layer).Y;
 
                     double xDiff = mousePosX - clickPosition.X;
                     double yDiff = mousePosY - clickPosition.Y;
-                    
+
                     xDiff = (layer.Width + xDiff) > layer.MinWidth ? xDiff : layer.MinWidth;
                     yDiff = (layer.Height + yDiff) > layer.MinHeight ? yDiff : layer.MinHeight;
-                   
+
                     if (Cursor == Cursors.SizeNWSE)
                     {
                         layer.Width += xDiff;
@@ -611,7 +611,7 @@ namespace PhotoEditor
                         layer.Width += xDiff;
                     else if (Cursor == Cursors.SizeNS)
                         layer.Height += yDiff;
-                    
+
                     clickPosition.X = mousePosX;
                     clickPosition.Y = mousePosY;
                 }
@@ -627,71 +627,34 @@ namespace PhotoEditor
             }
         }
 
-        private void sliderBrushSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        void MainCanvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            VisualHost.BrushSize = sliderBrushSize.Value;
-        }
-
-        private void brushToBitmap()
-        {
-            int index = GlobalState.currentLayerIndex;
+            int index = GlobalState.CurrentLayerIndex;
             var layer = LayersWidgets[index].ThisLayer;
-            var size = new Size(layer.ActualWidth, layer.ActualHeight);
-            var bitmap = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96d, 96d, PixelFormats.Pbgra32);
 
-            //fix for render position 
-            DrawingVisual drawingVisual = new DrawingVisual();
-            using (DrawingContext drawingContext = drawingVisual.RenderOpen())
+            if (GlobalState.CurrentTool == GlobalState.Instruments.Resize)
             {
-                VisualBrush visualBrush = new VisualBrush(layer);
-                drawingContext.DrawRectangle(visualBrush, null,
-                    new Rect(new Point(0, 0), size));
+                ScaleTransform scaletransform = new ScaleTransform();
+                double height = layer.ActualHeight;
+                double width = layer.ActualWidth;
+
+                double zoom = e.Delta;
+
+                if (zoom > 0)
+                {
+                    height = height * 2;
+                    width = width * 2;
+                }
+                if (zoom < 0)
+                {
+                    height = height / 2;
+                    width = width / 2;
+                }
+
+                layer.Height = height;
+                layer.Width = width;
+                layer.RenderTransform = scaletransform;
             }
-            bitmap.Render(drawingVisual);
-
-            BitmapFrame bmpFrame = BitmapFrame.Create(bitmap);
-            layer.layerBmpFrame = bmpFrame;
-            layer.refreshBrush();
-            layer.Children.Clear();
-        }
-
-        // TEST OUTPUT
-
-
-        static public void Text_2(Layer layer)
-        {
-            ((MainWindow)Application.Current.MainWindow).text_2.Text = "ln "
-                + layer.LayerName
-                + " zi "
-                + Panel.GetZIndex(layer)
-                + " wi "
-                + LayersWidgets.IndexOf(layer.Widget)
-                + " cur "
-                + GlobalState.currentLayerIndex
-                + "\npos "
-                + Mouse.GetPosition(layer);
-
-        }
-
-        private void OpenConsole(object sender, RoutedEventArgs e)
-        {
-            if (GetConsoleWindow() != IntPtr.Zero)
-            {
-                FreeConsole();
-            }
-            else
-            {
-                AllocConsole();
-            }
-        }
-
-
-        // LISTBOX KEY SELECT RESTRICTION
-
-
-        private void listBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            e.Handled = true;
         }
 
 
@@ -736,20 +699,27 @@ namespace PhotoEditor
 
         private void Fill_Selected(object sender, RoutedEventArgs e)
         {
-            int index = GlobalState.currentLayerIndex;
+            int index = GlobalState.CurrentLayerIndex;
             var layer = LayersWidgets[index].ThisLayer;
             layer.Background = new SolidColorBrush(VisualHost.BrushColor.Color);
             layer.Widget.previewCanvas.Background = new SolidColorBrush(VisualHost.BrushColor.Color);
         }
+        
 
-      
+        // COLOR & OPACITY
 
-        private void colorTranspSelected(object sender, RoutedEventArgs e)
+
+        private void SliderBrushSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            VisualHost.BrushSize = sliderBrushSize.Value;
+        }
+        
+        private void ColorTranspSelected(object sender, RoutedEventArgs e)
         {
             VisualHost.BrushColor = Brushes.Transparent;
         }
 
-        //select color
+        /*select color
         public Color? ColorName
         {
             get
@@ -757,6 +727,7 @@ namespace PhotoEditor
                 return ColorPicker1.SelectedColor;
             }
         }
+
         private void SelectColor(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
 
@@ -778,6 +749,72 @@ namespace PhotoEditor
 
             // layer.refreshBrush();
         }
+        */
 
+
+        // SYSTEM BUTTONS
+
+
+        private void MinimizeButtonUp(object sender, EventArgs e)
+        {
+            //EditorWindow.WindowState = WindowState.Minimized;
+        }
+
+        private void MaximizeButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (EditorWindow.Top != 0 && EditorWindow.Left != 0)
+            {
+                //EditorWindow.WindowState = WindowState.Normal;
+                EditorWindow.Left = 0;
+                EditorWindow.Top = 0;
+                EditorWindow.Width = SystemParameters.PrimaryScreenWidth;
+                EditorWindow.Height = SystemParameters.PrimaryScreenHeight;
+            }
+            else
+            {
+                //EditorWindow.WindowState = WindowState.Normal;
+                EditorWindow.Left = WindowLeft;
+                EditorWindow.Top = WindowTop;
+                EditorWindow.Width = WindowWidth;
+                EditorWindow.Height = WindowHeight;
+            }
+        }
+
+        private void CloseButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            MainWindowState.IsOpen = false;
+            Close();
+        }
+
+
+        // MAIN WINDOW ACTIONS
+
+
+        public static void CloseMainWindow()
+        {
+            if (MainWindowState.IsOpen)
+            {
+                ((MainWindow)Application.Current.MainWindow).Close();
+            }
+            MainWindowState.IsOpen = false;
+        }
+
+        public static void ShowMainWindow()
+        {
+            if (!MainWindowState.IsOpen)
+            {
+                ((MainWindow)Application.Current.MainWindow).WindowActions();
+                ((MainWindow)Application.Current.MainWindow).Show();
+            }
+        }
+
+
+        // LISTBOX KEY SELECT RESTRICTION
+
+
+        private void ListBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }

@@ -27,7 +27,7 @@ namespace PhotoEditor.Controls
             EditBox.SelectAll();
         }
 
-        private void editBox_KeyUp(object sender, KeyEventArgs e)
+        private void EditBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
@@ -38,19 +38,17 @@ namespace PhotoEditor.Controls
             }
         }
 
-        public void refreshPreviewCanvas()
+        public void RefreshPreviewCanvas()
         {
-            previewCanvas.Background = ThisLayer.layerImageBrush;
+            previewCanvas.Background = ThisLayer.LayerImageBrush;
         }
 
         public void UserContol_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var widgetIndex = MainWindow.LayersWidgets.IndexOf(this);
-            GlobalState.currentLayerIndex = widgetIndex;
+            GlobalState.CurrentLayerIndex = widgetIndex;
             ((MainWindow)Application.Current.MainWindow).sliderOpacity.Value = ThisLayer.Opacity * 100;
             ((MainWindow)Application.Current.MainWindow).widgetsCanvas.SelectedIndex = widgetIndex;
-
-            MainWindow.Text_2(ThisLayer);
         }
     }
 }

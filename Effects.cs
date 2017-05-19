@@ -32,7 +32,7 @@ namespace PhotoEditor
 
         public static void Negative(Layer photo)
         {
-            Bitmap img = GetBitmap(photo.layerBmpFrame);
+            Bitmap img = GetBitmap(photo.LayerBmpFrame);
             ColorMatrix colorMatrix = new ColorMatrix(new float[][] {
                 //           r    g    b    a    t
                 new float[] {-1,  0,   0,   0,   0}, // red
@@ -41,7 +41,7 @@ namespace PhotoEditor
                 new float[] {0,   0,   0,   1,   0}, // alpha 
                 new float[] {1,   1,   1,   1,   1}  // three translations
             });
-            photo.layerBmpFrame = BitmapFrame.Create(GetBitmapSource(ApplyColorMatrix(img, colorMatrix)));
+            photo.LayerBmpFrame = BitmapFrame.Create(GetBitmapSource(ApplyColorMatrix(img, colorMatrix)));
         }
 
         public static Bitmap GetBitmap(BitmapSource source)
@@ -88,9 +88,10 @@ namespace PhotoEditor
             }
             return bitmap32;
         }
+
         public static void Grayscale(Layer photo)
         {
-            Bitmap img = GetBitmap(photo.layerBmpFrame);
+            Bitmap img = GetBitmap(photo.LayerBmpFrame);
             ColorMatrix colorMatrix = new ColorMatrix(new float[][] {
                 //           r     g     b     a     t
                 new float[] {.3f,  .3f,  .3f,  0,    0}, // red
@@ -99,27 +100,31 @@ namespace PhotoEditor
                 new float[] {0,    0,    0,    1,    0}, // alpha 
                 new float[] {0,    0,    0,    0,    1}  // three translations
             });
-            photo.layerBmpFrame = BitmapFrame.Create(GetBitmapSource(ApplyColorMatrix(img, colorMatrix)));
+            photo.LayerBmpFrame = BitmapFrame.Create(GetBitmapSource(ApplyColorMatrix(img, colorMatrix)));
         }
-
+        
 
         //------------------------ Начало: Фильтр по Гауссу -------------------------
+
         public static void GaussianBlur(Layer photo, int radial)
         {
-            Bitmap img = GetBitmap(photo.layerBmpFrame);
+            Bitmap img = GetBitmap(photo.LayerBmpFrame);
             var gaussianBlur = new GaussianBlur(img);
             img = gaussianBlur.Process(radial);
-            photo.layerBmpFrame = BitmapFrame.Create(GetBitmapSource(img));
+            photo.LayerBmpFrame = BitmapFrame.Create(GetBitmapSource(img));
         }
+
         //--------------------- Конец: Фильтр по Гауссу  --------------------
+
+
         public static void SobelFilter(Layer photo, bool grayscale = false)
         {
-            Bitmap source = GetBitmap(photo.layerBmpFrame);
+            Bitmap source = GetBitmap(photo.LayerBmpFrame);
             Bitmap resultBitmap = ConvolutionFilter(source,
                 /*Горизонталь*/ new double[,] { { -1, 0, 1 }, { -2, 0, 2 }, { -1, 0, 1 } },
                 /*Вертикаль*/ new double[,] { { 1, 2, 1 }, { 0, 0, 0 }, { -1, -2, -1 } },
                 1.0, 0, grayscale);
-            photo.layerBmpFrame = BitmapFrame.Create(GetBitmapSource(resultBitmap));
+            photo.LayerBmpFrame = BitmapFrame.Create(GetBitmapSource(resultBitmap));
         }
 
         public static Bitmap ConvolutionFilter
@@ -301,26 +306,21 @@ namespace PhotoEditor
             return resultBitmap;
         }
 
-
         //------------- Конец: Фильтры обнаружения края --------------
-        //-----Resize image----
-        
-        //----end resize
 
 
         //-------------------- Начало: Поворот ---------------------
-
-
+        
         public static void Rotate(Layer photo, double angle)
         {
-            BitmapSource img = photo.layerBmpFrame;
+            BitmapSource img = photo.LayerBmpFrame;
             CachedBitmap cache = new CachedBitmap(img, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
-            photo.layerBmpFrame = BitmapFrame.Create(new TransformedBitmap(cache, new RotateTransform(angle)));
+            photo.LayerBmpFrame = BitmapFrame.Create(new TransformedBitmap(cache, new RotateTransform(angle)));
         }
 
         public static void RotateBilinear(Layer photo, double angle)
         {
-            Bitmap img = GetBitmap(photo.layerBmpFrame);
+            Bitmap img = GetBitmap(photo.LayerBmpFrame);
             if (angle > 180) angle -= 360;
             System.Drawing.Color bkColor = System.Drawing.Color.Transparent;
             System.Drawing.Imaging.PixelFormat pf = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
@@ -357,35 +357,9 @@ namespace PhotoEditor
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBilinear;
             g.DrawImageUnscaled(img, 0, 0); // Рисую изображение  0, 0
             g.Dispose();
-            photo.layerBmpFrame = BitmapFrame.Create(GetBitmapSource(newImg));
+            photo.LayerBmpFrame = BitmapFrame.Create(GetBitmapSource(newImg));
         }
+
         //----------------- Конец: Поворот -----------------
-
-        //---sizeImage
-        public static BitmapFrame CreateResizedImage(ImageSource source, int height, int width, int margin)
-        {
-
-            var rect = new Rect(margin, margin, width - margin * 2, height - margin * 2);
-
-            var group = new DrawingGroup();
-            RenderOptions.SetBitmapScalingMode(group, BitmapScalingMode.HighQuality);
-            group.Children.Add(new ImageDrawing(source, rect));
-
-            var drawingVisual = new DrawingVisual();
-            using (var drawingContext = drawingVisual.RenderOpen())
-                drawingContext.DrawDrawing(group);
-
-
-            var resizedImage = new RenderTargetBitmap(
-                width, height,         // Resized dimensions
-                96, 96,                // Default DPI values
-                PixelFormats.Default); // Default pixel format
-            resizedImage.Render(drawingVisual);
-
-            return BitmapFrame.Create(resizedImage);
-        }
-        //--
-        
-        
     }
 }
