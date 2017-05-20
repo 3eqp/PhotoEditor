@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PhotoEditor"
         xmlns:Design="clr-namespace:UIElements;assembly=UIElements"
         xmlns:Buttons="clr-namespace:UIElements.Buttons.Navigation;assembly=UIElements"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:wpfx="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit/extended"
         mc:Ignorable="d"
         x:Name="EditorWindow"
         Height="600" Width="1200"
@@ -77,6 +77,20 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="35"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="35"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="35"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="35"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="35"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+
+
+
+                    <ColumnDefinition Width="10*"/>
                 </Grid.ColumnDefinitions>
 
                 <Buttons:AddPhotoButton x:Name="AddPhotoButton"
@@ -87,6 +101,27 @@
                                      Grid.Column="4"/>
                 <Buttons:RotateButton x:Name="RotateButton" 
                                      Grid.Column="6"/>
+                <Buttons:ColorButton x:Name="ColorButton"
+                                     Grid.Column="8"/>
+                <Rectangle Name="ColorPreview"
+                           Fill="Black" 
+                           Width="27"
+                           Height="17"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           Grid.Row="1"
+                           Margin="0,9,0,0"
+                           RadiusX="1" RadiusY="1"
+                           Panel.ZIndex="1"
+                           Grid.Column="8"
+                           MouseLeftButtonDown="ColorButton_MouseDown"/>
+                <Buttons:FillButton x:Name="FillButton"
+                                    Grid.Column="10"/>
+                <Buttons:BrushButton x:Name="BrushButton"
+                                     Grid.Column="14"/>
+                <Buttons:EraseButton x:Name="EraseButton"
+                                     Grid.Column="12"/>
+
 
 
             </Grid>
@@ -134,11 +169,14 @@
             Grid.Column="1" 
             Grid.Row="1"/>
 
-        <ScrollViewer Name="LayersList"
-            Grid.Column="3" 
+        <!--<wpfx:ColorCanvas Name="ColorCanvas" Panel.ZIndex="999"
+            Grid.Column="1" 
+            Grid.Row="1"/>-->
+        
+        <ScrollViewer Name="LayersList" 
             Grid.Row="1"
             Background="Gainsboro"
-            ScrollViewer.VerticalScrollBarVisibility="Auto">
+            ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,159,124,0">
             <ListBox x:Name="widgetsCanvas"
                 PreviewKeyDown="ListBox_PreviewKeyDown"
                 ItemsSource="{Binding LayersWidgets, Mode=TwoWay}"
@@ -150,7 +188,7 @@
             </ListBox>
         </ScrollViewer>
 
-        <Menu Height="24" VerticalAlignment="Center" Margin="345,267,25,188" Grid.Column="2" Grid.Row="1">
+        <Menu Height="24" VerticalAlignment="Center" Margin="88,211,282,280" Grid.Row="1">
             <MenuItem Header="File">
                 <MenuItem Header="New"/>
                 <MenuItem Header="Open" Click="ButtonOpenFile_Click"/>
@@ -165,12 +203,6 @@
             <MenuItem Header="Help" ></MenuItem>
         </Menu>
 
-        <!--<xctk:ColorCanvas Name="ColorPicker1" 
-                          Width="40"
-                          Height="30"
-                          SelectedColorChanged="SelectColor" 
-                          DisplayColorAndName="True" />-->
-
         <Button x:Name="btnNewLayer"
                 Height="33" HorizontalAlignment="Left" 
                 Margin="5,0,0,46"  VerticalAlignment="Bottom" 
@@ -178,7 +210,7 @@
         <Button x:Name="btnDeleteLayer" Height="33" HorizontalAlignment="Left"
                 Margin="75,0,0,46" VerticalAlignment="Bottom" 
                 Width="65" Grid.Column="3" Grid.Row="2" Content="DeleteLayer" Click="DeleteLayer_Click"/>
-        
+
         <Button x:Name="btnEffect"
                 Height="33" HorizontalAlignment="Left" 
                 Margin="152,0,0,6"  VerticalAlignment="Bottom" 
@@ -203,23 +235,13 @@
                 Height="33" HorizontalAlignment="Left" 
                 Margin="289,0,0,46"  VerticalAlignment="Bottom" 
                 Width="64" Grid.Column="2" Grid.Row="2" Content="Поворот" Click="Rotate_Click"/>
-        
+
         <Button Name="colorTransp"
-                Background="Transparent"  Click="ColorTranspSelected"
-                Grid.Column="3" Grid.Row="2" Margin="36,52,168,6"/>
+                Background="Transparent"  Click="ColorTranspSelected" Grid.Row="1" Margin="36,267,404,6"/>
         <!--<Button Name="PouringButton"
                     Content="Pouring"  Click="Pouring"
                     Grid.Column="2" Grid.Row="2" 
                     Margin="513,11.8,23.6,48.4"/>-->
-        <Button Name="BrushButton"
-                Content="brush"  Click="Brush_Selected"
-                Grid.Column="2" Grid.Row="2" Margin="386,52,151,6"/>
-        <Button Name="EraserButton"
-                Content="eraser"  Click="Erase_Selected"
-                Grid.Column="2" Grid.Row="2" Margin="497,52,25,6"/>
-        <Button Name="FillButton"
-                Content="fill"  Click="Fill_Selected"
-                Grid.Column="2" Grid.Row="2" Margin="289,52,233,6"/>
         <Slider x:Name="sliderBrushSize" 
                 Grid.Column="2" 
                 HorizontalAlignment="Left"

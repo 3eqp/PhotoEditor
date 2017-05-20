@@ -11,7 +11,8 @@ using Microsoft.Win32;
 using System.Windows.Shapes;
 using PhotoEditor.Controls;
 using System.Runtime.InteropServices;
-using Xceed.Wpf.Toolkit; 
+using Xceed.Wpf.Toolkit;
+using System.Windows.Media.Effects;
 
 namespace PhotoEditor
 {
@@ -39,7 +40,7 @@ namespace PhotoEditor
             LayersWidgets = new ObservableCollection<LayerWidget>();
             widgetsCanvas.DataContext = this;
 
-#region Button&Mouse Events
+            #region Button&Mouse Events
             // MainCanvas mouse events
             mainCanvas.MouseMove += new MouseEventHandler(MainCanvas_MouseMove);
             mainCanvas.MouseWheel += new MouseWheelEventHandler(MainCanvas_MouseWheel);
@@ -52,8 +53,12 @@ namespace PhotoEditor
             ArrowButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Arrow_Selected), true);
             ResizeButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Resize_Selected), true);
             RotateButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Rotate_Click), true);
+            ColorButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(ColorButton_MouseDown), true);
+            FillButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Fill_Selected), true);
+            EraseButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Erase_Selected), true);
+            BrushButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Brush_Selected), true);
 
-#endregion
+            #endregion
             Hide();
             Start StartWindow = new Start();
             StartWindow.Show();
@@ -638,38 +643,21 @@ namespace PhotoEditor
         private void Brush_Selected(object sender, RoutedEventArgs e)
         {
             GlobalState.CurrentTool = GlobalState.Instruments.Brush;
-            ArrowButton.Style.Setters.Add(Background);
-            ArrowButton.BorderThickness = new Thickness(0.5);
-            BrushButton.BorderThickness = new Thickness(1);
-            ResizeButton.BorderThickness = new Thickness(0.5);
-            EraserButton.BorderThickness = new Thickness(0.5);
         }
 
         private void Resize_Selected(object sender, RoutedEventArgs e)
         {
             GlobalState.CurrentTool = GlobalState.Instruments.Resize;
-            ArrowButton.BorderThickness = new Thickness(0.5);
-            BrushButton.BorderThickness = new Thickness(0.5);
-            ResizeButton.BorderThickness = new Thickness(1);
-            EraserButton.BorderThickness = new Thickness(0.5);
         }
 
         private void Erase_Selected(object sender, RoutedEventArgs e)
         {
             GlobalState.CurrentTool = GlobalState.Instruments.Eraser;
-            ArrowButton.BorderThickness = new Thickness(0.5);
-            BrushButton.BorderThickness = new Thickness(0.5);
-            ResizeButton.BorderThickness = new Thickness(0.5);
-            EraserButton.BorderThickness = new Thickness(1);
         }
 
         private void Arrow_Selected(object sender, RoutedEventArgs e)
         {
             GlobalState.CurrentTool = GlobalState.Instruments.Arrow;
-            ArrowButton.BorderThickness = new Thickness(1);
-            BrushButton.BorderThickness = new Thickness(0.5);
-            ResizeButton.BorderThickness = new Thickness(0.5);
-            EraserButton.BorderThickness = new Thickness(0.5);
         }
 
         private void Fill_Selected(object sender, RoutedEventArgs e)
@@ -692,6 +680,11 @@ namespace PhotoEditor
         private void ColorTranspSelected(object sender, RoutedEventArgs e)
         {
             VisualHost.BrushColor = Brushes.Transparent;
+        }
+
+        private void ColorButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ColorPreview.Fill = new SolidColorBrush(Colors.Red);
         }
 
         /*select color
