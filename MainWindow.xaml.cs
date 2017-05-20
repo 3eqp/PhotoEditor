@@ -208,7 +208,7 @@ namespace PhotoEditor
         public void NewLayer(double PixelHeight, double PixelWidth)
         {
             string layerName = "NewLayer" + LayersWidgets.Count;
-            var layer = new Layer(layerName, PixelWidth, PixelHeight, 1, 1, 2, 1);
+            var layer = new Layer(layerName, PixelWidth, PixelHeight, 1, 1, 1, 2, 1);
 
             mainCanvas.Children.Add(layer);
             LayersWidgets.Add(layer.Widget);
@@ -353,101 +353,39 @@ namespace PhotoEditor
         }
         
 
-        // 
+        // LAYER BITMAP FUNCTIONS
         
-
-        //!!!!!!!!!test function!!!!!!!!
-        private void Bitmap(Point pos)
+            
+        private BitmapFrame BmpFrameErase(Point pos, Layer layer)
         {
-            const int width = 5;
-            const int height = 5;
-            int indexs = GlobalState.CurrentLayerIndex;
-            var layer = LayersWidgets[indexs].ThisLayer;
+            var bmpFrame = layer.LayerBmpFrame;
+            pos.X = pos.X * layer.LayerScale;
+            pos.Y = pos.Y * layer.LayerScale;
+            var source = new FormatConvertedBitmap(bmpFrame, PixelFormats.Bgra32, null, 0);
+            TranslatePoint(pos, layer);
 
+            int width = (int)source.Width;
+            int height = (int)source.Height;
+            int bytesperpixel = 4;
+            int stride = width * bytesperpixel;
 
-            BitmapSource source = (BitmapSource)layer.LayerBmpFrame;
+            uint transparentPixel = 0x7f;
+            uint[] intPixelData = new uint[height * stride];
 
-            // Calculate stride of source
-            int stride = source.PixelWidth * (source.Format.BitsPerPixel + 7) / 8;
+            source.CopyPixels(intPixelData, stride, 0);
 
-            // Create data array to hold source pixel data
-            byte[] data = new byte[stride * source.PixelHeight];
-
-            // Copy source image pixels to the data array
-            source.CopyPixels(data, stride, 0);
-
-            // Create WriteableBitmap to copy the pixel data to.      
-            WriteableBitmap target = new WriteableBitmap(
-              source.PixelWidth,
-              source.PixelHeight,
-              source.DpiX, source.DpiY,
-              source.Format, null);
-
-            // Write the pixel data to the WriteableBitmap.
-            target.WritePixels(
-              new Int32Rect(0, 0, source.PixelWidth, source.PixelHeight),
-              data, stride, 0);
-
-            byte[,,] pixels = new byte[height, width, 4];
-
-            // Clear to black.
             for (int row = 0; row < height; row++)
             {
                 for (int col = 0; col < width; col++)
                 {
-                    for (int i = 0; i < 3; i++)
-                        pixels[row, col, i] = 0;
-                    pixels[row, col, 3] = 255;
+                    if (col >= pos.X - 10 && col <= pos.X + 10 && row >= pos.Y - 10 && row <= pos.Y + 10)
+                        intPixelData[row * width + col] = transparentPixel;
                 }
             }
 
-            // Blue.
-            for (int row = 0; row < 80; row++)
-            {
-                for (int col = 0; col <= row; col++)
-                {
-                    pixels[row, col, 0] = 255;
-                }
-            }
-
-            // Green.
-            for (int row = 80; row < 160; row++)
-            {
-                for (int col = 0; col < 80; col++)
-                {
-                    pixels[row, col, 1] = 255;
-                }
-            }
-
-            // Red.
-            for (int row = 160; row < 240; row++)
-            {
-                for (int col = 0; col < 80; col++)
-                {
-                    pixels[row, col, 2] = 255;
-                }
-            }
-
-            // Copy the data into a one-dimensional array.
-            byte[] pixels1d = new byte[height * width * 4];
-            int index = 0;
-            for (int row = 0; row < height; row++)
-            {
-                for (int col = 0; col < width; col++)
-                {
-                    for (int i = 0; i < 4; i++)
-                        pixels1d[index++] = pixels[row, col, i];
-                }
-            }
-
-            // Update writeable bitmap with the colorArray to the image.
-            Int32Rect rect = new Int32Rect(0, 0, width, height);
-            stride = 4 * width;
-            target.WritePixels(rect, pixels1d, stride, 0);
-
-            var bf = BitmapFrame.Create(target);
-            layer.LayerBmpFrame = bf;
-            layer.RefreshBrush();
+            var bsCheckerboard = BitmapSource.Create(width, height, 96, 96, PixelFormats.Bgra32, null, intPixelData, stride);
+            bmpFrame = BitmapFrame.Create(bsCheckerboard);
+            return bmpFrame;
         }
 
         private void BrushToBitmap()
@@ -488,7 +426,12 @@ namespace PhotoEditor
             if (GlobalState.CurrentTool == GlobalState.Instruments.Eraser)
             {
                 clickPosition = e.GetPosition(layer);
-                Bitmap(clickPosition);
+                GlobalState.MousePressed = true;
+                GlobalState.IsErasing = true;
+
+                var bmpFrame = BmpFrameErase(clickPosition, layer);
+                layer.LayerBmpFrame = bmpFrame;
+                layer.RefreshBrush();
             }
 
             // Resize
@@ -520,7 +463,8 @@ namespace PhotoEditor
             // Erase
             if (GlobalState.CurrentTool == GlobalState.Instruments.Eraser)
             {
-
+                GlobalState.MousePressed = false;
+                GlobalState.IsErasing = false;
             }
 
             // Resize
@@ -546,9 +490,16 @@ namespace PhotoEditor
                 var layer = LayersWidgets[index].ThisLayer;
 
                 // Erase
-                if (GlobalState.MousePressed && GlobalState.CurrentTool == GlobalState.Instruments.Eraser)
+                if (GlobalState.MousePressed && GlobalState.IsErasing)
                 {
+                    Point pos = new Point();
+                    pos.X = e.GetPosition(layer).X;
+                    pos.Y = e.GetPosition(layer).Y;
 
+                    var bmpFrame = BmpFrameErase(pos, layer);
+
+                    layer.LayerBmpFrame = bmpFrame;
+                    layer.RefreshBrush();
                 }
 
                 #region Check_Cursor & Resize
@@ -644,11 +595,13 @@ namespace PhotoEditor
                 {
                     height = height * 2;
                     width = width * 2;
+                    layer.LayerScale /= 2;
                 }
                 if (zoom < 0)
                 {
                     height = height / 2;
                     width = width / 2;
+                    layer.LayerScale *= 2;
                 }
 
                 layer.Height = height;

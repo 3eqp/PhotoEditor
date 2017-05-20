@@ -20,13 +20,13 @@ namespace PhotoEditor.Controls
         public string LayerName { get; set; }
         public Point LayerPosition;
 
-        public SolidColorBrush layerColorBrush { get; set; }
+        public SolidColorBrush LayerColorBrush { get; set; }
         public ImageBrush LayerImageBrush { get; set; }
         public BitmapFrame LayerBmpFrame { get; set; }
+        public double LayerScale { get; set; }
         public LayerWidget Widget { get; set; }
-
-
-        public Layer(string name, double width, double height, double opacity, int col, int colspan, int row)
+        
+        public Layer(string name, double width, double height, double opacity, double scale, int col, int colspan, int row)
         {
             this.MouseLeftButtonDown += new MouseButtonEventHandler(Control_MouseLeftButtonDown);
             this.MouseLeftButtonUp += new MouseButtonEventHandler(Control_MouseLeftButtonUp);
@@ -38,6 +38,7 @@ namespace PhotoEditor.Controls
             MinHeight = 100;
             MinWidth = 100;
             Opacity = opacity;
+            LayerScale = scale;
             if (col != 0) Grid.SetColumn(this, col);
             if (row != 0) Grid.SetRow(this, row);
             if (colspan != 0) Grid.SetColumnSpan(this, colspan);
