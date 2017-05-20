@@ -14,7 +14,8 @@ namespace PhotoEditor.Controls
 {
     public class Layer : Canvas
     {
-        protected bool isDragging;
+        protected bool IsDragging { get; set; }
+        public bool IsLayerVisible { get; set; }
         public Point clickPosition;
 
         public string LayerName { get; set; }
@@ -39,6 +40,8 @@ namespace PhotoEditor.Controls
             MinWidth = 100;
             Opacity = opacity;
             LayerScale = scale;
+            IsLayerVisible = true;
+            Visibility = Visibility.Visible;
             if (col != 0) Grid.SetColumn(this, col);
             if (row != 0) Grid.SetRow(this, row);
             if (colspan != 0) Grid.SetColumnSpan(this, colspan);
@@ -57,6 +60,20 @@ namespace PhotoEditor.Controls
             Background = brush;
         }
 
+        public void VisibleChange()
+        {
+            if (IsLayerVisible)
+            {
+                Visibility = Visibility.Hidden;
+                IsLayerVisible = false;
+            }
+            else if(!IsLayerVisible)
+            {
+                Visibility = Visibility.Visible;
+                IsLayerVisible = true;
+            }
+        }
+
 
         // DRAGGING LAYER
 
@@ -65,7 +82,7 @@ namespace PhotoEditor.Controls
         {
             if (GlobalState.CurrentTool == GlobalState.Instruments.Arrow)
             {
-                isDragging = true;
+                IsDragging = true;
                 var draggableControl = sender as Canvas;
                 clickPosition = e.GetPosition(this);
                 draggableControl.CaptureMouse();
@@ -79,7 +96,7 @@ namespace PhotoEditor.Controls
         {
             if (GlobalState.CurrentTool == GlobalState.Instruments.Arrow)
             {
-                isDragging = false;
+                IsDragging = false;
                 var draggable = sender as Canvas;
                 draggable.ReleaseMouseCapture();
             }
@@ -89,7 +106,7 @@ namespace PhotoEditor.Controls
         {
             var draggableControl = sender as Canvas;
 
-            if (isDragging && draggableControl != null)
+            if (IsDragging && draggableControl != null)
             {
                 Point currentPosition = e.GetPosition(this.Parent as UIElement);
 

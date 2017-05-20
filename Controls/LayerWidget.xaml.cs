@@ -50,5 +50,10 @@ namespace PhotoEditor.Controls
             ((MainWindow)Application.Current.MainWindow).sliderOpacity.Value = ThisLayer.Opacity * 100;
             ((MainWindow)Application.Current.MainWindow).widgetsCanvas.SelectedIndex = widgetIndex;
         }
+
+        private void VisibleChange_Click(object sender, RoutedEventArgs e)
+        {
+            ThisLayer.VisibleChange();
+        }
     }
 }

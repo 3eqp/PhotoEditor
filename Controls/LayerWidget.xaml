@@ -19,7 +19,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="40px" />
         </Grid.ColumnDefinitions>
-        <Button Grid.Column="2" Grid.Row="2" Margin="10,9,10,11"></Button>
+        <Button Grid.Column="2" Grid.Row="2" Margin="10,9,10,11" Click="VisibleChange_Click"/>
         <Canvas x:Name="previewCanvas" Grid.Row="1" Background="Gray" Grid.RowSpan="3"/>
 
         <Label
