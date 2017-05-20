@@ -39,13 +39,21 @@ namespace PhotoEditor
             LayersWidgets = new ObservableCollection<LayerWidget>();
             widgetsCanvas.DataContext = this;
 
-            // Events
+#region Button&Mouse Events
+            // MainCanvas mouse events
             mainCanvas.MouseMove += new MouseEventHandler(MainCanvas_MouseMove);
             mainCanvas.MouseWheel += new MouseWheelEventHandler(MainCanvas_MouseWheel);
+            // System buttons
             MinimizeButton_Black.AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(MinimizeButtonUp), true);
             CloseButton_Black.AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(CloseButtonUp), true);
             MaximizeButton_Black.AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(MaximizeButtonUp), true);
+            // Navigator buttons
+            AddPhotoButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(ButtonOpenPhoto_Click), true);
+            ArrowButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Arrow_Selected), true);
+            ResizeButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Resize_Selected), true);
+            RotateButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Rotate_Click), true);
 
+#endregion
             Hide();
             Start StartWindow = new Start();
             StartWindow.Show();
@@ -56,7 +64,7 @@ namespace PhotoEditor
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             MainWindowState.IsOpen = true;
-
+            
             WindowTop = EditorWindow.Top;
             WindowLeft = EditorWindow.Left;
             WindowHeight = EditorWindow.Height;
@@ -92,7 +100,7 @@ namespace PhotoEditor
             OpenPhoto();
         }
 
-        private void ButtonOpenPhoto_Click(object sender, RoutedEventArgs e)
+        private void ButtonOpenPhoto_Click(object sender, MouseButtonEventArgs e)
         {
             OpenPhoto();
         }
@@ -630,6 +638,7 @@ namespace PhotoEditor
         private void Brush_Selected(object sender, RoutedEventArgs e)
         {
             GlobalState.CurrentTool = GlobalState.Instruments.Brush;
+            ArrowButton.Style.Setters.Add(Background);
             ArrowButton.BorderThickness = new Thickness(0.5);
             BrushButton.BorderThickness = new Thickness(1);
             ResizeButton.BorderThickness = new Thickness(0.5);
@@ -765,10 +774,7 @@ namespace PhotoEditor
 
         public static void CloseMainWindow()
         {
-            if (MainWindowState.IsOpen)
-            {
-                ((MainWindow)Application.Current.MainWindow).Close();
-            }
+            ((MainWindow)Application.Current.MainWindow).Close();
             MainWindowState.IsOpen = false;
         }
 

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PhotoEditor"
         xmlns:Design="clr-namespace:UIElements;assembly=UIElements"
+        xmlns:Buttons="clr-namespace:UIElements.Buttons.Navigation;assembly=UIElements"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         x:Name="EditorWindow"
@@ -70,31 +71,22 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="75"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="75"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="35"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="35"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="35"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="35"/>
-                    <ColumnDefinition Width="20*"/>
-                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="35"/>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="35"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="75"/>
+                    <ColumnDefinition Width="35"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="30"/>
-                </Grid.RowDefinitions>
 
-
+                <Buttons:AddPhotoButton x:Name="AddPhotoButton"
+                                        Grid.RowSpan="3"/>
+                <Buttons:ArrowButton x:Name="ArrowButton" 
+                                     Grid.Column="2"/>
+                <Buttons:ResizeButton x:Name="ResizeButton" 
+                                     Grid.Column="4"/>
+                <Buttons:RotateButton x:Name="RotateButton" 
+                                     Grid.Column="6"/>
 
 
             </Grid>
@@ -131,7 +123,7 @@
                 </Grid>
             </Grid>
         </Grid>
-        
+
         <Canvas x:Name="mainCanvas" 
             Width="auto"
             Height="auto"
@@ -179,10 +171,6 @@
                           SelectedColorChanged="SelectColor" 
                           DisplayColorAndName="True" />-->
 
-        <Button x:Name="btnOpenPhoto"
-                Height="33" HorizontalAlignment="Left"  VerticalAlignment="Bottom" 
-                Width="66" Grid.Column="1" Grid.Row="2" Content="OpenPhoto" 
-                Click="ButtonOpenPhoto_Click" Margin="10,0,0,38"/>
         <Button x:Name="btnNewLayer"
                 Height="33" HorizontalAlignment="Left" 
                 Margin="5,0,0,46"  VerticalAlignment="Bottom" 
@@ -190,6 +178,7 @@
         <Button x:Name="btnDeleteLayer" Height="33" HorizontalAlignment="Left"
                 Margin="75,0,0,46" VerticalAlignment="Bottom" 
                 Width="65" Grid.Column="3" Grid.Row="2" Content="DeleteLayer" Click="DeleteLayer_Click"/>
+        
         <Button x:Name="btnEffect"
                 Height="33" HorizontalAlignment="Left" 
                 Margin="152,0,0,6"  VerticalAlignment="Bottom" 
@@ -214,6 +203,7 @@
                 Height="33" HorizontalAlignment="Left" 
                 Margin="289,0,0,46"  VerticalAlignment="Bottom" 
                 Width="64" Grid.Column="2" Grid.Row="2" Content="Поворот" Click="Rotate_Click"/>
+        
         <Button Name="colorTransp"
                 Background="Transparent"  Click="ColorTranspSelected"
                 Grid.Column="3" Grid.Row="2" Margin="36,52,168,6"/>
@@ -221,15 +211,9 @@
                     Content="Pouring"  Click="Pouring"
                     Grid.Column="2" Grid.Row="2" 
                     Margin="513,11.8,23.6,48.4"/>-->
-        <Button Name="ArrowButton"
-                Content="arrow"  Click="Arrow_Selected"
-                Grid.Column="2" Grid.Row="2" Margin="345,52,192,6"/>
         <Button Name="BrushButton"
                 Content="brush"  Click="Brush_Selected"
                 Grid.Column="2" Grid.Row="2" Margin="386,52,151,6"/>
-        <Button Name="ResizeButton"
-                Content="resize"  Click="Resize_Selected"
-                Grid.Column="2" Grid.Row="2" Margin="358,12,164,46"/>
         <Button Name="EraserButton"
                 Content="eraser"  Click="Erase_Selected"
                 Grid.Column="2" Grid.Row="2" Margin="497,52,25,6"/>
