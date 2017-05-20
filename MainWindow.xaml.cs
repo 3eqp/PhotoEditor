@@ -42,7 +42,10 @@ namespace PhotoEditor
             // Events
             mainCanvas.MouseMove += new MouseEventHandler(MainCanvas_MouseMove);
             mainCanvas.MouseWheel += new MouseWheelEventHandler(MainCanvas_MouseWheel);
-            
+            MinimizeButton_Black.AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(MinimizeButtonUp), true);
+            CloseButton_Black.AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(CloseButtonUp), true);
+            MaximizeButton_Black.AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(MaximizeButtonUp), true);
+
             Hide();
             Start StartWindow = new Start();
             StartWindow.Show();
@@ -53,6 +56,11 @@ namespace PhotoEditor
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             MainWindowState.IsOpen = true;
+
+            WindowTop = EditorWindow.Top;
+            WindowLeft = EditorWindow.Left;
+            WindowHeight = EditorWindow.Height;
+            WindowWidth = EditorWindow.Width;
         }
 
         // Actions from Start Window
@@ -76,8 +84,7 @@ namespace PhotoEditor
                 Show();
             }
         }
-      
-
+        
         // OPEN
 
         private void ButtonOpenFile_Click(object sender, RoutedEventArgs e)
@@ -299,14 +306,16 @@ namespace PhotoEditor
 
         private void Negative_Click(object sender, RoutedEventArgs e)
         {
-            var layer = (Layer)mainCanvas.Children[GlobalState.CurrentLayerIndex];
+            int index = GlobalState.CurrentLayerIndex;
+            var layer = LayersWidgets[index].ThisLayer;
             Effects.Negative(layer);
             layer.RefreshBrush();
         }
 
         private void Grayscale_Click(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)mainCanvas.Children[GlobalState.CurrentLayerIndex];
+            int index = GlobalState.CurrentLayerIndex;
+            var layer = LayersWidgets[index].ThisLayer;
             Effects.Grayscale(layer);
             layer.RefreshBrush();
         }
@@ -317,7 +326,8 @@ namespace PhotoEditor
             if (BoxWindow.ShowDialog() == true)
             {
                 int x = int.Parse(BoxWindow.Turns);
-                Layer layer = (Layer)mainCanvas.Children[GlobalState.CurrentLayerIndex];
+                int index = GlobalState.CurrentLayerIndex;
+                var layer = LayersWidgets[index].ThisLayer;
                 Effects.GaussianBlur(layer, x);
                 layer.RefreshBrush();
             }
@@ -325,14 +335,16 @@ namespace PhotoEditor
 
         private void SobelFilter_Click(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)mainCanvas.Children[GlobalState.CurrentLayerIndex];
+            int index = GlobalState.CurrentLayerIndex;
+            var layer = LayersWidgets[index].ThisLayer;
             Effects.SobelFilter(layer);
             layer.RefreshBrush();
         }
 
         private void SobelFilterGrayscale_Click(object sender, RoutedEventArgs e)
         {
-            Layer layer = (Layer)mainCanvas.Children[GlobalState.CurrentLayerIndex];
+            int index = GlobalState.CurrentLayerIndex;
+            var layer = LayersWidgets[index].ThisLayer;
             Effects.SobelFilter(layer, true);
             layer.RefreshBrush();
         }
@@ -345,7 +357,8 @@ namespace PhotoEditor
             {
                 
                 double x = double.Parse(BoxWindow.Turns);
-                Layer layer = (Layer)mainCanvas.Children[GlobalState.CurrentLayerIndex];
+                int index = GlobalState.CurrentLayerIndex;
+                var layer = LayersWidgets[index].ThisLayer;
                 if (x==90 || x==180 || x == 360) { Effects.Rotate(layer, x); } else { Effects.RotateBilinear(layer, x); }
                 
                 layer.RefreshBrush();
@@ -710,14 +723,14 @@ namespace PhotoEditor
 
         private void MinimizeButtonUp(object sender, EventArgs e)
         {
-            //EditorWindow.WindowState = WindowState.Minimized;
+            EditorWindow.WindowState = System.Windows.WindowState.Minimized;
         }
 
         private void MaximizeButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (EditorWindow.Top != 0 && EditorWindow.Left != 0)
             {
-                //EditorWindow.WindowState = WindowState.Normal;
+                EditorWindow.WindowState = System.Windows.WindowState.Normal;
                 EditorWindow.Left = 0;
                 EditorWindow.Top = 0;
                 EditorWindow.Width = SystemParameters.PrimaryScreenWidth;
@@ -725,7 +738,7 @@ namespace PhotoEditor
             }
             else
             {
-                //EditorWindow.WindowState = WindowState.Normal;
+                EditorWindow.WindowState = System.Windows.WindowState.Normal;
                 EditorWindow.Left = WindowLeft;
                 EditorWindow.Top = WindowTop;
                 EditorWindow.Width = WindowWidth;
@@ -737,6 +750,13 @@ namespace PhotoEditor
         {
             MainWindowState.IsOpen = false;
             Close();
+        }
+
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+            WindowTop = EditorWindow.Top;
+            WindowTop = EditorWindow.Left;
         }
 
 
