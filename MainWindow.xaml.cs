@@ -57,8 +57,8 @@ namespace PhotoEditor
             FillButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Fill_Selected), true);
             EraseButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Erase_Selected), true);
             BrushButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Brush_Selected), true);
-
             #endregion
+
             Hide();
             Start StartWindow = new Start();
             StartWindow.Show();
@@ -385,6 +385,7 @@ namespace PhotoEditor
         private BitmapFrame BmpFrameErase(Point pos, Layer layer)
         {
             var bmpFrame = layer.LayerBmpFrame;
+            double brushSize = VisualHost.BrushSize;
             pos.X = pos.X * layer.LayerScale;
             pos.Y = pos.Y * layer.LayerScale;
             var source = new FormatConvertedBitmap(bmpFrame, PixelFormats.Bgra32, null, 0);
@@ -404,7 +405,7 @@ namespace PhotoEditor
             {
                 for (int col = 0; col < width; col++)
                 {
-                    if (col >= pos.X - 10 && col <= pos.X + 10 && row >= pos.Y - 10 && row <= pos.Y + 10)
+                    if (col >= pos.X - brushSize && col <= pos.X + brushSize && row >= pos.Y - brushSize && row <= pos.Y + brushSize)
                         intPixelData[row * width + col] = transparentPixel;
                 }
             }

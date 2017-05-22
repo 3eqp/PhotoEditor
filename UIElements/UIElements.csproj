@@ -62,6 +62,14 @@
     <Compile Include="Buttons\MinimizeButton_Black.xaml.cs">
       <DependentUpon>MinimizeButton_Black.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Buttons\Navigation\AddPhotoButton.xaml.cs" />
+    <Compile Include="Buttons\Navigation\ArrowButton.xaml.cs" />
+    <Compile Include="Buttons\Navigation\BrushButton.xaml.cs" />
+    <Compile Include="Buttons\Navigation\ColorButton.xaml.cs" />
+    <Compile Include="Buttons\Navigation\EraseButton.xaml.cs" />
+    <Compile Include="Buttons\Navigation\FillButton.xaml.cs" />
+    <Compile Include="Buttons\Navigation\ResizeButton.xaml.cs" />
+    <Compile Include="Buttons\Navigation\RotateButton.xaml.cs" />
     <Compile Include="Feature1.xaml.cs">
       <DependentUpon>Feature1.xaml</DependentUpon>
     </Compile>
@@ -138,6 +146,38 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Buttons\Navigation\AddPhotoButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buttons\Navigation\ArrowButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buttons\Navigation\BrushButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buttons\Navigation\ColorButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buttons\Navigation\EraseButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buttons\Navigation\FillButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buttons\Navigation\ResizeButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buttons\Navigation\RotateButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Feature1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -184,17 +224,18 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="icons\ic_img.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="icons\logo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="icons\ic_feature_png.png" />
-    <Resource Include="icons\ic_feature_layer.png" />
+    <Resource Include="icons\ic_addPhoto.png" />
+    <Resource Include="icons\ic_arrow.png" />
+    <Resource Include="icons\ic_brush.png" />
+    <Resource Include="icons\ic_erase.png" />
     <Resource Include="icons\ic_feature_draw.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="icons\ic_feature_layer.png" />
+    <Resource Include="icons\ic_feature_png.png" />
+    <Resource Include="icons\ic_fill.png" />
+    <Resource Include="icons\ic_img.png" />
+    <Resource Include="icons\ic_resize.png" />
+    <Resource Include="icons\ic_rotate.png" />
+    <Resource Include="icons\logo.png" />
     <Resource Include="icons\textlogo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

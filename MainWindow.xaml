@@ -16,6 +16,86 @@
         AllowsTransparency="True"
         WindowStyle="None">
 
+    <Window.Resources>
+        <Style x:Key="SliderRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Rectangle Fill="Transparent"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SliderThumbStyle" TargetType="{x:Type Thumb}">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Button.Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="300" ShadowDepth="2" BlurRadius="4" Opacity="0.1" RenderingBias="Quality" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Grid>
+                            <Border Name="innerBorder"
+                            Background="White"
+                            BorderBrush="White"
+                            Height="15" Width="15" CornerRadius="7.5" Opacity="1" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="innerBorder" Property="Width" Value="4" />
+                                <Setter TargetName="innerBorder" Property="Height" Value="4" />
+                                <Setter TargetName="innerBorder" Property="CornerRadius" Value="2" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <ControlTemplate x:Key="HorizontalSlider" TargetType="{x:Type Slider}">
+            <Grid Margin="5,0,5,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Border x:Name="TrackBackground"
+                        CornerRadius="2"
+                        Grid.Row="1"
+                        Margin="2,0,2,0"
+                        BorderThickness="2"
+                        BorderBrush="#bbb"
+                        VerticalAlignment="Center" Height="4" />
+                <Track x:Name="PART_Track" Grid.Row="1">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Command="{x:Static Slider.DecreaseLarge}"  Style="{StaticResource SliderRepeatButtonStyle}" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource SliderRepeatButtonStyle}"/>
+                    </Track.IncreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb x:Name="Thumb" Style="{StaticResource SliderThumbStyle}" />
+                    </Track.Thumb>
+                </Track>
+            </Grid>
+        </ControlTemplate>
+        <Style x:Key="SliderStyle" TargetType="{x:Type Slider}">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="MinWidth" Value="100" />
+                    <Setter Property="MinHeight" Value="15" />
+                    <Setter Property="Template" Value="{StaticResource HorizontalSlider}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
     <Grid x:Name="Grid_Main">
         <Grid.Background>
             <SolidColorBrush Color="#0d0302" Opacity="0.9"/>
@@ -51,11 +131,29 @@
                         MouseLeftButtonDown="Border_MouseLeftButtonDown"
                         Background="Transparent" 
                         Grid.ColumnSpan="5"/>
+
                 <Design:TextLogo x:Name="TextLogo"
                                  HorizontalAlignment="Left"
                                  Margin="10,0,0,0" Width="18"/>
                 <Design:FileButton x:Name="FileButton" Grid.Column="1" HorizontalAlignment="Right"/>
                 <Design:HelpButton x:Name="HelpButton" Grid.Column="2" HorizontalAlignment="Right"/>
+
+                <Menu Height="24" VerticalAlignment="Center" Margin="5,0,703,1" Grid.Column="3">
+                    <MenuItem Header="File">
+                        <MenuItem Header="New"/>
+                        <MenuItem Header="Open" Click="ButtonOpenFile_Click"/>
+                        <MenuItem Header="Save"/>
+                        <MenuItem Header="Export As" >
+                            <MenuItem Header="Export as PNG" Click="ExportAsPNG"></MenuItem>
+                            <MenuItem Header="Export as JPG" Click="ExportAsJPG" ></MenuItem>
+                            <MenuItem Header="Export as BMP" Click="ExportAsBMP"></MenuItem>
+                        </MenuItem>
+                        <MenuItem Header="Exit" MouseLeftButtonUp="CloseButtonUp"></MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="Help" ></MenuItem>
+                </Menu>
+
+
                 <Design:MinimizeButton_Black x:Name="MinimizeButton_Black" 
                                              Grid.Column="4" HorizontalAlignment="Left" Width="30"/>
                 <Design:MaximizeButton_Black x:Name="MaximizeButton_Black" 
@@ -101,8 +199,10 @@
                                      Grid.Column="4"/>
                 <Buttons:RotateButton x:Name="RotateButton" 
                                      Grid.Column="6"/>
+                <Buttons:FillButton x:Name="FillButton"
+                                    Grid.Column="8"/>
                 <Buttons:ColorButton x:Name="ColorButton"
-                                     Grid.Column="8"/>
+                                     Grid.Column="10"/>
                 <Rectangle Name="ColorPreview"
                            Fill="Black" 
                            Width="27"
@@ -113,14 +213,22 @@
                            Margin="0,9,0,0"
                            RadiusX="1" RadiusY="1"
                            Panel.ZIndex="1"
-                           Grid.Column="8"
+                           Grid.Column="10"
                            MouseLeftButtonDown="ColorButton_MouseDown"/>
-                <Buttons:FillButton x:Name="FillButton"
-                                    Grid.Column="10"/>
-                <Buttons:BrushButton x:Name="BrushButton"
-                                     Grid.Column="14"/>
                 <Buttons:EraseButton x:Name="EraseButton"
                                      Grid.Column="12"/>
+                <Buttons:BrushButton x:Name="BrushButton"
+                                     Grid.Column="14"/>
+                <Slider x:Name="sliderBrushSize" 
+                        Style="{StaticResource SliderStyle}"
+                        Grid.Column="16" 
+                        Margin="0,10,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top" 
+                        Width="51"
+                        Maximum="10"
+                        Minimum="1"
+                        ValueChanged="SliderBrushSize_ValueChanged"/>
 
 
 
@@ -143,18 +251,67 @@
                 <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
             <Grid Name="Grid_LayersList">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="75"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+
                 <Grid Name="Grid_LayerControl"
                       Grid.Row="0">
-
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="10"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                    </Grid.ColumnDefinitions>
+                    <Canvas Background="#efefef"
+                            Grid.RowSpan="5" 
+                            Grid.ColumnSpan="3"/>
+                    <TextBlock Text="Opacity"
+                               FontFamily="SF UI Display"
+                               FontWeight="Regular"
+                               FontSize="12"
+                               Foreground="Black"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left" 
+                               Grid.Row="1" 
+                               Grid.Column="1"/>
+                    <Slider x:Name="sliderOpacity" 
+                            Style="{StaticResource SliderStyle}"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top" 
+                            Width="100"
+                            Height="15"
+                            Maximum="100"
+                            Minimum="0"
+                            ValueChanged="SliderOpacity_ValueChanged" 
+                            Grid.Column="1" 
+                            Grid.Row="1" Grid.RowSpan="2"/>
                 </Grid>
-                <Grid Name="Grid_Layer"
-                      Grid.Row="1">
 
+                <Grid Name="Grid_LayerList"
+                      Grid.Row="1">
+                    <ScrollViewer Name="LayersList"
+                                  Background="White"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox x:Name="widgetsCanvas"
+                                 PreviewKeyDown="ListBox_PreviewKeyDown"
+                                 ItemsSource="{Binding LayersWidgets, Mode=TwoWay}"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 x:FieldModifier="public"
+                                 KeyUp="MoveLayerUp"
+                                 KeyDown="MoveLayerDown"
+                                 VerticalAlignment="Top">
+                        </ListBox>
+                    </ScrollViewer>
                 </Grid>
             </Grid>
         </Grid>
@@ -172,36 +329,7 @@
         <!--<wpfx:ColorCanvas Name="ColorCanvas" Panel.ZIndex="999"
             Grid.Column="1" 
             Grid.Row="1"/>-->
-        
-        <ScrollViewer Name="LayersList" 
-            Grid.Row="1"
-            Background="Gainsboro"
-            ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,159,124,0">
-            <ListBox x:Name="widgetsCanvas"
-                PreviewKeyDown="ListBox_PreviewKeyDown"
-                ItemsSource="{Binding LayersWidgets, Mode=TwoWay}"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                x:FieldModifier="public"
-                KeyUp="MoveLayerUp"
-                KeyDown="MoveLayerDown"
-                VerticalAlignment="Top">
-            </ListBox>
-        </ScrollViewer>
 
-        <Menu Height="24" VerticalAlignment="Center" Margin="88,211,282,280" Grid.Row="1">
-            <MenuItem Header="File">
-                <MenuItem Header="New"/>
-                <MenuItem Header="Open" Click="ButtonOpenFile_Click"/>
-                <MenuItem Header="Save"/>
-                <MenuItem Header="Export As" >
-                    <MenuItem Header="Export as PNG" Click="ExportAsPNG"></MenuItem>
-                    <MenuItem Header="Export as JPG" Click="ExportAsJPG" ></MenuItem>
-                    <MenuItem Header="Export as BMP" Click="ExportAsBMP"></MenuItem>
-                </MenuItem>
-                <MenuItem Header="Exit" MouseLeftButtonUp="CloseButtonUp"></MenuItem>
-            </MenuItem>
-            <MenuItem Header="Help" ></MenuItem>
-        </Menu>
 
         <Button x:Name="btnNewLayer"
                 Height="33" HorizontalAlignment="Left" 
@@ -242,16 +370,6 @@
                     Content="Pouring"  Click="Pouring"
                     Grid.Column="2" Grid.Row="2" 
                     Margin="513,11.8,23.6,48.4"/>-->
-        <Slider x:Name="sliderBrushSize" 
-                Grid.Column="2" 
-                HorizontalAlignment="Left"
-                Margin="441,63,0,0" 
-                Grid.Row="2" 
-                VerticalAlignment="Top" 
-                Width="51"
-                Maximum="10"
-                Minimum="1"
-                ValueChanged="SliderBrushSize_ValueChanged"/>
 
         <Button x:Name="btnUp"
                 Height="33" HorizontalAlignment="Left" 
@@ -261,15 +379,5 @@
                 Height="33" HorizontalAlignment="Left" 
                 Margin="192,0,0,46"  VerticalAlignment="Bottom" 
                 Width="38" Grid.Column="3" Grid.Row="2" Content="Down" Click="MoveLayerDown"/>
-        <Slider x:Name="sliderOpacity" 
-                Grid.Column="3" 
-                HorizontalAlignment="Left"
-                Margin="145,67,0,0" 
-                Grid.Row="2" 
-                VerticalAlignment="Top" 
-                Width="85"
-                Maximum="100"
-                Minimum="0"
-                ValueChanged="SliderOpacity_ValueChanged"/>
     </Grid>
 </Window>
