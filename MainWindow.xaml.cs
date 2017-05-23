@@ -101,10 +101,17 @@ namespace PhotoEditor
             FillButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Fill_Selected), true);
             EraseButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Erase_Selected), true);
             BrushButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Brush_Selected), true);
+            // Layers
             LayerUpButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(MoveLayerUp), true);
             LayerDownButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(MoveLayerDown), true);
             AddLayerButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(NewLayer_Click), true);
             DeleteLayerButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(DeleteLayer_Click), true);
+            // Effects
+            GrayscaleButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Grayscale_Click), true);
+            NegativeButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Negative_Click), true);
+            GaussianBlurButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(GaussianBlur_Click), true);
+            SobelEffectButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(SobelFilter_Click), true);
+            SobelEffectGrayScaleButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(SobelFilterGrayscale_Click), true);
             #endregion
 
             Hide();
@@ -616,8 +623,8 @@ namespace PhotoEditor
                     TranslatePoint(newPosition, layer);
                     bool stretchWidth = (newPosition.X >= 0 && newPosition.X <= width) ? true : false;
                     bool stretchHeight = (newPosition.Y >= 0 && newPosition.Y <= height) ? true : false;
-                    bool stretchRight = (newPosition.X > width - 5 && newPosition.X < width && stretchHeight && stretchWidth) ? true : false;
-                    bool stretchBottom = (newPosition.Y > height - 5 && newPosition.Y < height && stretchHeight && stretchWidth) ? true : false;
+                    bool stretchRight = (newPosition.X > width - 10 && newPosition.X < width && stretchHeight && stretchWidth) ? true : false;
+                    bool stretchBottom = (newPosition.Y > height - 10 && newPosition.Y < height && stretchHeight && stretchWidth) ? true : false;
 
                     Console.WriteLine(e.GetPosition(mainCanvas) + " " + (xPos + width));
 
@@ -943,8 +950,6 @@ namespace PhotoEditor
             }
             if ((e.Key == Key.R) && (Keyboard.IsKeyDown(Key.LeftCtrl)))
                 Rotate_Click(sender, e);
-            if ((e.Key == Key.E) && (Keyboard.IsKeyDown(Key.LeftCtrl)))
-                Negative_Click(sender, e);
         }
     }
 }

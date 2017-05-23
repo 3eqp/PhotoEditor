@@ -28,10 +28,12 @@
         <Design:LayerVisibilityButtonON Name="VisibilityON"
                                         Grid.Column="3" 
                                         Grid.Row="2"
+                                        HorizontalAlignment="Left"
                                         Visibility="Visible"/>
         <Design:LayerVisibilityButtonOFF Name="VisibilityOFF"
                                         Grid.Column="3" 
                                         Grid.Row="2"
+                                        HorizontalAlignment="Left"
                                         Visibility="Hidden"/>
         <Rectangle x:Name="previewCanvas"
                    Fill="Gray"

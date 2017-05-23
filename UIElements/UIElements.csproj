@@ -62,6 +62,9 @@
     <Compile Include="Buttons\DeleteLayer.xaml.cs">
       <DependentUpon>DeleteLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Buttons\EffectsBox.xaml.cs">
+      <DependentUpon>EffectsBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Buttons\LayerDown.xaml.cs">
       <DependentUpon>LayerDown.xaml</DependentUpon>
     </Compile>
@@ -87,6 +90,9 @@
     <Compile Include="Buttons\Navigation\ArrowButton.xaml.cs" />
     <Compile Include="Buttons\Navigation\BrushButton.xaml.cs" />
     <Compile Include="Buttons\Navigation\ColorButton.xaml.cs" />
+    <Compile Include="Buttons\Navigation\Effects.xaml.cs">
+      <DependentUpon>Effects.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Buttons\Navigation\EraseButton.xaml.cs" />
     <Compile Include="Buttons\Navigation\FillButton.xaml.cs" />
     <Compile Include="Buttons\Navigation\ResizeButton.xaml.cs" />
@@ -161,6 +167,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Buttons\EffectsBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Buttons\LayerDown.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -204,6 +214,10 @@
     <Page Include="Buttons\Navigation\ColorButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buttons\Navigation\Effects.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Buttons\Navigation\EraseButton.xaml">
       <Generator>MSBuild:Compile</Generator>
