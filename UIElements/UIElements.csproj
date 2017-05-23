@@ -74,6 +74,9 @@
     <Compile Include="Buttons\LayerVisibilityButtonON.xaml.cs">
       <DependentUpon>LayerVisibilityButtonON.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Buttons\MaximizeButtonOFF.xaml.cs">
+      <DependentUpon>MaximizeButtonOFF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Buttons\MaximizeButton_Black.xaml.cs">
       <DependentUpon>MaximizeButton_Black.xaml</DependentUpon>
     </Compile>
@@ -171,6 +174,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Buttons\LayerVisibilityButtonON.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Buttons\MaximizeButtonOFF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -281,6 +288,9 @@
   <ItemGroup>
     <Resource Include="icons\ic_layerVisibilityOFF.png" />
     <Resource Include="icons\ic_layerVisibilityON.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\ic_maximizeOFF.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

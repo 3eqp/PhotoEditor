@@ -85,6 +85,7 @@ namespace PhotoEditor.Controls
 
         private void Control_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            // Arrow
             if (GlobalState.CurrentTool == GlobalState.Instruments.Arrow)
             {
                 IsDragging = true;
@@ -94,6 +95,13 @@ namespace PhotoEditor.Controls
                 var widgetIndex = MainWindow.LayersWidgets.IndexOf(this.Widget);
                 GlobalState.CurrentLayerIndex = widgetIndex;
                 ((MainWindow)Application.Current.MainWindow).widgetsCanvas.SelectedIndex = widgetIndex;
+            }
+
+            // Fill
+            if (GlobalState.CurrentTool == GlobalState.Instruments.Fill)
+            {
+                Background = new SolidColorBrush(VisualHost.BrushColor.Color);
+                Widget.previewCanvas.Fill = new SolidColorBrush(VisualHost.BrushColor.Color);
             }
         }
 

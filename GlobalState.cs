@@ -11,7 +11,7 @@ namespace PhotoEditor
     {
         internal enum Instruments
         {
-            Arrow, Brush, Resize, Eraser
+            Arrow, Brush, Resize, Eraser, Fill
         }
         public static Instruments CurrentTool;
 
@@ -32,5 +32,6 @@ namespace PhotoEditor
     class MainWindowState
     {
         public static bool IsOpen { get; set; }
+        public static bool IsMaximized { get; set; }
     }
 }

@@ -15,11 +15,50 @@ using System.Windows.Navigation;
 using System.Runtime.InteropServices;
 using Xceed.Wpf.Toolkit;
 using System.Windows.Media.Effects;
+using System.Windows.Interop;
 
 namespace PhotoEditor
 {
+    #region System Blur Parameters
+
+    internal enum AccentState
+    {
+        ACCENT_DISABLED = 0,
+        ACCENT_ENABLE_GRADIENT = 1,
+        ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
+        ACCENT_ENABLE_BLURBEHIND = 3,
+        ACCENT_INVALID_STATE = 4
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct AccentPolicy
+    {
+        public AccentState AccentState;
+        public int AccentFlags;
+        public int GradientColor;
+        public int AnimationId;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct WindowCompositionAttributeData
+    {
+        public WindowCompositionAttribute Attribute;
+        public IntPtr Data;
+        public int SizeOfData;
+    }
+
+    internal enum WindowCompositionAttribute
+    {
+        WCA_ACCENT_POLICY = 19
+    }
+
+    #endregion
+
     public partial class MainWindow : Window
     {
+        [DllImport("user32.dll")]
+        internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
+
         // Window Global Parameters
         public static double WindowTop { get; set; }
         public static double WindowLeft { get; set; }
@@ -38,6 +77,8 @@ namespace PhotoEditor
         public MainWindow()
         {
             InitializeComponent();
+            SizeToContent = System.Windows.SizeToContent.Manual;
+            MaxHeight = SystemParameters.WorkArea.Height;
 
             LayersWidgets = new ObservableCollection<LayerWidget>();
             widgetsCanvas.DataContext = this;
@@ -74,12 +115,35 @@ namespace PhotoEditor
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            EnableBlur(this);
             MainWindowState.IsOpen = true;
             
             WindowTop = EditorWindow.Top;
             WindowLeft = EditorWindow.Left;
             WindowHeight = EditorWindow.Height;
             WindowWidth = EditorWindow.Width;
+        }
+
+        public static void EnableBlur(Window win)
+        {
+            var windowHelper = new WindowInteropHelper(win);
+
+            var accent = new AccentPolicy();
+            accent.AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND;
+
+            var accentStructSize = Marshal.SizeOf(accent);
+
+            var accentPtr = Marshal.AllocHGlobal(accentStructSize);
+            Marshal.StructureToPtr(accent, accentPtr, false);
+
+            var data = new WindowCompositionAttributeData();
+            data.Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY;
+            data.SizeOfData = accentStructSize;
+            data.Data = accentPtr;
+
+            SetWindowCompositionAttribute(windowHelper.Handle, ref data);
+
+            Marshal.FreeHGlobal(accentPtr);
         }
 
         // Actions from Start Window
@@ -652,19 +716,37 @@ namespace PhotoEditor
         // INSTRUMENTS
 
 
+        SolidColorBrush passiveColor = new SolidColorBrush(Color.FromArgb(0, (byte)255, (byte)72, (byte)31));
+        SolidColorBrush activeColor = new SolidColorBrush(Color.FromArgb(255, (byte)255, (byte)72, (byte)31));
+
         private void Brush_Selected(object sender, RoutedEventArgs e)
         {
             GlobalState.CurrentTool = GlobalState.Instruments.Brush;
+            Arrow_Overlay.Fill = passiveColor;
+            Resize_Overlay.Fill = passiveColor;
+            Fill_Overlay.Fill = passiveColor;
+            Erase_Overlay.Fill = passiveColor;
+            Brush_Overlay.Fill = activeColor;
         }
 
         private void Resize_Selected(object sender, RoutedEventArgs e)
         {
             GlobalState.CurrentTool = GlobalState.Instruments.Resize;
+            Arrow_Overlay.Fill = passiveColor;
+            Resize_Overlay.Fill = activeColor;
+            Fill_Overlay.Fill = passiveColor;
+            Erase_Overlay.Fill = passiveColor;
+            Brush_Overlay.Fill = passiveColor;
         }
 
         private void Erase_Selected(object sender, RoutedEventArgs e)
         {
             GlobalState.CurrentTool = GlobalState.Instruments.Eraser;
+            Arrow_Overlay.Fill = passiveColor;
+            Resize_Overlay.Fill = passiveColor;
+            Fill_Overlay.Fill = passiveColor;
+            Erase_Overlay.Fill = activeColor;
+            Brush_Overlay.Fill = passiveColor;
 
             // Convert to Bitmap
             var index = GlobalState.CurrentLayerIndex;
@@ -680,14 +762,21 @@ namespace PhotoEditor
         private void Arrow_Selected(object sender, RoutedEventArgs e)
         {
             GlobalState.CurrentTool = GlobalState.Instruments.Arrow;
+            Arrow_Overlay.Fill = activeColor;
+            Resize_Overlay.Fill = passiveColor;
+            Fill_Overlay.Fill = passiveColor;
+            Erase_Overlay.Fill = passiveColor;
+            Brush_Overlay.Fill = passiveColor;
         }
 
         private void Fill_Selected(object sender, RoutedEventArgs e)
         {
-            int index = GlobalState.CurrentLayerIndex;
-            var layer = LayersWidgets[index].ThisLayer;
-            layer.Background = new SolidColorBrush(VisualHost.BrushColor.Color);
-            layer.Widget.previewCanvas.Fill = new SolidColorBrush(VisualHost.BrushColor.Color);
+            GlobalState.CurrentTool = GlobalState.Instruments.Fill;
+            Arrow_Overlay.Fill = passiveColor;
+            Resize_Overlay.Fill = passiveColor;
+            Fill_Overlay.Fill = activeColor;
+            Erase_Overlay.Fill = passiveColor;
+            Brush_Overlay.Fill = passiveColor;
         }
         
 
@@ -759,6 +848,9 @@ namespace PhotoEditor
                 EditorWindow.Top = 0;
                 EditorWindow.Width = SystemParameters.PrimaryScreenWidth;
                 EditorWindow.Height = SystemParameters.PrimaryScreenHeight;
+                MaximizeButton_Black.Visibility = Visibility.Hidden;
+                MaximizeButtonOFF.Visibility = Visibility.Visible;
+                MainWindowState.IsMaximized = true;
             }
             else
             {
@@ -767,6 +859,9 @@ namespace PhotoEditor
                 EditorWindow.Top = WindowTop;
                 EditorWindow.Width = WindowWidth;
                 EditorWindow.Height = WindowHeight;
+                MaximizeButton_Black.Visibility = Visibility.Visible;
+                MaximizeButtonOFF.Visibility = Visibility.Hidden;
+                MainWindowState.IsMaximized = false;
             }
         }
 
@@ -776,11 +871,14 @@ namespace PhotoEditor
             Close();
         }
 
-        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void DragCanvasButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DragMove();
-            WindowTop = EditorWindow.Top;
-            WindowTop = EditorWindow.Left;
+            if (!MainWindowState.IsMaximized)
+            {
+                DragMove();
+                WindowTop = EditorWindow.Top;
+                WindowTop = EditorWindow.Left;
+            }
         }
 
 
@@ -814,6 +912,38 @@ namespace PhotoEditor
         private void HelpButtonUp(object sender, MouseButtonEventArgs e)
         {
             System.Diagnostics.Process.Start("http://google.com");
+        }
+
+        private void KeysEvent(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.A:
+                    Arrow_Selected(sender, e);
+                    break;
+                case Key.R:
+                    Resize_Selected(sender, e);
+                    break;
+                case Key.E:
+                    Erase_Selected(sender, e);
+                    break;
+                case Key.B:
+                    Brush_Selected(sender, e);
+                    break;
+                case Key.F:
+                    Fill_Selected(sender, e);
+                    break;
+                case Key.OemPlus:
+                    NewLayer_Click(sender, e);
+                    break;
+                case Key.OemMinus:
+                    DeleteLayer_Click(sender, e);
+                    break;
+            }
+            if ((e.Key == Key.R) && (Keyboard.IsKeyDown(Key.LeftCtrl)))
+                Rotate_Click(sender, e);
+            if ((e.Key == Key.E) && (Keyboard.IsKeyDown(Key.LeftCtrl)))
+                Negative_Click(sender, e);
         }
     }
 }

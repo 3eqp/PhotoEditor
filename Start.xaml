@@ -9,6 +9,7 @@
 		Background="#12000000"
 		Loaded="Window_Loaded"
         x:Name="myWindow"
+        WindowStartupLocation="CenterScreen"
         Height="500" Width="900">
 
     <Window.Resources>

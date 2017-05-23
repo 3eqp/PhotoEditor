@@ -42,15 +42,6 @@
                                     </Setter.Value>
                                 </Setter>
                             </Trigger>
-
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter Property="Background" Value="#05000000"/>
-                                <Setter Property="Button.Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect Color="Black" Direction="300" ShadowDepth="0.5" BlurRadius="2" Opacity="0.2" RenderingBias="Quality" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
