@@ -10,11 +10,13 @@
         mc:Ignorable="d"
         x:Name="EditorWindow"
         Height="600" Width="1200"
+        MinHeight="400" MinWidth="800"
 		Background="#12000000"
         WindowStartupLocation="CenterScreen"
         Loaded="MainWindow_Loaded"
         AllowsTransparency="True"
         WindowStyle="None"
+        ResizeMode="CanResizeWithGrip"
         KeyDown="KeysEvent">
 
     <Window.Resources>
