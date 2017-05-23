@@ -10,6 +10,8 @@ using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using System.Windows.Shapes;
 using PhotoEditor.Controls;
+using System.Diagnostics;
+using System.Windows.Navigation;
 using System.Runtime.InteropServices;
 using Xceed.Wpf.Toolkit;
 using System.Windows.Media.Effects;
@@ -57,6 +59,10 @@ namespace PhotoEditor
             FillButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Fill_Selected), true);
             EraseButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Erase_Selected), true);
             BrushButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Brush_Selected), true);
+            LayerUpButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(MoveLayerUp), true);
+            LayerDownButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(MoveLayerDown), true);
+            AddLayerButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(NewLayer_Click), true);
+            DeleteLayerButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(DeleteLayer_Click), true);
             #endregion
 
             Hide();
@@ -412,10 +418,11 @@ namespace PhotoEditor
 
             var bsCheckerboard = BitmapSource.Create(width, height, 96, 96, PixelFormats.Bgra32, null, intPixelData, stride);
             bmpFrame = BitmapFrame.Create(bsCheckerboard);
+            layer.RefreshBrush();
             return bmpFrame;
         }
 
-        private void BrushToBitmap()
+        public void BrushToBitmap()
         {
             int index = GlobalState.CurrentLayerIndex;
             var layer = LayersWidgets[index].ThisLayer;
@@ -613,6 +620,7 @@ namespace PhotoEditor
             if (GlobalState.CurrentTool == GlobalState.Instruments.Resize)
             {
                 ScaleTransform scaletransform = new ScaleTransform();
+                TranslateTransform translatetransform = new TranslateTransform();
                 double height = layer.ActualHeight;
                 double width = layer.ActualWidth;
 
@@ -633,7 +641,10 @@ namespace PhotoEditor
 
                 layer.Height = height;
                 layer.Width = width;
+                translatetransform.X = layer.LayerPosition.X;
+                translatetransform.Y = layer.LayerPosition.Y;
                 layer.RenderTransform = scaletransform;
+                layer.RenderTransform = translatetransform;
             }
         }
 
@@ -654,6 +665,16 @@ namespace PhotoEditor
         private void Erase_Selected(object sender, RoutedEventArgs e)
         {
             GlobalState.CurrentTool = GlobalState.Instruments.Eraser;
+
+            // Convert to Bitmap
+            var index = GlobalState.CurrentLayerIndex;
+            var layer = LayersWidgets[index].ThisLayer;
+            if (layer.LayerBmpFrame == null)
+            {
+                mainCanvas.UpdateLayout();
+                BrushToBitmap();
+                layer.RefreshBrush();
+            }
         }
 
         private void Arrow_Selected(object sender, RoutedEventArgs e)
@@ -666,7 +687,7 @@ namespace PhotoEditor
             int index = GlobalState.CurrentLayerIndex;
             var layer = LayersWidgets[index].ThisLayer;
             layer.Background = new SolidColorBrush(VisualHost.BrushColor.Color);
-            layer.Widget.previewCanvas.Background = new SolidColorBrush(VisualHost.BrushColor.Color);
+            layer.Widget.previewCanvas.Fill = new SolidColorBrush(VisualHost.BrushColor.Color);
         }
         
 
@@ -788,6 +809,11 @@ namespace PhotoEditor
         private void ListBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true;
+        }
+      
+        private void HelpButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://google.com");
         }
     }
 }

@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace UIElements
 {
     /// <summary>
-    /// Interaction logic for HelpButton.xaml
+    /// Interaction logic for LayerVisibilityButton.xaml
     /// </summary>
-    public partial class HelpButton : UserControl
+    public partial class LayerVisibilityButtonON : UserControl
     {
-        public HelpButton()
+        public LayerVisibilityButtonON()
         {
             InitializeComponent();
         }

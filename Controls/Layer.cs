@@ -42,6 +42,7 @@ namespace PhotoEditor.Controls
             LayerScale = scale;
             IsLayerVisible = true;
             Visibility = Visibility.Visible;
+
             if (col != 0) Grid.SetColumn(this, col);
             if (row != 0) Grid.SetRow(this, row);
             if (colspan != 0) Grid.SetColumnSpan(this, colspan);
@@ -65,11 +66,15 @@ namespace PhotoEditor.Controls
             if (IsLayerVisible)
             {
                 Visibility = Visibility.Hidden;
+                Widget.VisibilityON.Visibility = Visibility.Hidden;
+                Widget.VisibilityOFF.Visibility = Visibility.Visible;
                 IsLayerVisible = false;
             }
             else if(!IsLayerVisible)
             {
                 Visibility = Visibility.Visible;
+                Widget.VisibilityON.Visibility = Visibility.Visible;
+                Widget.VisibilityOFF.Visibility = Visibility.Hidden;
                 IsLayerVisible = true;
             }
         }

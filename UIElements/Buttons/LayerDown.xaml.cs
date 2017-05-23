@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace UIElements
 {
     /// <summary>
-    /// Interaction logic for FileButton.xaml
+    /// Interaction logic for LayerDown.xaml
     /// </summary>
-    public partial class FileButton : UserControl
+    public partial class LayerDown : UserControl
     {
-        public FileButton()
+        public LayerDown()
         {
             InitializeComponent();
         }

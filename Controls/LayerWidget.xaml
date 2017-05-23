@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Design="clr-namespace:UIElements;assembly=UIElements"
              mc:Ignorable="d"
-             d:DesignHeight="50"
-             d:DesignWidth="240">
+             Height="50"
+             Width="200">
     <Grid MouseLeftButtonDown="UserContol_MouseLeftButtonDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="0"/>
@@ -15,25 +16,42 @@
             <RowDefinition Height="0"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5px"/>
             <ColumnDefinition Width="40px"/>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="40px" />
         </Grid.ColumnDefinitions>
-        <Button Grid.Column="2" Grid.Row="2" Margin="10,9,10,11" Click="VisibleChange_Click"/>
-        <Canvas x:Name="previewCanvas" Grid.Row="1" Background="Gray" Grid.RowSpan="3"/>
-
+        <Canvas Name="WidgetBG" 
+                Background="White" 
+                Grid.ColumnSpan="4" 
+                Grid.RowSpan="4"/>
+        <Design:LayerVisibilityButtonON Name="VisibilityON"
+                                        Grid.Column="3" 
+                                        Grid.Row="2"
+                                        Visibility="Visible"/>
+        <Design:LayerVisibilityButtonOFF Name="VisibilityOFF"
+                                        Grid.Column="3" 
+                                        Grid.Row="2"
+                                        Visibility="Hidden"/>
+        <Rectangle x:Name="previewCanvas"
+                   Fill="Gray"
+                   Grid.Row="2" 
+                   Grid.Column="1"
+                   RadiusX="2"
+                   RadiusY="2"/>
         <Label
-            Grid.Column="1"
+            Grid.Column="2"
             Grid.Row="1"
+            Grid.RowSpan="3"
             VerticalAlignment="Center"
             HorizontalAlignment="Left"
             HorizontalContentAlignment="Left"
             MouseDoubleClick="Label_MouseDoubleClick" 
-            Height="50" 
-            Width="160" Grid.RowSpan="3">
+            Height="50" Width="115">
             <TextBlock Name="WidgetText"
                        Text="{Binding Path=LayerName, Mode=TwoWay}"
-                       FontSize="12"
+                       FontSize="14"
+                       FontFamily="SF UI Display"
                        TextAlignment="Center"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
@@ -41,19 +59,20 @@
                        Visibility="Visible"
                        Width="{Binding Path=Label}"
                        x:FieldModifier="private" 
-                       Margin="0,11,0,8"/>
+                       Margin="10,12,10,10"/>
         </Label>
         <TextBox Name="EditBox"
                  Grid.Row="2"
-                 Grid.Column="1"
+                 Grid.Column="2"
                  VerticalAlignment="Center"
                  HorizontalAlignment="Left"
                  HorizontalContentAlignment="Left"
-                 FontSize="12"
+                 FontSize="14"
+                 FontFamily="SF UI Display"
                  TextAlignment="Center"
                  Background="Transparent"
                  KeyUp="EditBox_KeyUp"
                  Visibility="Hidden"
-                 x:FieldModifier="private" Margin="0,11"/>
+                 x:FieldModifier="private" Margin="10,10,10,10"/>
     </Grid>
 </UserControl>

@@ -12,10 +12,14 @@ namespace PhotoEditor.Controls
         public LayerWidget(Layer layer, string name)
         {
             Height = 50;
+            Width = 200;
             ThisLayer = layer;
             DataContext = ThisLayer;
 
             InitializeComponent();
+
+            VisibilityON.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(VisibleChange_Click), true);
+            VisibilityOFF.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(VisibleChange_Click), true);
         }
 
         private void Label_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -40,7 +44,7 @@ namespace PhotoEditor.Controls
 
         public void RefreshPreviewCanvas()
         {
-            previewCanvas.Background = ThisLayer.LayerImageBrush;
+            previewCanvas.Fill = ThisLayer.LayerImageBrush;
         }
 
         public void UserContol_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

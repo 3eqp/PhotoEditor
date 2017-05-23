@@ -47,6 +47,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Buttons\AddLayer.xaml.cs">
+      <DependentUpon>AddLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Buttons\CloseButton.xaml.cs">
       <DependentUpon>CloseButton.xaml</DependentUpon>
     </Compile>
@@ -55,6 +58,21 @@
     </Compile>
     <Compile Include="Buttons\CreateNewFileButton.xaml.cs">
       <DependentUpon>CreateNewFileButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Buttons\DeleteLayer.xaml.cs">
+      <DependentUpon>DeleteLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Buttons\LayerDown.xaml.cs">
+      <DependentUpon>LayerDown.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Buttons\LayerUp.xaml.cs">
+      <DependentUpon>LayerUp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Buttons\LayerVisibilityButtonOFF.xaml.cs">
+      <DependentUpon>LayerVisibilityButtonOFF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Buttons\LayerVisibilityButtonON.xaml.cs">
+      <DependentUpon>LayerVisibilityButtonON.xaml</DependentUpon>
     </Compile>
     <Compile Include="Buttons\MaximizeButton_Black.xaml.cs">
       <DependentUpon>MaximizeButton_Black.xaml</DependentUpon>
@@ -78,12 +96,6 @@
     </Compile>
     <Compile Include="Feature3.xaml.cs">
       <DependentUpon>Feature3.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Buttons\FileButton.xaml.cs">
-      <DependentUpon>FileButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Buttons\HelpButton.xaml.cs">
-      <DependentUpon>HelpButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logo.xaml.cs">
       <DependentUpon>Logo.xaml</DependentUpon>
@@ -126,6 +138,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Buttons\AddLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Buttons\CloseButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -135,6 +151,26 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Buttons\CreateNewFileButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Buttons\DeleteLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Buttons\LayerDown.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Buttons\LayerUp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Buttons\LayerVisibilityButtonOFF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buttons\LayerVisibilityButtonON.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -190,14 +226,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Buttons\FileButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Buttons\HelpButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Logo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -237,6 +265,22 @@
     <Resource Include="icons\ic_rotate.png" />
     <Resource Include="icons\logo.png" />
     <Resource Include="icons\textlogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\ic_layerDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\ic_layerUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\ic_addLayer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\ic_deleteLayer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\ic_layerVisibilityOFF.png" />
+    <Resource Include="icons\ic_layerVisibilityON.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
