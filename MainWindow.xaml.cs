@@ -218,8 +218,8 @@ namespace PhotoEditor
 
         private void SaveCanvas(Canvas canvas, int dpi, string filename)
         {
-            var width = canvas.ActualWidth;
-            var height = canvas.ActualHeight;
+            var width = ViewCanvas.ActualWidth;
+            var height = ViewCanvas.ActualHeight;
 
             var size = new Size(width, height);
             canvas.Measure(size);
@@ -267,7 +267,6 @@ namespace PhotoEditor
                 SaveCanvas(mainCanvas, 96, saveDlg.FileName);
             }
         }
-
 
 
         // LAYER EXPORT
@@ -386,9 +385,12 @@ namespace PhotoEditor
         
         private void SliderOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            int index = GlobalState.CurrentLayerIndex;
-            var layer = LayersWidgets[index].ThisLayer;
-            layer.Opacity = sliderOpacity.Value / 100;
+            if (LayersWidgets.Count > 0)
+            {
+                int index = GlobalState.CurrentLayerIndex;
+                var layer = LayersWidgets[index].ThisLayer;
+                layer.Opacity = sliderOpacity.Value / 100;
+            }
         }
 
 

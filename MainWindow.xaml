@@ -470,15 +470,19 @@
                           Grid.Column="1"
                           ScrollViewer.VerticalScrollBarVisibility="Visible"
                           ScrollViewer.HorizontalScrollBarVisibility="Visible">
-                <DockPanel>
-                    <Canvas x:Name="mainCanvas"
-                            Width="3000"
-                            Height="3000"
-                            MouseLeftButtonDown="MainCanvas_MouseLeftButtonDown"
-                            MouseLeftButtonUp="MainCanvas_MouseLeftButtonUp"
-                            MouseMove="MainCanvas_MouseMove" />
-                </DockPanel>
+                    <DockPanel>
+                        <Canvas x:Name="mainCanvas"
+                                Width="3000"
+                                Height="3000"
+                                MouseLeftButtonDown="MainCanvas_MouseLeftButtonDown"
+                                MouseLeftButtonUp="MainCanvas_MouseLeftButtonUp"
+                                MouseMove="MainCanvas_MouseMove" />
+                    </DockPanel>
             </ScrollViewer>
+            <Canvas Name="ViewCanvas"
+                    Grid.ColumnSpan="2"
+                    Grid.Column="1">
+            </Canvas>
 
             <Grid Name="Grid_Layers">
                 <Grid.RowDefinitions>
