@@ -296,15 +296,5 @@
   <ItemGroup>
     <Resource Include="icons\ic_addLayer.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="icons\ic_deleteLayer.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="icons\ic_layerVisibilityOFF.png" />
-    <Resource Include="icons\ic_layerVisibilityON.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="icons\ic_maximizeOFF.png" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
