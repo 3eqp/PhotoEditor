@@ -953,5 +953,21 @@ namespace PhotoEditor
             if ((e.Key == Key.R) && (Keyboard.IsKeyDown(Key.LeftCtrl)))
                 Rotate_Click(sender, e);
         }
+        //select color
+        public Color? ColorName
+        {
+            get
+            {
+
+                return ColorPicker1.SelectedColor;
+            }
+        }
+        private void ClrPcker(object sender, RoutedPropertyChangedEventArgs<Color> e)
+        {
+            Color Colorid = (Color)ColorName;
+            var mySolidColorBrush = new SolidColorBrush(Colorid);
+
+            VisualHost.BrushColor = mySolidColorBrush;
+        }
     }
 }

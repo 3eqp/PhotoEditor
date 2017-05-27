@@ -50,11 +50,17 @@
     <Compile Include="Buttons\AddLayer.xaml.cs">
       <DependentUpon>AddLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Buttons\CancelForm.xaml.cs">
+      <DependentUpon>CancelForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Buttons\CloseButton.xaml.cs">
       <DependentUpon>CloseButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Buttons\CloseButton_Black.xaml.cs">
       <DependentUpon>CloseButton_Black.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Buttons\ConfirmForm.xaml.cs">
+      <DependentUpon>ConfirmForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="Buttons\CreateNewFileButton.xaml.cs">
       <DependentUpon>CreateNewFileButton.xaml</DependentUpon>
@@ -151,11 +157,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Buttons\CancelForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Buttons\CloseButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Buttons\CloseButton_Black.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Buttons\ConfirmForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,31 +1,67 @@
 ﻿<Window x:Class="PhotoEditor.Turn"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:Design="clr-namespace:UIElements;assembly=UIElements"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PhotoEditor"
         mc:Ignorable="d"
-        Title="Turn" Height="150" Width="300">
-    <Grid Margin="10" >
+        Title="Turn"  Height="600" Width="1200"
+        MinHeight="400" MinWidth="800"
+         AllowsTransparency="True"
+        WindowStyle="None"
+		Background="#12000000"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style
+            TargetType="{x:Type Canvas}"
+            x:Key="SystemButtonsCanvas">
+            <Setter Property="Width" Value="200" />
+            <Setter Property="Height" Value="200" />
+        </Style>
+        <Style
+            TargetType="{x:Type TextBlock}"
+            x:Key="ButtonCaption">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontFamily" Value="SF UI Display" />
+        </Style>
+    </Window.Resources>
+    <Grid Margin="10,10,10,10.6" >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="111*"/>
-            <ColumnDefinition Width="139*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="256.8" />
+            <RowDefinition Height="76.8"/>
+            <RowDefinition Height="48.8"/>
+            <RowDefinition Height="196.4"/>
+
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.ColumnSpan="2" Margin="0,0,0.4,0">Ведите угол поворота:</TextBlock>
-        <StackPanel FocusManager.FocusedElement="{Binding ElementName=Box}">
-            <TextBox x:Name="Box" MinWidth="250" Margin="130,0,-258.4,0" KeyDown="Box_KeyDown" RenderTransformOrigin="0.469,1.945"/>
-        </StackPanel>
 
-        <WrapPanel Grid.Row="2" HorizontalAlignment="Right" Margin="0,23.4,21.6,-48.6" Grid.Column="1">
-            <Button IsCancel="True" MinWidth="60">Отмена</Button>
-            <Button IsDefault="True" Click="Accept_Click" MinWidth="60" Margin="0,0,10,0" Content="OK"/>
-        </WrapPanel>
+
+
+        <TextBlock Text="Angle of rotation"
+                       Style="{StaticResource ButtonCaption}"
+                       Foreground="#66FFFFFF"
+                       FontWeight="Regular" 
+                       FontSize="12"
+                       Margin="542,0,543,56.6"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Bottom" Height="16" Width="95" Grid.ColumnSpan="2" Grid.Row="1"/>
+
+
+        <TextBox x:Name="Box"  MinWidth="50" KeyDown="Box_KeyDown" RenderTransformOrigin="0.469,1.945" Margin="542,25.2,543,30.6" Grid.ColumnSpan="2" Grid.Row="1"/>
+
+
+
+        <Design:CancelForm x:Name="Cancel" 
+                                   Margin="542,5.4,543,16.4" Grid.Row="2" Grid.ColumnSpan="2"
+                           />
+        <Design:ConfirmForm x:Name="Confirm" 
+                                   Margin="542,51.2,0,48.4" HorizontalAlignment="Left" Width="95" Grid.ColumnSpan="2" Grid.RowSpan="2" Grid.Row="1"/>
 
     </Grid>
 </Window>

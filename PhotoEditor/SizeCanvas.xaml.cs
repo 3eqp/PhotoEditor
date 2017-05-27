@@ -22,6 +22,8 @@ namespace PhotoEditor
         public SizeCanvas()
         {
             InitializeComponent();
+            Confirm.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Accept_Click), true);
+            Cancel.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Cancel_Click), true);
         }
         public string SizeWs
         {
@@ -31,7 +33,10 @@ namespace PhotoEditor
         {
             get { return HeightBox.Text; }
         }
-
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
         private void Accept_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
@@ -79,7 +84,7 @@ namespace PhotoEditor
                     break;
             }
         }
-             private void BoxHeight(object sender, KeyEventArgs e)
+        private void BoxHeight(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
