@@ -159,7 +159,7 @@
     <Content Include="Extensions\Xceed.Wpf.Toolkit.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="UIElements\UIElements.csproj">
+    <ProjectReference Include="..\UIElements\UIElements.csproj">
       <Project>{0e88c4c4-5956-4402-97f5-6cf5bec6fff0}</Project>
       <Name>UIElements</Name>
     </ProjectReference>
