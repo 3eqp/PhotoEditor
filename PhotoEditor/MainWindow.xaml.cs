@@ -97,7 +97,7 @@ namespace PhotoEditor
             ArrowButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Arrow_Selected), true);
             ResizeButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Resize_Selected), true);
             RotateButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Rotate_Click), true);
-            ColorButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(ColorButton_MouseDown), true);
+            
             FillButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Fill_Selected), true);
             EraseButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Erase_Selected), true);
             BrushButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Brush_Selected), true);
@@ -803,43 +803,9 @@ namespace PhotoEditor
             VisualHost.BrushColor = Brushes.Transparent;
         }
 
-        private void ColorButton_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            ColorPreview.Fill = new SolidColorBrush(Colors.Red);
-        }
+       
 
-        /*select color
-        public Color? ColorName
-        {
-            get
-            {
-                return ColorPicker1.SelectedColor;
-            }
-        }
-
-        private void SelectColor(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-
-
-            Color Colorid = (Color)ColorName;
-            var mySolidColorBrush = new SolidColorBrush(Colorid);
-
-            VisualHost.BrushColor = mySolidColorBrush;
-        }
-
-        private void Pouring(object sender, RoutedEventArgs e)
-        {
-            Layer layer = (Layer)mainCanvas.Children[GlobalState.currentLayerIndex];
-
-
-            Color Colorid = (Color)ColorName;
-
-            layer.Background = new SolidColorBrush(Colorid);
-
-            // layer.refreshBrush();
-        }
-        */
-
+       
 
         // SYSTEM BUTTONS
 
@@ -968,6 +934,12 @@ namespace PhotoEditor
             var mySolidColorBrush = new SolidColorBrush(Colorid);
 
             VisualHost.BrushColor = mySolidColorBrush;
+            ColorPreview.Fill = new SolidColorBrush(Colorid);
+        }
+
+        private void ColorButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ColorPreview.Fill = new SolidColorBrush(Colors.Red);
         }
     }
 }

@@ -398,11 +398,12 @@
                            Height="17"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Top"
-                           Margin="3.8,9,4.4,0"
+                           Grid.Row="1"
+                           Margin="0,9,0,0"
                            RadiusX="1" RadiusY="1"
                            Panel.ZIndex="1"
                            Grid.Column="10"
-                           MouseLeftButtonDown="ColorButton_MouseDown"/>
+                           />
 
                 <Buttons:EraseButton x:Name="EraseButton"
                                      Grid.Column="12" Margin="0,0,0.2,0"/>
@@ -443,8 +444,18 @@
                     <ComboBoxItem Name="SobelEffectButton">Sobel Effect</ComboBoxItem>
                     <ComboBoxItem Name="SobelEffectGrayScaleButton">Sobel Effect B&amp;W</ComboBoxItem>
                 </ComboBox>
-                <wpfx:ColorPicker x:Name="ColorPicker1" Panel.ZIndex="999"  SelectedColorChanged="ClrPcker"
-                	Margin="6,9,0,30" RenderTransformOrigin="0.482,0.511" Grid.Column="18" HorizontalAlignment="Left" Width="40"/>
+                <wpfx:ColorPicker x:Name="ColorPicker1" Panel.ZIndex="999"  SelectedColorChanged="ClrPcker" Opacity="0"
+                	Margin="5,6,0,10" RenderTransformOrigin="0.559,0.477" Grid.Column="10" HorizontalAlignment="Left" Width="20">
+                    <wpfx:ColorPicker.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform X="-2.618"/>
+                        </TransformGroup>
+                    </wpfx:ColorPicker.RenderTransform>
+                </wpfx:ColorPicker>
+
             </Grid>
 
             <Canvas Grid.RowSpan="2">
@@ -572,9 +583,8 @@
             </Grid>
         </Grid>
 
-        <!--<wpfx:ColorCanvas Name="ColorCanvas" Panel.ZIndex="999"
-            Grid.Column="1" 
-            Grid.Row="1"/>-->
+        <!--<wpfx:ColorCanvas Name="ColorCanvas" Panel.ZIndex="999" 
+            Grid.Row="1" Margin="417,10.2,495,199"/>-->
 
         <!--<Button Name="PouringButton"
                     Content="Pouring"  Click="Pouring"
