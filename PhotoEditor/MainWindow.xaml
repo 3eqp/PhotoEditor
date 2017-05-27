@@ -306,7 +306,7 @@
                               Width="35">
                         <MenuItem Header="New"/>
                         <MenuItem Header="Open" Click="ButtonOpenFile_Click"/>
-                        <MenuItem Header="Save"/>
+                        <MenuItem Header="Save as *.bpe" Click="ButtonSave_Click"/>
                         <MenuItem Header="Export As" >
                             <MenuItem Header="Export as PNG" Click="ExportAsPNG"/>
                             <MenuItem Header="Export as JPG" Click="ExportAsJPG" />

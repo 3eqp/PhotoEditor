@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 using Xceed.Wpf.Toolkit;
 using System.Windows.Media.Effects;
 using System.Windows.Interop;
+using System.Collections.Generic;
 
 namespace PhotoEditor
 {
@@ -74,6 +75,8 @@ namespace PhotoEditor
         /// </summary>
         static public int WindowTrigger;
 
+        private int keyCtrlDown = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -97,7 +100,7 @@ namespace PhotoEditor
             ArrowButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Arrow_Selected), true);
             ResizeButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Resize_Selected), true);
             RotateButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Rotate_Click), true);
-            
+
             FillButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Fill_Selected), true);
             EraseButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Erase_Selected), true);
             BrushButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Brush_Selected), true);
@@ -117,6 +120,8 @@ namespace PhotoEditor
             Hide();
             Start StartWindow = new Start();
             StartWindow.Show();
+            KeyDown += OnKeyDownHandler;
+            KeyUp += OnKeyUpHandler;
         }
 
         public static ObservableCollection<LayerWidget> LayersWidgets { get; set; }
@@ -125,7 +130,7 @@ namespace PhotoEditor
         {
             EnableBlur(this);
             MainWindowState.IsOpen = true;
-            
+
             WindowTop = EditorWindow.Top;
             WindowLeft = EditorWindow.Left;
             WindowHeight = EditorWindow.Height;
@@ -175,7 +180,7 @@ namespace PhotoEditor
                 Show();
             }
         }
-        
+
         // OPEN
 
         private void ButtonOpenFile_Click(object sender, RoutedEventArgs e)
@@ -190,25 +195,33 @@ namespace PhotoEditor
 
         private void OpenPhoto()
         {
-            OpenFileDialog op = new OpenFileDialog();
-            op.Title = "Select a picture";
-            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Select a picture";
+            ofd.Filter = "All supported graphics|*.jpg;*.jpeg;*.png;*.bpe|" +
               "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
-              "Portable Network Graphic (*.png)|*.png";
+              "Portable Network Graphic (*.png)|*.png|" +
+              "Bstu Photo Editor (*.bpe)|*.bpe";
 
-            if (op.ShowDialog() == true)
+            if (ofd.ShowDialog() == true)
             {
-                double HeightCanvas, WidthCanvas;
-                BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(op.FileName));
-                HeightCanvas = bmpFrame.PixelHeight;
-                WidthCanvas = bmpFrame.PixelWidth;
-                
-                NewLayer(HeightCanvas, WidthCanvas);
-                int index = GlobalState.CurrentLayerIndex;
-                var layer = LayersWidgets[index].ThisLayer;
+                if (ofd.FileName.EndsWith(".bpe"))
+                {
+                    LoadBPE(ofd.FileName);
+                }
+                else
+                {
+                    double HeightCanvas, WidthCanvas;
+                    BitmapFrame bmpFrame = BitmapFrame.Create(new Uri(ofd.FileName));
+                    HeightCanvas = bmpFrame.PixelHeight;
+                    WidthCanvas = bmpFrame.PixelWidth;
 
-                layer.LayerBmpFrame = bmpFrame;
-                layer.RefreshBrush();
+                    NewLayer(HeightCanvas, WidthCanvas);
+                    int index = GlobalState.CurrentLayerIndex;
+                    var layer = LayersWidgets[index].ThisLayer;
+
+                    layer.LayerBmpFrame = bmpFrame;
+                    layer.RefreshBrush();
+                }
             }
         }
 
@@ -246,11 +259,12 @@ namespace PhotoEditor
                 enc.Save(stm);
             }
         }
-       
+
         private void ExportAs(BitmapEncoder encoder, string format)
         {
             var saveDlg = new SaveFileDialog();
-            switch (format) {
+            switch (format)
+            {
                 case ".jpg":
                     saveDlg.Filter = "JPG|*.jpg";
                     break;
@@ -261,7 +275,7 @@ namespace PhotoEditor
                     saveDlg.Filter = "BMP|*.bmp";
                     break;
             }
-            
+
             if (saveDlg.ShowDialog() == true)
             {
                 SaveCanvas(mainCanvas, 96, saveDlg.FileName);
@@ -380,9 +394,9 @@ namespace PhotoEditor
         private void MoveLayerDown(object sender, RoutedEventArgs e)
         {
             if (GlobalState.CurrentLayerIndex < widgetsCanvas.Items.Count - 1)
-               SwapLayers(GlobalState.CurrentLayerIndex, GlobalState.CurrentLayerIndex + 1);
+                SwapLayers(GlobalState.CurrentLayerIndex, GlobalState.CurrentLayerIndex + 1);
         }
-        
+
         private void SliderOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (LayersWidgets.Count > 0)
@@ -479,7 +493,7 @@ namespace PhotoEditor
 
         private void Rotate_Click(object sender, RoutedEventArgs e)
         {
-            
+
             Turn BoxWindow = new Turn();
             try
             {
@@ -499,11 +513,11 @@ namespace PhotoEditor
                 Console.WriteLine("Ошибка: " + ex.Message);
             }
         }
-        
+
 
         // LAYER BITMAP FUNCTIONS
-        
-            
+
+
         private BitmapFrame BmpFrameErase(Point pos, Layer layer)
         {
             var bmpFrame = layer.LayerBmpFrame;
@@ -830,7 +844,7 @@ namespace PhotoEditor
             Erase_Overlay.Fill = passiveColor;
             Brush_Overlay.Fill = passiveColor;
         }
-        
+
 
         // COLOR & OPACITY
 
@@ -839,15 +853,15 @@ namespace PhotoEditor
         {
             VisualHost.BrushSize = sliderBrushSize.Value;
         }
-        
+
         private void ColorTranspSelected(object sender, RoutedEventArgs e)
         {
             VisualHost.BrushColor = Brushes.Transparent;
         }
 
-       
 
-       
+
+
 
         // SYSTEM BUTTONS
 
@@ -926,7 +940,7 @@ namespace PhotoEditor
         {
             e.Handled = true;
         }
-      
+
         private void HelpButtonUp(object sender, MouseButtonEventArgs e)
         {
             System.Diagnostics.Process.Start("http://google.com");
@@ -962,10 +976,8 @@ namespace PhotoEditor
                 Rotate_Click(sender, e);
         }
         //select color
-        public Color? ColorName
-        {
-            get
-            {
+        public Color? ColorName {
+            get {
 
                 return ColorPicker1.SelectedColor;
             }
@@ -982,6 +994,78 @@ namespace PhotoEditor
         private void ColorButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
             ColorPreview.Fill = new SolidColorBrush(Colors.Red);
+        }
+        private void SaveBPE()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "BstuPhotoEditor|*.bpe";
+            if (sfd.ShowDialog() == true)
+            {
+                List<byte> toWrite = new List<byte>();
+                toWrite.AddRange(BitConverter.GetBytes((Int32)LayersWidgets.Count));
+                foreach (var layer in LayersWidgets)
+                {
+                    toWrite.AddRange(layer.ThisLayer.ToBytes());
+                }
+                using (FileStream fstream = new FileStream(sfd.FileName, FileMode.OpenOrCreate))
+                {
+                    fstream.Write(toWrite.ToArray(), 0, toWrite.Count);
+                }
+            }
+        }
+
+        private void LoadBPE(string fileUri)
+        {
+            byte[] Read;
+            using (FileStream fstream = new FileStream(fileUri, FileMode.OpenOrCreate))
+            {
+                Read = new byte[fstream.Length];
+                fstream.Read(Read, 0, (int)fstream.Length);
+            }
+            Queue<byte> q = new Queue<byte>(Read);
+            LayersWidgets.Clear();
+            mainCanvas.Children.Clear();
+            Int32 layersCount = Utils.FromBytesInt32(q);
+            for (uint i = 0; i < layersCount; i++)
+            {
+                Layer loadedLayer = Layer.FromBytes(q);
+                LayersWidgets.Add(loadedLayer.Widget);
+                mainCanvas.Children.Add(loadedLayer);
+            }
+            GlobalState.CurrentLayerIndex = 0;
+        }
+
+        private void OnKeyDownHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+            {
+                keyCtrlDown++;
+            }
+            else if (keyCtrlDown > 0)
+            {
+                switch (e.Key)
+                {
+                    case Key.S:
+                        SaveBPE();
+                        break;
+                    case Key.O:
+                        OpenPhoto();
+                        break;
+                }
+            }
+        }
+
+        private void OnKeyUpHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+            {
+                keyCtrlDown--;
+            }
+        }
+
+        private void ButtonSave_Click(object sender, RoutedEventArgs e)
+        {
+            SaveBPE();
         }
     }
 }
