@@ -399,62 +399,104 @@ namespace PhotoEditor
 
         private void Negative_Click(object sender, RoutedEventArgs e)
         {
-            int index = GlobalState.CurrentLayerIndex;
-            var layer = LayersWidgets[index].ThisLayer;
-            Effects.Negative(layer);
-            layer.RefreshBrush();
+            try
+            {
+                int index = GlobalState.CurrentLayerIndex;
+                var layer = LayersWidgets[index].ThisLayer;
+                Effects.Negative(layer);
+                layer.RefreshBrush();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка: " + ex.Message);
+            }
         }
 
         private void Grayscale_Click(object sender, RoutedEventArgs e)
         {
-            int index = GlobalState.CurrentLayerIndex;
-            var layer = LayersWidgets[index].ThisLayer;
-            Effects.Grayscale(layer);
-            layer.RefreshBrush();
+            try
+            {
+                int index = GlobalState.CurrentLayerIndex;
+                var layer = LayersWidgets[index].ThisLayer;
+                Effects.Grayscale(layer);
+                layer.RefreshBrush();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка: " + ex.Message);
+            }
         }
 
         private void GaussianBlur_Click(object sender, RoutedEventArgs e)
         {
             Turn BoxWindow = new Turn();
-            if (BoxWindow.ShowDialog() == true)
+            try
             {
-                int x = int.Parse(BoxWindow.Turns);
-                int index = GlobalState.CurrentLayerIndex;
-                var layer = LayersWidgets[index].ThisLayer;
-                Effects.GaussianBlur(layer, x);
-                layer.RefreshBrush();
+                if (BoxWindow.ShowDialog() == true)
+                {
+                    int x = int.Parse(BoxWindow.Turns);
+                    int index = GlobalState.CurrentLayerIndex;
+                    var layer = LayersWidgets[index].ThisLayer;
+                    Effects.GaussianBlur(layer, x);
+                    layer.RefreshBrush();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка: " + ex.Message);
             }
         }
 
         private void SobelFilter_Click(object sender, RoutedEventArgs e)
         {
-            int index = GlobalState.CurrentLayerIndex;
-            var layer = LayersWidgets[index].ThisLayer;
-            Effects.SobelFilter(layer);
-            layer.RefreshBrush();
+            try
+            {
+                int index = GlobalState.CurrentLayerIndex;
+                var layer = LayersWidgets[index].ThisLayer;
+                Effects.SobelFilter(layer);
+                layer.RefreshBrush();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка: " + ex.Message);
+            }
         }
 
         private void SobelFilterGrayscale_Click(object sender, RoutedEventArgs e)
         {
-            int index = GlobalState.CurrentLayerIndex;
-            var layer = LayersWidgets[index].ThisLayer;
-            Effects.SobelFilter(layer, true);
-            layer.RefreshBrush();
+            try
+            {
+                int index = GlobalState.CurrentLayerIndex;
+                var layer = LayersWidgets[index].ThisLayer;
+                Effects.SobelFilter(layer, true);
+                layer.RefreshBrush();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка: " + ex.Message);
+            }
         }
 
         private void Rotate_Click(object sender, RoutedEventArgs e)
         {
             
             Turn BoxWindow = new Turn();
-            if (BoxWindow.ShowDialog() == true)
+            try
             {
-                
-                double x = double.Parse(BoxWindow.Turns);
-                int index = GlobalState.CurrentLayerIndex;
-                var layer = LayersWidgets[index].ThisLayer;
-                if (x==90 || x==180 || x == 360) { Effects.Rotate(layer, x); } else { Effects.RotateBilinear(layer, x); }
-                
-                layer.RefreshBrush();
+                if (BoxWindow.ShowDialog() == true)
+                {
+
+                    double x = double.Parse(BoxWindow.Turns);
+                    int index = GlobalState.CurrentLayerIndex;
+                    var layer = LayersWidgets[index].ThisLayer;
+                    if (x == 90 || x == 180 || x == 360) { Effects.Rotate(layer, x); } else { Effects.RotateBilinear(layer, x); }
+
+                    layer.RefreshBrush();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка: " + ex.Message);
             }
         }
         
