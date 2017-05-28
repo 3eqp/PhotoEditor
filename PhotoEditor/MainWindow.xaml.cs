@@ -995,6 +995,7 @@ namespace PhotoEditor
         {
             ColorPreview.Fill = new SolidColorBrush(Colors.Red);
         }
+
         private void SaveBPE()
         {
             SaveFileDialog sfd = new SaveFileDialog();

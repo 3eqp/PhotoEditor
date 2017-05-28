@@ -310,5 +310,8 @@
   <ItemGroup>
     <Resource Include="icons\ic_addLayer.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\ic_deleteLayer.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
