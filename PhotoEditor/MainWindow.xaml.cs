@@ -170,7 +170,7 @@ namespace PhotoEditor
 
             if (WindowTrigger == 2)
             {
-                // Add Open File
+                OpenPhoto();
                 Show();
             }
 
