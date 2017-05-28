@@ -26,7 +26,7 @@ namespace PhotoEditor.Controls
         public BitmapFrame LayerBmpFrame { get; set; }
         public double LayerScale { get; set; }
         public LayerWidget Widget { get; set; }
-        
+
         public Layer(string name, double width, double height, double opacity, double scale, int col, int colspan, int row)
         {
             this.MouseLeftButtonDown += new MouseButtonEventHandler(Control_MouseLeftButtonDown);
@@ -70,7 +70,7 @@ namespace PhotoEditor.Controls
                 Widget.VisibilityOFF.Visibility = Visibility.Visible;
                 IsLayerVisible = false;
             }
-            else if(!IsLayerVisible)
+            else if (!IsLayerVisible)
             {
                 Visibility = Visibility.Visible;
                 Widget.VisibilityON.Visibility = Visibility.Visible;
@@ -137,5 +137,58 @@ namespace PhotoEditor.Controls
                 Console.WriteLine("layer " + LayerPosition.X + " " + LayerPosition.Y);
             }
         }
+
+        public List<byte> ToBytes()
+        {
+            List<byte> result = new List<byte>();
+            result.AddRange(LayerName.ToBytes());
+            result.AddRange(LayerPosition.ToBytes());
+            if (LayerBmpFrame == null)
+            {
+                result.AddRange(BitConverter.GetBytes((Int32)0));
+            }
+            else
+            {
+                result.AddRange(BitConverter.GetBytes((Int32)LayerBmpFrame.PixelWidth));
+                result.AddRange(BitConverter.GetBytes((Int32)LayerBmpFrame.PixelHeight));
+
+                int stride = LayerBmpFrame.PixelWidth * (LayerBmpFrame.Format.BitsPerPixel / 8);
+                byte[] data = new byte[LayerBmpFrame.PixelHeight * stride];
+
+                result.AddRange(BitConverter.GetBytes((Int32)data.Length));
+
+                LayerBmpFrame.CopyPixels(data, stride, 0);
+                result.AddRange(data);
+            }
+            return result;
+        }
+
+        public static Layer FromBytes(Queue<byte> q)
+        {
+            string layerName = Utils.FromBytesString(q);
+            Point layerPosition = Utils.FromBytesPoint(q);
+            int width = Utils.FromBytesInt32(q);
+            if (width != 0)
+            {
+                int height = Utils.FromBytesInt32(q);
+                //Layer result = new Layer(layerName, width, height, 1, 1, 2, 1);
+                Layer result = new Layer(layerName, 350, 350, 1, 1, 1, 2, 1);
+                int bytesPerImage = Utils.FromBytesInt32(q);
+                byte[] imageData = new byte[bytesPerImage];
+                for (uint i = 0; i < bytesPerImage; i++)
+                {
+                    imageData[i] = q.Dequeue();
+                }
+                WriteableBitmap bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgra32, null);
+                bitmap.WritePixels(new Int32Rect(0, 0, width, height), imageData, width * (bitmap.Format.BitsPerPixel / 8), 0);
+                result.LayerBmpFrame = BitmapFrame.Create(bitmap);
+                // TODO: позиция записывается верная, но рендерится картинка всё-равно в начале координат
+                result.LayerPosition = layerPosition;
+                result.RefreshBrush();
+                return result;
+            }
+            return null;
+        }
+
     }
 }
