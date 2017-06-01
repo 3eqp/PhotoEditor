@@ -325,8 +325,8 @@
                                              Grid.Column="5" HorizontalAlignment="Left" Width="30"/>
                 <Design:MaximizeButton_Black x:Name="MaximizeButton_Black" 
                                              Grid.Column="5" Margin="30,0" Visibility="Visible"/>
-                <Design:MaximizeButtonOFF x:Name="MaximizeButtonOFF" 
-                                             Grid.Column="5" Margin="30,0" Visibility="Hidden"/>
+                <!--<Design:MaximizeButtonOFF x:Name="MaximizeButtonOFF" 
+                                             Grid.Column="5" Margin="30,0" Visibility="Hidden"/>-->
                 <Design:CloseButton_Black x:Name="CloseButton_Black"
                                           Grid.Column="5" HorizontalAlignment="Right"/>
 
@@ -476,20 +476,21 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <ScrollViewer x:Name="mainCanvasScroll"
+            <!--<ScrollViewer x:Name="mainCanvasScroll"
                           Grid.ColumnSpan="2"
                           Grid.Column="1"
                           ScrollViewer.VerticalScrollBarVisibility="Visible"
                           ScrollViewer.HorizontalScrollBarVisibility="Visible">
                 <DockPanel>
-                    <Canvas x:Name="mainCanvas"
-                                Width="3000"
-                                Height="3000"
+                </DockPanel>
+            </ScrollViewer>-->
+
+            <Canvas x:Name="mainCanvas"
+                          Grid.ColumnSpan="2"
+                          Grid.Column="1"
                                 MouseLeftButtonDown="MainCanvas_MouseLeftButtonDown"
                                 MouseLeftButtonUp="MainCanvas_MouseLeftButtonUp"
                                 MouseMove="MainCanvas_MouseMove" />
-                </DockPanel>
-            </ScrollViewer>
             <Canvas Name="ViewCanvas"
                     Grid.ColumnSpan="2"
                     Grid.Column="1">

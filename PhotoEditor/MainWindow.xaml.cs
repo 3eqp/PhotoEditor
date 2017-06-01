@@ -94,7 +94,7 @@ namespace PhotoEditor
             MinimizeButton_Black.AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(MinimizeButtonUp), true);
             CloseButton_Black.AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(CloseButtonUp), true);
             MaximizeButton_Black.AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(MaximizeButtonUp), true);
-            MaximizeButtonOFF.AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(MaximizeButtonUp), true);
+            //MaximizeButtonOFF.AddHandler(MouseLeftButtonUpEvent, new MouseButtonEventHandler(MaximizeButtonUp), true);
             // Navigator buttons
             AddPhotoButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(ButtonOpenPhoto_Click), true);
             ArrowButton.AddHandler(MouseLeftButtonDownEvent, new MouseButtonEventHandler(Arrow_Selected), true);
@@ -231,8 +231,8 @@ namespace PhotoEditor
 
         private void SaveCanvas(Canvas canvas, int dpi, string filename)
         {
-            var width = ViewCanvas.ActualWidth;
-            var height = ViewCanvas.ActualHeight;
+            var width = mainCanvas.ActualWidth;
+            var height = mainCanvas.ActualHeight;
 
             var size = new Size(width, height);
             canvas.Measure(size);
@@ -880,8 +880,8 @@ namespace PhotoEditor
                 EditorWindow.Top = 0;
                 EditorWindow.Width = SystemParameters.PrimaryScreenWidth;
                 EditorWindow.Height = SystemParameters.PrimaryScreenHeight;
-                MaximizeButton_Black.Visibility = Visibility.Hidden;
-                MaximizeButtonOFF.Visibility = Visibility.Visible;
+                MaximizeButton_Black.Visibility = Visibility.Visible;
+                //MaximizeButtonOFF.Visibility = Visibility.Visible;
                 MainWindowState.IsMaximized = true;
             }
             else
@@ -892,7 +892,7 @@ namespace PhotoEditor
                 EditorWindow.Width = WindowWidth;
                 EditorWindow.Height = WindowHeight;
                 MaximizeButton_Black.Visibility = Visibility.Visible;
-                MaximizeButtonOFF.Visibility = Visibility.Hidden;
+                //MaximizeButtonOFF.Visibility = Visibility.Hidden;
                 MainWindowState.IsMaximized = false;
             }
         }
@@ -1024,16 +1024,20 @@ namespace PhotoEditor
                 fstream.Read(Read, 0, (int)fstream.Length);
             }
             Queue<byte> q = new Queue<byte>(Read);
-            LayersWidgets.Clear();
-            mainCanvas.Children.Clear();
-            Int32 layersCount = Utils.FromBytesInt32(q);
-            for (uint i = 0; i < layersCount; i++)
+            Layer loadedLayer = Layer.FromBytes(q);
+            if (loadedLayer != null)
             {
-                Layer loadedLayer = Layer.FromBytes(q);
-                LayersWidgets.Add(loadedLayer.Widget);
-                mainCanvas.Children.Add(loadedLayer);
+                LayersWidgets.Clear();
+                mainCanvas.Children.Clear();
+                Int32 layersCount = Utils.FromBytesInt32(q);
+                for (uint i = 0; i < layersCount; i++)
+                {
+                    loadedLayer = Layer.FromBytes(q);
+                    LayersWidgets.Add(loadedLayer.Widget);
+                    mainCanvas.Children.Add(loadedLayer);
+                }
+                GlobalState.CurrentLayerIndex = 0;
             }
-            GlobalState.CurrentLayerIndex = 0;
         }
 
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
